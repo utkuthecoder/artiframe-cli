@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtiFrame | Documentation Officielle pour Développeurs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:          #0d1117;
+            --surface:     #161b22;
+            --surface-2:   #1c2128;
+            --border:      #30363d;
+            --text:        #e6edf3;
+            --muted:       #7d8590;
+            --green:       #009d6c;
+            --green-light: #00c88c;
+            --green-dim:   rgba(0,157,108,0.12);
+            --blue:        #58a6ff;
+            --yellow:      #e3b341;
+            --red:         #f85149;
+            --purple:      #bc8cff;
+            --code-bg:     #0d1117;
+            --sidebar-w:   280px;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.75;
+            display: flex;
+        }
+
+        /* ---- SIDEBAR ---- */
+        .sidebar {
+            width: var(--sidebar-w);
+            background: var(--surface);
+            height: 100vh;
+            position: fixed;
+            top: 0; left: 0;
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 28px 0 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sb-logo {
+            padding: 0 22px 24px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+        .sb-logo strong {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--green);
+            letter-spacing: -0.3px;
+        }
+        .sb-logo span {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        .sb-cat {
+            padding: 16px 22px 6px;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--green);
+            font-weight: 700;
+        }
+        .sidebar nav a {
+            display: block;
+            padding: 7px 22px;
+            font-size: 0.88rem;
+            color: var(--muted);
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            transition: all .15s;
+        }
+        .sidebar nav a:hover,
+        .sidebar nav a.active {
+            color: var(--text);
+            background: var(--green-dim);
+            border-left-color: var(--green);
+        }
+
+        /* ---- MAIN ---- */
+        .content {
+            margin-left: var(--sidebar-w);
+            padding: 60px 70px 100px;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        /* ---- TYPOGRAPHY ---- */
+        h1 { font-size: 2.6rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 16px; }
+        h1 span { color: var(--green); }
+        h2 {
+            font-size: 1.7rem; font-weight: 700;
+            margin: 72px 0 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+        h2 .tag { font-size: 0.65rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; vertical-align: middle; margin-left: 10px; }
+        h3 { font-size: 1.1rem; font-weight: 600; margin: 32px 0 12px; color: var(--green-light); display: flex; align-items: center; gap: 10px; }
+        p { color: var(--muted); margin-bottom: 16px; font-size: 0.97rem; }
+        strong { color: var(--text); }
+        ul, ol { margin: 0 0 16px 22px; color: var(--muted); font-size: 0.97rem; }
+        li { margin-bottom: 8px; }
+        a { color: var(--green-light); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* ---- LEAD ---- */
+        .lead { font-size: 1.05rem; color: var(--muted); margin-bottom: 0; max-width: 720px; }
+
+        /* ---- BADGES ---- */
+        .badge { font-size: 0.68rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
+        .b-view   { background: rgba(88,166,255,.12); color: #58a6ff; border: 1px solid rgba(88,166,255,.3); }
+        .b-api    { background: rgba(188,140,255,.12); color: #bc8cff; border: 1px solid rgba(188,140,255,.3); }
+        .b-cli    { background: rgba(0,200,140,.12);   color: #00c88c; border: 1px solid rgba(0,200,140,.3); }
+        .b-core   { background: rgba(227,179,65,.12);  color: #e3b341; border: 1px solid rgba(227,179,65,.3); }
+        .b-sec    { background: rgba(248,81,73,.12);   color: #f85149; border: 1px solid rgba(248,81,73,.3); }
+
+        /* ---- CODE ---- */
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 22px 24px;
+            overflow-x: auto;
+            margin: 18px 0 24px;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        code { font-family: 'JetBrains Mono', 'Consolas', monospace; color: #e6edf3; }
+        .ic { /* inline code */
+            background: var(--surface-2);
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            color: var(--yellow);
+            border: 1px solid var(--border);
+        }
+        .kw { color: #ff7b72; }   /* keyword / php tag */
+        .fn { color: #d2a8ff; }   /* function name */
+        .st { color: #a5d6ff; }   /* string */
+        .cm { color: #8b949e; }   /* comment */
+        .nu { color: #79c0ff; }   /* number / bool */
+        .var { color: #ffa657; }  /* variable */
+
+        /* ---- CARDS ---- */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 28px 32px;
+            margin-bottom: 20px;
+        }
+        .card.highlight { border-left: 3px solid var(--green); }
+
+        /* ---- ALERTS ---- */
+        .alert { padding: 18px 22px; border-radius: 8px; margin: 24px 0; border-left: 3px solid; font-size: 0.95rem; }
+        .a-info    { background: rgba(88,166,255,.08);  border-color: var(--blue);   color: #93c5fd; }
+        .a-warn    { background: rgba(227,179,65,.08);  border-color: var(--yellow); color: #fbbf24; }
+        .a-danger  { background: rgba(248,81,73,.08);   border-color: var(--red);    color: #fca5a5; }
+        .a-success { background: rgba(0,157,108,.08);   border-color: var(--green);  color: #6ee7b7; }
+
+        /* ---- RETURN TYPE ---- */
+        .ret { display: inline-block; font-size: 0.78rem; color: var(--green); font-family: 'JetBrains Mono', monospace; background: rgba(0,157,108,.12); padding: 3px 10px; border-radius: 4px; border: 1px solid rgba(0,157,108,.25); margin-bottom: 12px; }
+
+        /* ---- GRID ---- */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 24px; }
+        @media(max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        /* ---- DIR TREE ---- */
+        .tree { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 22px 24px; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; line-height: 1.9; white-space: pre; overflow-x: auto; }
+        .tree .dir { color: var(--blue); font-weight: 600; }
+        .tree .file { color: #e6edf3; }
+        .tree .note { color: #8b949e; }
+        .tree .warn { color: var(--yellow); }
+        .tree .safe { color: var(--green); }
+
+        /* ---- STEP LIST ---- */
+        .steps { counter-reset: step; list-style: none; margin: 0 0 24px; padding: 0; }
+        .steps li { counter-increment: step; display: flex; gap: 18px; margin-bottom: 20px; }
+        .steps li::before {
+            content: counter(step);
+            flex-shrink: 0;
+            width: 30px; height: 30px;
+            background: var(--green-dim);
+            border: 1px solid rgba(0,157,108,.3);
+            color: var(--green);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.85rem;
+            margin-top: 2px;
+        }
+
+        /* ---- SIGNATURE TABLE ---- */
+        .sig-table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.87rem; }
+        .sig-table th { text-align: left; padding: 10px 14px; background: var(--surface-2); color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--border); }
+        .sig-table td { padding: 10px 14px; border-bottom: 1px solid rgba(48,54,61,.5); vertical-align: top; }
+        .sig-table td:first-child { font-family: 'JetBrains Mono', monospace; color: var(--yellow); white-space: nowrap; }
+        .sig-table td:last-child { color: var(--muted); }
+
+        /* ---- SCROLL SPY ---- */
+        header#page-header { margin-bottom: 52px; }
+    </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="sb-logo">
+        <strong>ArtiFrame</strong>
+        <span>Documentation pour Développeurs</span>
+    </div>
+    <nav>
+        <div class="sb-cat">Commencer</div>
+        <a href="#giris">Introduction & Philosophie</a>
+        <a href="#kurulum">Installation</a>
+        <a href="#dizin">Structure du Répertoire</a>
+
+        <div class="sb-cat">Architecture</div>
+        <a href="#bootstrapper">Architecture Bootstrapper</a>
+        <a href="#kurallar">Ensemble de Règles</a>
+
+        <div class="sb-cat">Outil CLI</div>
+        <a href="#cli-giris">Introduction à la CLI</a>
+        <a href="#cli-new">new</a>
+        <a href="#cli-view">make:view</a>
+        <a href="#cli-api">make:api</a>
+        <a href="#cli-class">make:class</a>
+        <a href="#cli-version">version</a>
+
+        <div class="sb-cat">View Helpers</div>
+        <a href="#vh-display">display()</a>
+        <a href="#vh-csrf">csrfField()</a>
+        <a href="#vh-dates">Fonctions de Date</a>
+        <a href="#vh-format">Formatage</a>
+        <a href="#vh-money">money()</a>
+
+        <div class="sb-cat">System Helpers</div>
+        <a href="#sh-json">jsonResponse()</a>
+        <a href="#sh-csrf">verifyCsrf()</a>
+        <a href="#sh-sanitize">Sanitize</a>
+        <a href="#sh-request">HTTP & Requête</a>
+        <a href="#sh-security">Sécurité</a>
+
+        <div class="sb-cat">Sécurité de l'API</div>
+        <a href="#api-methods">Contrôle de Méthode HTTP</a>
+        <a href="#api-cors">CORS</a>
+        <a href="#api-rate">Limitation de Débit</a>
+
+        <div class="sb-cat">Pratique</div>
+        <a href="#workflow">Flux de Travail Complet</a>
+    </nav>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="content">
+
+    <!-- ====== GİRİŞ ====== -->
+    <header id="page-header">
+        <h1>ArtiFrame <span>Documentation</span></h1>
+        <p class="lead">Le framework pour des projets PHP natifs évolutifs, géré avec zéro dépendance externe, des règles strictes et une interface de ligne de commande puissante (CLI). Sans dépendances, libéré de la soupe de paquets Composer, un écosystème léger et rapide qui vous permet de vous concentrer sur votre logique métier.</p>
+    </header>
+
+    <!-- ====== GİRİŞ & FELSEFE ====== -->
+    <section id="giris">
+        <h2>Introduction & Philosophie</h2>
+        <p>ArtiFrame est basé sur le principe de <strong>"Convention over Configuration"</strong> (Convention plutôt que Configuration). La force d'un framework ne vient pas de la richesse des outils qu'il propose, mais de la cohérence de l'ordre qu'il établit.</p>
+
+        <div class="grid-2">
+            <div class="card highlight">
+                <h3>Zéro Surcharge (Zero Overhead)</h3>
+                <p>Zéro dépendance aux paquets Composer, au cœur du framework ou aux bibliothèques tierces. Chaque ligne de code est la vôtre ; sans gonflement, sans couches d'abstraction inutiles.</p>
+            </div>
+            <div class="card highlight">
+                <h3>La Sécurité d'Abord</h3>
+                <p>La protection XSS, la validation CSRF, l'assainissement contre l'injection SQL et le contrôle de la méthode HTTP sont intégrés par défaut. La sécurité n'est pas une option, c'est un standard.</p>
+            </div>
+            <div class="card highlight">
+                <h3>Ensemble de Règles Strict</h3>
+                <p>Un développeur junior nouvellement intégré au projet comprend l'architecture <code class="ic">data-js</code> et la structure des répertoires en quelques minutes. La cohésion de l'équipe est garantie au niveau du framework.</p>
+            </div>
+            <div class="card highlight">
+                <h3>Priorité à la CLI</h3>
+                <p>Pas de création manuelle de fichiers view, API ou class. La CLI génère à partir de fichiers stub, établit des liens d'assets et maintient le projet cohérent.</p>
+            </div>
+        </div>
+
+        <div class="alert a-info">
+            <strong>ℹ️ Licence AGPLv3 :</strong> ArtiFrame est open source. Les travaux dérivés que vous produisez peuvent être utilisés librement, à condition que le code source reste ouvert. L'avis de droit d'auteur ne peut être supprimé.
+        </div>
+    </section>
+
+    <!-- ====== KURULUM ====== -->
+    <section id="kurulum">
+        <h2>Installation</h2>
+        <p>ArtiFrame CLI est installé en tant qu'outil PHP global. Installé une fois, il est utilisé dans chaque projet.</p>
+
+        <h3>1. Installer l'Outil CLI Globalement</h3>
+        <pre><code><span class="cm"># Installation globale via NPM</span>
+npm install -g @artilingo/artiframe-cli
+
+<span class="cm"># Vérifier l'installation</span>
+artiframe</code></pre>
+
+        <h3>2. Shell Interactif</h3>
+        <p>Tapez simplement <code class="ic">artiframe</code> dans le terminal et appuyez sur Entrée. La CLI ne se ferme pas ; un shell interactif s'ouvre, à l'écoute des commandes en continu :</p>
+        <pre><code>==================================================
+        ArtiFrame CLI Interactive Shell v1.0.0
+==================================================
+Type 'help' for commands, or 'exit' to quit.
+
+artiframe&gt; </code></pre>
+
+        <h3>3. Démarrer un Nouveau Projet</h3>
+        <pre><code>artiframe&gt; new mon-projet</code></pre>
+        <p>Cette commande crée le répertoire <code class="ic">mon-projet/</code> et copie toute la structure squelette à l'intérieur : <code class="ic">app/</code>, <code class="ic">bin/</code>, <code class="ic">config/</code>, <code class="ic">public/</code>, <code class="ic">src/</code>, <code class="ic">.env.example</code> et la première page <code class="ic">index.php</code>.</p>
+
+        <h3>4. Paramètres d'Environnement</h3>
+        <pre><code>cp .env.example .env</code></pre>
+        <p>Ouvrez votre fichier <code class="ic">.env</code> et remplissez les informations de base de données et d'application. Ce fichier n'entre jamais dans le contrôle de version.</p>
+
+        <div class="alert a-warn">
+            <strong>⚠️ Paramètre du Serveur Web :</strong> Dirigez le document root d'Apache/Nginx vers le dossier <code class="ic">/public/</code>. Les autres répertoires ne doivent jamais être exposés à l'extérieur.
+        </div>
+    </section>
+
+    <!-- ====== DİZİN YAPISI ====== -->
+    <section id="dizin">
+        <h2>Structure du Répertoire</h2>
+        <p>L'architecture créée au démarrage du projet ; assure une séparation claire des responsabilités (SoC).</p>
+
+        <div class="tree">
+<span class="dir">nom-du-projet/</span>
+├── <span class="dir">app/</span>                     <span class="note"># Couche d'infrastructure</span>
+│   ├── <span class="file">ViewControl.php</span>      <span class="note"># Bootstrapper pour les vues (pages HTML)</span>
+│   ├── <span class="file">ApiControl.php</span>       <span class="note"># Bootstrapper pour les endpoints API</span>
+│   ├── <span class="file">Database.php</span>         <span class="note"># Connexion à la base de données basée sur PDO</span>
+│   ├── <span class="file">DotEnv.php</span>           <span class="note"># Lecteur de .env</span>
+│   └── <span class="file">R2Manager.php</span>        <span class="note"># Gestionnaire de fichiers Cloudflare R2</span>
+│
+├── <span class="dir warn">bin/</span>                     <span class="note"># ⚠️ Système de base — ne pas modifier directement</span>
+│   ├── <span class="file">SystemMethod.php</span>     <span class="note"># Utilitaires globaux API/Backend</span>
+│   ├── <span class="file">ViewMethod.php</span>       <span class="note"># Utilitaires globaux View/Frontend</span>
+│   └── <span class="dir">stubs/</span>               <span class="note"># Modèles utilisés par la CLI</span>
+│       ├── view.stub
+│       ├── api-standart.stub
+│       ├── api-switch-case.stub
+│       └── class.stub
+│
+├── <span class="dir">config/</span>                  <span class="note"># Fichiers de configuration</span>
+│   └── <span class="file">app-version.php</span>      <span class="note"># Constantes APP_VERSION et APP_ENV</span>
+│
+├── <span class="dir">public/</span>                  <span class="note"># ← Le seul répertoire ouvert du serveur web</span>
+│   ├── <span class="dir safe">assets/</span>
+│   │   ├── <span class="dir">css/</span>             <span class="note"># Fichiers CSS spécifiques aux vues</span>
+│   │   └── <span class="dir">js/</span>              <span class="note"># Fichiers JS spécifiques aux vues</span>
+│   ├── <span class="dir">includes/</span>            <span class="note"># Composants partagés</span>
+│   │   ├── head.php
+│   │   ├── header.php
+│   │   └── footer.php
+│   ├── <span class="dir">api/</span>                 <span class="note"># Fichiers d'endpoints API</span>
+│   └── <span class="file">index.php</span>            <span class="note"># Page d'accueil</span>
+│
+├── <span class="dir">src/</span>                     <span class="note"># Logique métier et classes</span>
+├── <span class="file">.env</span>                     <span class="note"># Variables d'environnement (non suivies par git)</span>
+├── <span class="file">.env.example</span>            <span class="note"># Modèle — suivi par git</span>
+└── <span class="file">guide_fr.html</span>            <span class="note"># Ce document</span>
+        </div>
+
+        <div class="alert a-danger">
+            <strong>🚫 Ne touchez pas au répertoire bin/ :</strong> Les fichiers dans <code class="ic">bin/</code> constituent le cœur du framework. La logique métier spécifique au projet n'est pas ajoutée ici. Les classes et les services que vous ajouterez se trouvent sous <code class="ic">src/</code>, et les composants d'infrastructure se trouvent sous <code class="ic">app/</code>.
+        </div>
+    </section>
+
+    <!-- ====== BOOTSTRAPPER ====== -->
+    <section id="bootstrapper">
+        <h2>Architecture Bootstrapper <span class="tag b-core">Critique</span></h2>
+        <p>ArtiFrame utilise deux bootstrappers complètement indépendants. Cette architecture empêche fondamentalement les <strong>problèmes d'en-tête HTML et les failles de sécurité</strong>.</p>
+
+        <div class="grid-2">
+            <div class="card highlight">
+                <h3><span class="badge b-view">Vue</span> ViewControl.php</h3>
+                <p>Utilisé pour les pages HTML (fichiers de vue). Démarre la session, charge <code class="ic">ViewMethod</code>.</p>
+                <pre><code><span class="cm">// public/profil.php — TOUT EN HAUT, avant d'imprimer le HTML</span>
+<span class="kw">&lt;?php</span>
+<span class="fn">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>]
+    . <span class="st">'/../app/ViewControl.php'</span>;
+<span class="kw">use</span> Bin\ViewMethod;
+<span class="kw">?&gt;</span>
+<span class="kw">&lt;!DOCTYPE html&gt;</span>
+...</code></pre>
+            </div>
+            <div class="card highlight">
+                <h3><span class="badge b-api">API</span> ApiControl.php</h3>
+                <p>Utilisé pour les fichiers d'endpoints API. Définit l'en-tête JSON, effectue le contrôle de la méthode HTTP, charge <code class="ic">SystemMethod</code>.</p>
+                <pre><code><span class="cm">// public/api/utilisateur/obtenir.php</span>
+<span class="kw">&lt;?php</span>
+<span class="cm">// $allowedMethods DOIT être défini avant require</span>
+<span class="var">$allowedMethods</span> = [<span class="st">'GET'</span>];
+
+<span class="fn">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>]
+    . <span class="st">'/../app/ApiControl.php'</span>;
+
+<span class="kw">use</span> Bin\SystemMethod;</code></pre>
+            </div>
+        </div>
+
+        <div class="alert a-danger">
+            <strong>🚫 ViewControl et ApiControl ne sont jamais mélangés :</strong> Si ViewControl est requis dans un fichier API, il peut renvoyer un en-tête HTML au lieu d'un en-tête JSON, et toute la réponse de l'API sera corrompue. Si ApiControl est requis dans une page HTML, la session ne démarre pas et la page se casse.
+        </div>
+    </section>
+
+    <!-- ====== KURALLAR ====== -->
+    <section id="kurallar">
+        <h2>Ensemble de Règles <span class="tag b-core">Standard</span></h2>
+
+        <div class="card">
+            <h3>Règle 1 : Architecture data-js <span class="badge b-sec">Critique</span></h3>
+            <p>Les événements JavaScript ne peuvent jamais être écoutés via une <code class="ic">class</code> ou un <code class="ic">id</code>. Ce sont des identités visuelles/de style. Toutes les interactions JS sont gérées par l'attribut <code class="ic">data-js</code>. Si CSS supprime une classe, JavaScript ne plante jamais.</p>
+            <pre><code><span class="cm">&lt;!-- ❌ Anti-Pattern — non pris en charge --&gt;</span>
+&lt;button id="submitBtn" class="btn"&gt;Envoyer&lt;/button&gt;
+<span class="cm">// JS: document.getElementById('submitBtn').addEventListener(...)</span>
+
+<span class="cm">&lt;!-- ✅ Standard ArtiFrame --&gt;</span>
+&lt;button class="btn btn-primary" <span class="var">data-js</span>="login-submit"&gt;Envoyer&lt;/button&gt;
+<span class="cm">// JS: document.querySelector('[data-js="login-submit"]').addEventListener(...)</span></code></pre>
+        </div>
+
+        <div class="card">
+            <h3>Règle 2 : Architecture de Thème</h3>
+            <p>Les modes Sombre/Clair et les thèmes sont gérés via les attributs <code class="ic">data-theme</code> et <code class="ic">data-mode</code> de la balise <code class="ic">&lt;html&gt;</code>. Les classes de corps ne sont pas utilisées.</p>
+            <pre><code><span class="cm">&lt;!-- Balise d'ouverture HTML provenant du modèle view.stub --&gt;</span>
+&lt;html lang="fr" data-theme="default" data-mode="light"&gt;
+
+<span class="cm">/* Définition du thème dans app.css */</span>
+html[data-theme="default"][data-mode="dark"] {
+    --bg-color: #0b0c0e;
+    --text-main: #ffffff;
+}
+html[data-theme="default"][data-mode="light"] {
+    --bg-color: #ffffff;
+    --text-main: #111111;
+}</code></pre>
+        </div>
+
+        <div class="card">
+            <h3>Règle 3 : Flux de Données Sécurisé</h3>
+            <p>Toutes les données provenant de la base de données sont enveloppées avec <code class="ic">display()</code> avant d'être imprimées sur le DOM. Chaque donnée entrant dans l'API est nettoyée avec <code class="ic">sanitizeString()</code> ou <code class="ic">sanitizeInt()</code> avant d'être traitée.</p>
+        </div>
+
+        <div class="card">
+            <h3>Règle 4 : Gestion des Erreurs avec APP_ENV</h3>
+            <p>La valeur <code class="ic">APP_ENV</code> dans le fichier <code class="ic">.env</code> détermine la visibilité des erreurs. En production, aucun message d'erreur n'est affiché à l'utilisateur.</p>
+            <pre><code><span class="cm">// config/app-version.php</span>
+define(<span class="st">'APP_ENV'</span>, (int)<span class="var">$_ENV</span>[<span class="st">'APP_ENV'</span>]); <span class="cm">// 1=Debug, 0=Production</span>
+
+<span class="kw">if</span> (APP_ENV === <span class="nu">1</span>) {
+    ini_set(<span class="st">'display_errors'</span>, <span class="nu">1</span>);
+    error_reporting(E_ALL);
+} <span class="kw">else</span> {
+    ini_set(<span class="st">'display_errors'</span>, <span class="nu">0</span>);
+}</code></pre>
+        </div>
+    </section>
+
+    <!-- ====== CLI GİRİŞ ====== -->
+    <section id="cli-giris">
+        <h2>Écosystème CLI</h2>
+        <p>ArtiFrame CLI ouvre un shell interactif lorsque vous tapez <code class="ic">artiframe</code> dans le terminal. Toutes les commandes s'exécutent dans ce shell. Les commandes peuvent également être exécutées en une seule fois.</p>
+        <pre><code><span class="cm"># Mode interactif (recommandé)</span>
+artiframe
+artiframe&gt; make:view admin/utilisateurs.php
+
+<span class="cm"># Mode à usage unique</span>
+artiframe make:view admin/utilisateurs.php</code></pre>
+    </section>
+    <!-- new -->
+    <section id="cli-new">
+        <h2><code>new</code> <span class="tag b-cli">Commande CLI</span></h2>
+        <p>Crée un nouveau projet ArtiFrame. Génère le squelette complet du répertoire, les fichiers bootstrapper et la première page d'index.</p>
+        <pre><code>artiframe&gt; <span class="fn">new</span> <span class="st">nom-du-projet</span></code></pre>
+        <p>Structure créée :</p>
+        <div class="tree" style="font-size:0.82rem; line-height:1.7">
+nom-du-projet/
+├── app/ (ViewControl.php, ApiControl.php, Database.php, DotEnv.php)
+├── bin/ (SystemMethod.php, ViewMethod.php, stubs/)
+├── config/ (app-version.php)
+├── public/ (index.php, assets/, includes/, api/)
+├── src/
+├── .env.example
+└── guide_fr.html
+        </div>
+    </section>
+
+    <!-- make:view -->
+    <section id="cli-view">
+        <h2><code>make:view</code> <span class="tag b-cli">Commande CLI</span></h2>
+        <p>Crée un nouveau fichier de page (view) et ses ressources CSS/JS dédiées. Les ressources sont automatiquement liées à la page avec une invalidation du cache (cache-busting) via <code class="ic">?v=APP_VERSION</code>.</p>
+        <pre><code>artiframe&gt; <span class="fn">make:view</span> <span class="st">admin/utilisateurs.php</span></code></pre>
+        <p>Fichiers créés :</p>
+        <pre><code><span class="cm">✔  public/admin/utilisateurs.php</span>
+<span class="cm">✔  public/assets/css/admin/utilisateurs.css</span>
+<span class="cm">✔  public/assets/js/admin/utilisateurs.js</span></code></pre>
+        <p>Le fichier view généré inclut déjà `ViewControl` au début, comprend les inclusions de head/header/footer, et les liens CSS/JS sont connectés avec le système de cache-busting.</p>
+    </section>
+
+    <!-- make:api -->
+    <section id="cli-api">
+        <h2><code>make:api</code> <span class="tag b-cli">Commande CLI</span></h2>
+        <p>Crée un fichier endpoint API en sélectionnant l'un des deux modèles disponibles. Dans chaque nouveau fichier API, la variable <code class="ic">$allowedMethods</code> et l'inclusion de <code class="ic">ApiControl.php</code> sont déjà préparées.</p>
+
+        <div class="card">
+            <h3><span class="badge b-api">standart</span> — API à Action Unique</h3>
+            <p>Pour les endpoints qui effectuent une seule tâche (connexion, envoi, suppression). La logique métier y est écrite directement.</p>
+            <pre><code>artiframe&gt; <span class="fn">make:api</span> <span class="st">standart</span> <span class="st">api/auth/connexion.php</span></code></pre>
+            <pre><code><span class="kw">&lt;?php</span>
+<span class="var">$allowedMethods</span> = [<span class="st">'POST'</span>]; <span class="cm">// Accepte uniquement POST</span>
+<span class="fn">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/../app/ApiControl.php'</span>;
+
+<span class="kw">use</span> Bin\SystemMethod;
+
+<span class="cm">// Logique métier ici...</span>
+<span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'success'</span>], <span class="nu">200</span>);</code></pre>
+        </div>
+
+        <div class="card">
+            <h3><span class="badge b-api">switch-case</span> — API Multi-Actions</h3>
+            <p>Une structure qui gère les opérations CRUD pour un module dans un seul endpoint. L'opération à effectuer est déterminée par le paramètre <code class="ic">action</code>.</p>
+            <pre><code>artiframe&gt; <span class="fn">make:api</span> <span class="st">switch-case</span> <span class="st">api/utilisateur/gerer.php</span></code></pre>
+            <pre><code><span class="kw">&lt;?php</span>
+<span class="var">$allowedMethods</span> = [<span class="st">'POST'</span>];
+<span class="fn">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/../app/ApiControl.php'</span>;
+
+<span class="kw">use</span> Bin\SystemMethod;
+
+<span class="var">$action</span> = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'action'</span>] ?? <span class="st">''</span>);
+
+<span class="kw">switch</span> (<span class="var">$action</span>) {
+    <span class="kw">case</span> <span class="st">'create'</span>:
+        <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'success'</span>, <span class="st">'message'</span> =&gt; <span class="st">'Créé.'</span>], <span class="nu">200</span>);
+        <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="st">'update'</span>:
+        <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'success'</span>, <span class="st">'message'</span> =&gt; <span class="st">'Mis à jour.'</span>], <span class="nu">200</span>);
+        <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="st">'delete'</span>:
+        <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'success'</span>, <span class="st">'message'</span> =&gt; <span class="st">'Supprimé.'</span>], <span class="nu">200</span>);
+        <span class="kw">break</span>;
+    <span class="kw">default</span>:
+        <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'error'</span>, <span class="st">'message'</span> =&gt; <span class="st">'Action non valide.'</span>], <span class="nu">400</span>);
+}</code></pre>
+        </div>
+    </section>
+
+    <!-- make:class -->
+    <section id="cli-class">
+        <h2><code>make:class</code> <span class="tag b-cli">Commande CLI</span></h2>
+        <p>Crée un nouveau fichier de classe PHP avec son espace de noms (namespace) et son modèle de classe déjà préparés.</p>
+        <pre><code>artiframe&gt; <span class="fn">make:class</span> <span class="st">classes/EmailService.php</span></code></pre>
+    </section>
+
+    <!-- version -->
+    <section id="cli-version">
+        <h2><code>version</code> <span class="tag b-cli">Commande CLI</span></h2>
+        <p>Met à jour le numéro de version dans <code class="ic">config/app-version.php</code> selon les règles du versionnage sémantique (SemVer). Format de version : <strong>MAJOR.MINOR.PATCH</strong></p>
+
+        <table class="sig-table">
+            <thead>
+                <tr><th>Commande</th><th>Description</th><th>Exemple</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>version upgrade patch</td><td>Correction de bogue, amélioration mineure</td><td>1.2.3 → 1.2.4</td></tr>
+                <tr><td>version upgrade minor</td><td>Nouvelle fonctionnalité rétrocompatible</td><td>1.2.3 → 1.3.0</td></tr>
+                <tr><td>version upgrade major</td><td>Changement majeur (rupture de compatibilité)</td><td>1.2.3 → 2.0.0</td></tr>
+                <tr><td>version downgrade patch</td><td>Annuler le dernier patch</td><td>1.2.4 → 1.2.3</td></tr>
+                <tr><td>version downgrade minor</td><td>Annuler la dernière version mineure</td><td>1.3.0 → 1.2.0</td></tr>
+                <tr><td>version downgrade major</td><td>Annuler la dernière version majeure</td><td>2.0.0 → 1.0.0</td></tr>
+            </tbody>
+        </table>
+
+        <pre><code>artiframe&gt; <span class="fn">version</span> upgrade minor
+<span class="cm">✔  La version a été mise à jour de 1.2.0 → 1.3.0.</span></code></pre>
+    </section>
+
+    <!-- ====== VIEW HELPERS ====== -->
+    <section id="vh-display">
+        <h2>View Helpers — <code>display()</code> <span class="tag b-view">ViewMethod</span></h2>
+        <p>Applique une <strong>protection XSS obligatoire</strong> lors de l'impression de données provenant de la base de données ou de la saisie utilisateur sur le DOM. Au lieu de lancer une erreur sur des valeurs nulles ou vides, elle renvoie une valeur par défaut.</p>
+        <span class="ret">string display(mixed $data, string $default = '')</span>
+        <div class="alert a-info" style="margin-top: 10px; margin-bottom: 24px; padding: 12px 20px;">
+            <strong>💡 Astuce : Utilisation de <code>$default</code></strong><br>
+            Le deuxième paramètre (<code>$default</code>) est le texte de secours à afficher lorsque les données provenant de la base de données sont vides (null, false, chaîne vide). Par exemple, si vous utilisez <code>display($nom, 'Anonyme')</code> pour un utilisateur dont le nom n'a pas été saisi, votre page présentera un contenu significatif au lieu de vilains espaces vides.
+        </div>
+        <pre><code><span class="cm">&lt;!-- ❌ Non sécurisé — crée une vulnérabilité XSS --&gt;</span>
+&lt;h1&gt;&lt;?= <span class="var">$user</span>[<span class="st">'nom'</span>] ?&gt;&lt;/h1&gt;
+
+<span class="cm">&lt;!-- ✅ Utilisation sécurisée d'ArtiFrame --&gt;</span>
+&lt;h1&gt;&lt;?= <span class="fn">display</span>(<span class="var">$user</span>[<span class="st">'nom'</span>], <span class="st">'Utilisateur Anonyme'</span>) ?&gt;&lt;/h1&gt;</code></pre>
+    </section>
+
+    <section id="vh-escapeurl">
+        <h2>View Helpers — <code>escapeUrl()</code> <span class="tag b-view">ViewMethod</span></h2>
+        <p>Utilisé lors de l'impression des liens reçus des utilisateurs (par exemple, les sites Web de profil) dans des balises <code>&lt;a href="..."&gt;</code> ou <code>&lt;img src="..."&gt;</code>. Il neutralise les charges utiles dangereuses comme <code>javascript:alert(1)</code> (XSS stocké), empêchant l'exécution de code via le lien.</p>
+        <span class="ret">string escapeUrl(string $url)</span>
+        <pre><code><span class="cm">&lt;!-- ❌ Non sécurisé — le code JS peut fuiter via l'URL --&gt;</span>
+&lt;a href="&lt;?= <span class="var">$user</span>[<span class="st">'website'</span>] ?&gt;"&gt;Visiter le Site&lt;/a&gt;
+
+<span class="cm">&lt;!-- ✅ Utilisation sécurisée d'ArtiFrame --&gt;</span>
+&lt;a href="&lt;?= <span class="fn">escapeUrl</span>(<span class="var">$user</span>[<span class="st">'website'</span>]) ?&gt;"&gt;Visiter le Site&lt;/a&gt;</code></pre>
+    </section>
+
+    <section id="vh-csrf">
+        <h2>View Helpers — <code>csrfField()</code> <span class="tag b-view">ViewMethod</span></h2>
+        <p>Ajoute un champ de jeton caché aux formulaires HTML pour les protéger contre les attaques CSRF. <strong>Son utilisation est obligatoire sur chaque page contenant un formulaire POST.</strong></p>
+        <span class="ret">string csrfField()</span>
+        <pre><code>&lt;form action="/api/sauvegarder.php" method="POST"&gt;
+    &lt;?= <span class="fn">csrfField</span>() ?&gt;   <span class="cm">&lt;!-- Obligatoire pour la sécurité --&gt;</span>
+    &lt;input type="text" name="nom"&gt;
+    &lt;button type="submit" data-js="save-btn"&gt;Sauvegarder&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+    </section>
+
+    <section id="vh-dates">
+        <h2>View Helpers — Fonctions de Date <span class="tag b-view">ViewMethod</span></h2>
+        <p>Traite les chaînes de date au format <code class="ic">Y-m-d H:i:s</code> provenant de la base de données ou les valeurs timestamp UNIX. Toutes les sorties textuelles sont localisées selon la langue (<code class="ic">tr</code>, <code class="ic">en</code>, <code class="ic">de</code>, <code class="ic">fr</code>, <code class="ic">es</code>).</p>
+
+        <table class="sig-table">
+            <thead><tr><th>Fonction</th><th>Exemple de Sortie</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr><td>day($date)</td><td>24</td><td>Jour uniquement</td></tr>
+                <tr><td>month($date)</td><td>07</td><td>Mois (chiffre) uniquement</td></tr>
+                <tr><td>year($date)</td><td>2026</td><td>Année</td></tr>
+                <tr><td>timeOnly($date)</td><td>14:30</td><td>Heure:Minute</td></tr>
+                <tr><td>fulldate($date)</td><td>24.07.2026</td><td>Date complète</td></tr>
+                <tr><td>formatDate($date, $format)</td><td>24.07.2026 14:30</td><td>Format personnalisé</td></tr>
+                <tr><td>monthName($date, $lang)</td><td>Juillet / July / Juli</td><td>Nom du mois (selon la langue)</td></tr>
+                <tr><td>fulldateName($date, $lang)</td><td>24 Juillet 2026 / July 24, 2026</td><td>Date complète (avec nom du mois, selon la langue)</td></tr>
+                <tr><td>timeAgo($date, $lang)</td><td>il y a 5 minutes / 5 minutes ago</td><td>Style réseaux sociaux (selon la langue)</td></tr>
+            </tbody>
+        </table>
+
+        <div class="alert a-info" style="margin-top: 0; margin-bottom: 24px;">
+            <strong>💡 Comprendre les Paramètres : <code>$format</code> et <code>$lang</code></strong>
+            <ul style="margin-top: 10px; margin-bottom: 0;">
+                <li style="margin-bottom: 8px;"><strong><code>$format</code> (Format) :</strong> Utilisé uniquement avec la fonction <code>formatDate()</code>. Accepte les lettres de date standards de PHP. (Par exemple : <code>'d/m/Y'</code> ➔ 24/07/2026, ou <code>'H:i'</code> ➔ 15:30). Vous permet de créer votre propre modèle de date lorsque les fonctions prêtes à l'emploi (day, year, etc.) sont insuffisantes.</li>
+                <li style="margin-bottom: 0;"><strong><code>$lang</code> (Langue) :</strong> Utilisé dans les fonctions dont la sortie contient du texte (nom du mois, mot "il y a"). Si vous laissez ce paramètre vide, le système fonctionne <strong>par défaut en <code>'en'</code> (Anglais)</strong>. Si vous créez un projet multilingue, il vous suffit de saisir le code de langue (<code>tr, en, de, fr, es</code>) dans le deuxième paramètre. (Ex : <code>timeAgo($date, 'fr')</code> ➔ il y a 5 minutes)</li>
+            </ul>
+        </div>
+
+        <pre><code><span class="cm">&lt;!-- Supposons que nous ayons un timestamp UNIX obtenu via time() --&gt;</span>
+<span class="kw">&lt;?php</span> <span class="var">$date</span> = <span class="fn">time</span>(); <span class="kw">?&gt;</span>
+
+<span class="cm">&lt;!-- Date complète selon la langue --&gt;</span>
+&lt;span&gt;&lt;?= <span class="fn">fulldateName</span>(<span class="var">$date</span>, <span class="st">'fr'</span>) ?&gt;&lt;/span&gt;
+<span class="cm">&lt;!-- Sortie : 24 Juillet 2026 --&gt;</span>
+
+<span class="cm">&lt;!-- Affichage de l'heure style réseaux sociaux --&gt;</span>
+&lt;span&gt;&lt;?= <span class="fn">timeAgo</span>(<span class="var">$date</span>, <span class="st">'en'</span>) ?&gt;&lt;/span&gt;
+<span class="cm">&lt;!-- Sortie : 5 minutes ago --&gt;</span>
+
+&lt;span&gt;&lt;?= <span class="fn">timeAgo</span>(<span class="var">$date</span>, <span class="st">'fr'</span>) ?&gt;&lt;/span&gt;
+<span class="cm">&lt;!-- Sortie : il y a 5 minutes --&gt;</span></code></pre>
+    </section>
+
+    <section id="vh-format">
+        <h2>View Helpers — Formatage de Texte <span class="tag b-view">ViewMethod</span></h2>
+
+        <div class="card">
+            <h3><code>truncate($text, $length, $append)</code></h3>
+            <span class="ret">string truncate(string $text, int $length = 100, string $append = '...')</span>
+            <p>Tronque les textes longs (comme les résumés de blog) à la limite de caractères souhaitée sans couper le dernier mot et ajoute le suffixe spécifié à la fin.</p>
+            <pre><code>&lt;p&gt;&lt;?= <span class="fn">truncate</span>(<span class="var">$article</span>[<span class="st">'contenu'</span>], <span class="nu">160</span>, <span class="st">'...'</span>) ?&gt;&lt;/p&gt;</code></pre>
+        </div>
+    </section>
+
+    <section id="vh-money">
+        <h2>View Helpers — <code>money()</code> <span class="tag b-view">ViewMethod</span></h2>
+        <p>Formate le montant avec le symbole de la devise. Le code de la devise (ISO) détermine automatiquement l'emplacement du symbole. La devise par défaut est <code class="ic">usd</code>.</p>
+        <span class="ret">string money(float $amount, string $currency = 'usd')</span>
+
+        <table class="sig-table">
+            <thead><tr><th>Code</th><th>Sortie</th><th>Devise</th></tr></thead>
+            <tbody>
+                <tr><td>usd</td><td>$1.250,00</td><td>Dollar Américain</td></tr>
+                <tr><td>eur</td><td>1.250,00 €</td><td>Euro</td></tr>
+                <tr><td>try / tl</td><td>1.250,00 ₺</td><td>Livre Turque</td></tr>
+                <tr><td>gbp</td><td>£1.250,00</td><td>Livre Sterling</td></tr>
+                <tr><td>jpy</td><td>1.250,00 ¥</td><td>Yen Japonais</td></tr>
+                <tr><td>inr</td><td>1.250,00 ₹</td><td>Roupie Indienne</td></tr>
+                <tr><td>rub</td><td>1.250,00 ₽</td><td>Rouble Russe</td></tr>
+                <tr><td>krw</td><td>1.250,00 ₩</td><td>Won Sud-Coréen</td></tr>
+                <tr><td>brl</td><td>R$1.250,00</td><td>Réal Brésilien</td></tr>
+                <tr><td>aed</td><td>1.250,00 د.إ</td><td>Dirham des EAU</td></tr>
+            </tbody>
+        </table>
+
+        <pre><code>&lt;span&gt;&lt;?= <span class="fn">money</span>(<span class="var">$produit</span>[<span class="st">'prix'</span>], <span class="st">'eur'</span>) ?&gt;&lt;/span&gt;
+<span class="cm">&lt;!-- Sortie : 1.250,00 € --&gt;</span>
+
+&lt;span&gt;&lt;?= <span class="fn">money</span>(<span class="var">$produit</span>[<span class="st">'prix'</span>], <span class="st">'usd'</span>) ?&gt;&lt;/span&gt;
+<span class="cm">&lt;!-- Sortie : $1.250,00 --&gt;</span></code></pre>
+    </section>
+
+    <!-- ====== SYSTEM HELPERS ====== -->
+    <section id="sh-json">
+        <h2>System Helpers — <code>jsonResponse()</code> <span class="tag b-api">SystemMethod</span></h2>
+        <p>Définit l'en-tête JSON, fournit le code d'état HTTP et imprime la sortie de manière sécurisée avec json_encode, puis termine le script. <strong>Toutes les réponses de l'API doivent être données via cette fonction.</strong></p>
+        <span class="ret">void jsonResponse(array $data, int $statusCode = 200)</span>
+        <pre><code><span class="cm">// Réponse réussie</span>
+<span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'success'</span>, <span class="st">'data'</span> =&gt; <span class="var">$utilisateur</span>], <span class="nu">200</span>);
+
+<span class="cm">// Réponse d'erreur</span>
+<span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'error'</span>, <span class="st">'message'</span> =&gt; <span class="st">'Accès non autorisé.'</span>], <span class="nu">401</span>);</code></pre>
+    </section>
+
+    <section id="sh-csrf">
+        <h2>System Helpers — <code>verifyCsrf()</code> <span class="tag b-api">SystemMethod</span></h2>
+        <p>Vérifie que la requête POST entrante provient d'un formulaire légitime. Renvoie false si <code class="ic">csrfField()</code> n'a pas été ajouté au formulaire ou si le jeton n'est pas valide.</p>
+        <span class="ret">bool verifyCsrf(string $token)</span>
+        <pre><code><span class="kw">if</span> (!<span class="fn">verifyCsrf</span>(<span class="var">$_POST</span>[<span class="st">'csrf_token'</span>] ?? <span class="st">''</span>)) {
+    <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'error'</span>, <span class="st">'message'</span> =&gt; <span class="st">'Jeton CSRF invalide.'</span>], <span class="nu">403</span>);
+}</code></pre>
+    </section>
+
+    <section id="sh-sanitize">
+        <h2>System Helpers — Fonctions Sanitize (Nettoyage) <span class="tag b-api">SystemMethod</span></h2>
+
+        <table class="sig-table">
+            <thead><tr><th>Fonction</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr><td>sanitizeInt($value)</td><td>Supprime toutes les lettres, symboles et virgules, en ne laissant <strong>que les chiffres entiers</strong>. Utilisé pour les ID ou les limites.</td></tr>
+                <tr><td>sanitizeFloat($value)</td><td>Nettoie tout sauf les nombres décimaux. Utilisé pour les montants monétaires ou les métriques.</td></tr>
+                <tr><td>sanitizeString($value)</td><td>Pour empêcher les attaques XSS et similaires, <strong>détruit toutes les balises HTML et PHP (<code>&lt;script&gt;</code>, <code>&lt;iframe&gt;</code>, etc.)</strong>. Laisse un texte brut sécurisé.</td></tr>
+                <tr><td>sanitizeEmail($email)</td><td>Filtre tous les caractères invalides et dangereux qui ne correspondent pas au format de l'e-mail.</td></tr>
+            </tbody>
+        </table>
+
+        <pre><code><span class="var">$id</span>    = <span class="fn">sanitizeInt</span>(<span class="var">$_POST</span>[<span class="st">'id'</span>] ?? <span class="nu">0</span>);
+<span class="var">$nom</span>   = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'nom'</span>] ?? <span class="st">''</span>);
+<span class="var">$email</span> = <span class="fn">sanitizeEmail</span>(<span class="var">$_POST</span>[<span class="st">'email'</span>] ?? <span class="st">''</span>);</code></pre>
+    </section>
+
+    <section id="sh-request">
+        <h2>System Helpers — HTTP & Requête <span class="tag b-api">SystemMethod</span></h2>
+
+        <div class="card">
+            <h3><code>getIP()</code></h3>
+            <span class="ret">string getIP()</span>
+            <p>Obtient la véritable adresse IP de l'utilisateur, même derrière Cloudflare ou un Proxy.</p>
+        </div>
+        <div class="card">
+            <h3><code>getMethod()</code></h3>
+            <span class="ret">string getMethod()</span>
+            <p>Renvoie la méthode de la requête HTTP active (GET, POST, PUT, DELETE).</p>
+        </div>
+    </section>
+
+    <section id="sh-security">
+        <h2>System Helpers — Sécurité <span class="tag b-api">SystemMethod</span></h2>
+
+        <div class="card">
+            <h3><code>generateToken($length)</code></h3>
+            <span class="ret">string generateToken(int $length = 32)</span>
+            <p>Crée une chaîne hexadécimale cryptographiquement sécurisée. Utilisé pour les réinitialisations de mot de passe ou les jetons d'accès API.</p>
+        </div>
+    </section>
+
+    <!-- ====== API GÜVENLİĞİ ====== -->
+    <section id="api-methods">
+        <h2>API — Contrôle de Méthode HTTP <span class="tag b-api">ApiControl</span></h2>
+        <p>Les fichiers d'API ArtiFrame n'autorisent aucune requête en dehors du tableau <code class="ic">$allowedMethods</code>. Si un pirate tente d'envoyer un POST à une API GET, la demande est bloquée avant même que le fichier ne soit lu, et une erreur HTTP 405 (Method Not Allowed) est renvoyée.</p>
+        <div class="alert a-success">
+            <strong>✅ Pratique Saine :</strong> Vous devez définir le tableau <code>$allowedMethods</code> tout en haut de votre page API (avant require).
+        </div>
+    </section>
+
+    <section id="api-cors">
+        <h2>API — Politique CORS <span class="tag b-api">ApiControl</span></h2>
+        <p>ArtiFrame est livré configuré par défaut pour n'accepter que les requêtes de la même origine (Same-Origin). Si vous écrivez une API pour une application mobile (ex: React Native) ou un frontend distant, vous pouvez facilement gérer cela avec la variable <code class="ic">$enableCors</code>.</p>
+        <pre><code><span class="kw">&lt;?php</span>
+<span class="var">$allowedMethods</span> = [<span class="st">'POST'</span>];
+<span class="var">$enableCors</span>     = <span class="nu">true</span>; <span class="cm">// Autorise l'accès de n'importe où</span>
+
+<span class="fn">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/../app/ApiControl.php'</span>;</code></pre>
+    </section>
+
+    <section id="api-rate">
+        <h2>API — Limitation de Débit (Rate Limiting)</h2>
+        <p>La protection contre les requêtes excessives n'est pas encore activée par défaut, mais une architecture qui limite l'adresse IP pour empêcher les requêtes par force brute ou DoS au niveau du contrôleur d'API est en cours de développement (à venir dans la version 1.1).</p>
+    </section>
+
+    <!-- ====== PRATİK ====== -->
+    <section id="workflow">
+        <h2>Flux de Travail Complet</h2>
+        <p>Voyons à quoi ressemble un flux de travail typique dans ArtiFrame. Supposons que nous voulions créer une page de connexion.</p>
+
+        <ul class="steps">
+            <li>
+                <div>
+                    <strong>Créer la page (View)</strong>
+                    <p>Ouvrez la CLI et tapez <code>make:view auth/connexion.php</code>. La page HTML, le fichier CSS et le fichier JS sont générés.</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>Écrire l'interface</strong>
+                    <p>Dans <code>public/auth/connexion.php</code>, créez votre balise form. Ajoutez l'action <code>action="/api/auth/login.php"</code>, <code>method="POST"</code>, et placez <code>&lt;?= csrfField() ?&gt;</code> à l'intérieur. Ajoutez la classe <code>data-js="login-btn"</code> à votre bouton d'envoi.</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>Créer l'API</strong>
+                    <p>Ouvrez la CLI et tapez <code>make:api standart api/auth/login.php</code>. Dans le fichier créé, assurez-vous que <code>$allowedMethods = ['POST'];</code> est défini.</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>Gérer avec JavaScript (Optionnel)</strong>
+                    <p>Dans <code>public/assets/js/auth/connexion.js</code>, écoutez le bouton en utilisant <code>[data-js="login-btn"]</code>. Effectuez la requête AJAX vers l'API. (Si vous n'utilisez pas JS, le formulaire fonctionnera quand même et redirigera classiquement via POST).</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>Nettoyer et Répondre</strong>
+                    <p>Dans votre fichier API, nettoyez les données POST entrantes : <code>$email = sanitizeEmail($_POST['email']);</code>. Interrogez la base de données. Si la vérification du mot de passe réussit, démarrez la session utilisateur et renvoyez le succès avec <code>jsonResponse()</code>.</p>
+                </div>
+            </li>
+        </ul>
+        
+        <div class="alert a-success" style="margin-top: 40px;">
+            <strong>🎉 Prêt !</strong> Vous savez maintenant comment gérer en toute sécurité l'ensemble du flux de données avec ArtiFrame. Bonne création avec un code fluide et sans dépendances !
+        </div>
+    </section>
+
+</main>
+
+</body>
+</html>

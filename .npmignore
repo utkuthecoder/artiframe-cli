@@ -1,0 +1,15 @@
+# Development / CI files — not needed in the published package
+node_modules/
+.git/
+.github/
+.gitignore
+
+# Test & dev scripts
+scripts/postinstall.js
+
+# Any editor or OS artifacts
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+public

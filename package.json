@@ -1,0 +1,50 @@
+{
+  "name": "@artilingo/artiframe-cli",
+  "version": "1.0.8",
+  "description": "ArtiFrame — Zero-dependency native PHP framework with a powerful multilingual CLI. Scaffold projects, generate views, APIs and classes instantly.",
+  "main": "bin/artiframe.js",
+  "bin": {
+    "artiframe": "bin/artiframe.js"
+  },
+  "scripts": {
+    "postinstall": "node scripts/postinstall.js"
+  },
+  "files": [
+    "README.md",
+    "bin/artiframe.js",
+    "bin/artiframe.php",
+    "src/",
+    "core-stubs/",
+    "assets/",
+    "scripts/",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/artilingo/artiframe.git"
+  },
+  "homepage": "https://artiframe.org",
+  "bugs": {
+    "url": "https://github.com/artilingo/artiframe/issues"
+  },
+  "keywords": [
+    "php",
+    "framework",
+    "cli",
+    "artilingo",
+    "scaffold",
+    "native-php",
+    "zero-dependency",
+    "multilingual",
+    "mvc",
+    "api"
+  ],
+  "author": {
+    "name": "Artilingo",
+    "url": "https://artilingo.com"
+  },
+  "license": "AGPL-3.0",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

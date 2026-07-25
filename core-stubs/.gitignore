@@ -1,0 +1,21 @@
+# Environment & Sensitive Files
+.env
+
+# Dependency Managers & Built Binaries
+/vendor/
+composer.lock
+
+# AI Context & IDE Directories
+/.agents/
+.idea/
+.vscode/
+
+# Logs & Temporary Files
+*.log
+/tmp/
+
+# Framework Customizable Stubs
+/bin/stubs/
+
+# Documentation
+kilavuz.html

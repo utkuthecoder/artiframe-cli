@@ -1,0 +1,71 @@
+<?php
+namespace ArtiFrame\Cli\Commands;
+
+use ArtiFrame\Cli\Services\Translator;
+use ArtiFrame\Cli\Services\Safeguard;
+
+class MakeApiCommand
+{
+    private Translator $translator;
+    private Safeguard  $safeguard;
+
+    public function __construct(Translator $translator)
+    {
+        $this->translator = $translator;
+        $this->safeguard  = new Safeguard($translator);
+    }
+
+    public function execute(array $args): void
+    {
+        $type   = $args[0] ?? null;
+        $target = $args[1] ?? null;
+
+        if (!$type || !in_array($type, ['standart', 'switch-case'])) {
+            echo "❌ " . $this->translator->get('ERROR_API_TYPE') . PHP_EOL;
+            exit(1);
+        }
+
+        if (!$target) {
+            echo "❌ " . $this->translator->get('ERROR_API_PATH_REQUIRED') . PHP_EOL;
+            exit(1);
+        }
+
+        // Normalize path
+        $target = ltrim(str_replace('\\', '/', $target), '/');
+
+        // Ensure .php extension
+        if (!str_ends_with($target, '.php')) {
+            $target .= '.php';
+        }
+
+        $projectRoot = getcwd();
+        $apiPath     = $projectRoot . '/public/api/' . $type . '/' . $target;
+
+        if (!$this->safeguard->checkTarget($apiPath)) {
+            exit(1);
+        }
+
+        $stubName = 'api-' . $type . '.stub';
+        $stubPath = $projectRoot . '/bin/stubs/' . $stubName;
+
+        if (!file_exists($stubPath)) {
+            echo "❌ " . $this->translator->get('ERROR_STUB_NOT_FOUND', ['path' => $stubPath]) . PHP_EOL;
+            exit(1);
+        }
+
+        // Generate File
+        $this->ensureDirectoryExists(dirname($apiPath));
+
+        $content = file_get_contents($stubPath);
+        file_put_contents($apiPath, $content);
+
+        echo $this->translator->get('SUCCESS_API', ['type' => $type, 'path' => $target]) . PHP_EOL;
+    }
+
+    private function ensureDirectoryExists(string $path): void
+    {
+        if (!is_dir($path)) {
+            mkdir($path, 0755, true);
+        }
+    }
+}
