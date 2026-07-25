@@ -282,7 +282,7 @@
         <div class="grid-2">
             <div class="card highlight">
                 <h3>Zero Overhead</h3>
-                <p>Composer paketlerine, framework çekirdeğine veya 3. taraf kütüphanelere sıfır bağımlılık. Her satır kod sizindir; şişirmeden, gereksiz soyutlama katmanlarından arınmış.</p>
+                <p>Üçüncü parti Composer paketlerine veya kütüphanelere sıfır bağımlılık. Composer sadece projenin kendi PSR-4 otomatik sınıf yükleme (autoloading) mekanizmasını çalıştırmak için kullanılır. Her satır kod sizindir; gereksiz soyutlama katmanlarından arınmış.</p>
             </div>
             <div class="card highlight">
                 <h3>Güvenlik Önce Gelir</h3>
@@ -568,8 +568,12 @@ proje-adi/
     <!-- make:class -->
     <section id="cli-class">
         <h2><code>make:class</code> <span class="tag b-cli">CLI Komutu</span></h2>
-        <p>Namespace ve sınıf boilerplate'i hazır gelecek şekilde yeni bir PHP sınıf dosyası oluşturur.</p>
-        <pre><code>artiframe&gt; <span class="fn">make:class</span> <span class="st">classes/EmailService.php</span></code></pre>
+        <p>Namespace ve sınıf boilerplate'i hazır gelecek şekilde yeni bir PHP sınıf dosyası oluşturur. Sınıf yoluna göre namespace otomatik belirlenir. Eğer <strong>app/</strong> ve <strong>src/</strong> dışında (örneğin <strong>private/</strong>) bir dizin kullanılırsa, CLI aracı arka planda <code>composer dump-autoload</code> betiğini otomatik olarak yürütür.</p>
+        <pre><code>artiframe&gt; <span class="fn">make:class</span> <span class="st">src/Service/EmailService.php</span></code></pre>
+        <p>Eğer sınıfın dizini belirtilmezse komut hata döndürür:</p>
+        <pre><code>artiframe&gt; <span class="fn">make:class</span>
+❌ Hata: Sınıfın oluşturulacağı dizin belirtilmeli! (örn: /app veya /src)
+Example: /src/Service/PaymentService</code></pre>
     </section>
 
     <!-- version -->

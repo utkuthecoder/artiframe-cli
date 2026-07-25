@@ -251,7 +251,7 @@ class App
         // make:class
         echo "  " . $g . "make:class" . $r . " " . $y . "<path>" . $r . PHP_EOL;
         echo "  " . $d . "│" . $r . "   " . $t->get('HELP_MAKECLASS_DESC') . PHP_EOL;
-        echo "  " . $d . "└── " . $r . "Example: " . $lg . "make:class classes/UserManager.php" . $r . PHP_EOL;
+        echo "  " . $d . "└── " . $r . "Example: " . $lg . "make:class app/Services/UserManager.php" . $r . PHP_EOL;
         echo PHP_EOL;
 
         // cli v / cli version — CLI self-version

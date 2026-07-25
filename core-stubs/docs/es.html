@@ -569,7 +569,11 @@ nombre-proyecto/
     <section id="cli-class">
         <h2><code>make:class</code> <span class="tag b-cli">Comando CLI</span></h2>
         <p>Crea un nuevo archivo de clase PHP con el namespace y la estructura básica (boilerplate) preparados.</p>
-        <pre><code>artiframe&gt; <span class="fn">make:class</span> <span class="st">classes/EmailService.php</span></code></pre>
+        <pre><code>artiframe&gt; <span class="fn">make:class</span> <span class="st">src/Service/EmailService.php</span></code></pre>
+        <p>Si no se especifica el directorio de la clase, el comando devolverá un error:</p>
+        <pre><code>artiframe&gt; <span class="fn">make:class</span>
+❌ Error: ¡Se debe especificar el directorio para la clase! (ej. /app o /src)
+Example: /src/Service/PaymentService</code></pre>
     </section>
 
     <!-- version -->

@@ -22,12 +22,12 @@ class MakeApiCommand
 
         if (!$type || !in_array($type, ['standart', 'switch-case'])) {
             echo "❌ " . $this->translator->get('ERROR_API_TYPE') . PHP_EOL;
-            exit(1);
+            return;
         }
 
         if (!$target) {
             echo "❌ " . $this->translator->get('ERROR_API_PATH_REQUIRED') . PHP_EOL;
-            exit(1);
+            return;
         }
 
         // Normalize path
@@ -42,7 +42,7 @@ class MakeApiCommand
         $apiPath     = $projectRoot . '/public/api/' . $type . '/' . $target;
 
         if (!$this->safeguard->checkTarget($apiPath)) {
-            exit(1);
+            return;
         }
 
         $stubName = 'api-' . $type . '.stub';
@@ -50,7 +50,7 @@ class MakeApiCommand
 
         if (!file_exists($stubPath)) {
             echo "❌ " . $this->translator->get('ERROR_STUB_NOT_FOUND', ['path' => $stubPath]) . PHP_EOL;
-            exit(1);
+            return;
         }
 
         // Generate File

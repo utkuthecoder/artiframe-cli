@@ -22,17 +22,13 @@ class MakeClassCommand
         if (!$target || strpos($target, '/') === false && strpos($target, '\\') === false) {
             echo "❌ " . $this->translator->get('DIR_REQUIRED_ERROR') . PHP_EOL;
             echo "Example: /src/Service/PaymentService" . PHP_EOL;
-            exit(1);
+            return;
         }
 
         // Normalize path
         $target = ltrim(str_replace('\\', '/', $target), '/');
 
-        // Allowed roots
-        if (!str_starts_with($target, 'app/') && !str_starts_with($target, 'src/')) {
-            echo "❌ " . $this->translator->get('ERROR_CLASS_ROOT') . PHP_EOL;
-            exit(1);
-        }
+        $isCustomRoot = !str_starts_with($target, 'app/') && !str_starts_with($target, 'src/');
 
         // Ensure .php extension
         if (!str_ends_with($target, '.php')) {
@@ -43,13 +39,13 @@ class MakeClassCommand
         $classPath   = $projectRoot . '/' . $target;
 
         if (!$this->safeguard->checkTarget($classPath)) {
-            exit(1);
+            return;
         }
 
         $stubPath = $projectRoot . '/bin/stubs/class.stub';
         if (!file_exists($stubPath)) {
             echo "❌ " . $this->translator->get('ERROR_STUB_NOT_FOUND', ['path' => $stubPath]) . PHP_EOL;
-            exit(1);
+            return;
         }
 
         // Determine Namespace and Class Name
@@ -77,6 +73,10 @@ class MakeClassCommand
 
         echo $this->translator->get('SUCCESS_CLASS', ['path' => $target]) . PHP_EOL;
         echo $this->translator->get('NAMESPACE_LABEL') . ' ' . $namespace . PHP_EOL;
+
+        if ($isCustomRoot) {
+            shell_exec('composer dump-autoload -q');
+        }
     }
 
     private function ensureDirectoryExists(string $path): void

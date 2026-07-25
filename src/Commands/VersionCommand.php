@@ -19,12 +19,12 @@ class VersionCommand
 
         if (!$action || !in_array($action, ['upgrade', 'downgrade'])) {
             echo "❌ " . $this->translator->get('ERROR_VERSION_ACTION') . PHP_EOL;
-            exit(1);
+            return;
         }
 
         if (!$level || !in_array($level, ['major', 'minor', 'patch'])) {
             echo "❌ " . $this->translator->get('ERROR_VERSION_LEVEL') . PHP_EOL;
-            exit(1);
+            return;
         }
 
         $projectRoot = getcwd();
@@ -32,7 +32,7 @@ class VersionCommand
 
         if (!file_exists($versionFile)) {
             echo "❌ " . $this->translator->get('ERROR_VERSION_FILE', ['path' => $versionFile]) . PHP_EOL;
-            exit(1);
+            return;
         }
 
         $content = file_get_contents($versionFile);
@@ -40,7 +40,7 @@ class VersionCommand
         // Match define('APP_VERSION', 'x.y.z');
         if (!preg_match('/define\(\'APP_VERSION\',\s*\'(\d+)\.(\d+)\.(\d+)\'\);/', $content, $matches)) {
             echo "❌ " . $this->translator->get('ERROR_VERSION_PARSE') . PHP_EOL;
-            exit(1);
+            return;
         }
 
         $major      = (int)$matches[1];

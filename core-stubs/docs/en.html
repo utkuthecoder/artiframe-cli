@@ -569,8 +569,12 @@ project-name/
     <!-- make:class -->
     <section id="cli-class">
         <h2><code>make:class</code> <span class="tag b-cli">CLI Command</span></h2>
-        <p>Creates a new PHP class file with namespace and class boilerplate ready.</p>
-        <pre><code>artiframe&gt; <span class="fn">make:class</span> <span class="st">classes/EmailService.php</span></code></pre>
+        <p>Creates a new PHP class file with namespace and boilerplate ready. The namespace is automatically generated based on the file path. If a directory other than <strong>app/</strong> and <strong>src/</strong> (e.g., <strong>private/</strong>) is used, the CLI will automatically run the <code>composer dump-autoload</code> script in the background.</p>
+        <pre><code>artiframe&gt; <span class="fn">make:class</span> <span class="st">src/Service/EmailService.php</span></code></pre>
+        <p>If the class directory is not specified, the command will return an error:</p>
+        <pre><code>artiframe&gt; <span class="fn">make:class</span>
+❌ Error: Directory for the class must be specified! (e.g. /app or /src)
+Example: /src/Service/PaymentService</code></pre>
     </section>
 
     <!-- version -->

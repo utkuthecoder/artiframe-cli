@@ -25,7 +25,7 @@ class NewProjectCommand
 
         if (!$targetPath) {
             echo $this->translator->get('DIR_REQUIRED_ERROR') . PHP_EOL;
-            exit(1);
+            return;
         }
 
         // 1. Dizin çözümleme
@@ -34,7 +34,7 @@ class NewProjectCommand
 
         // 2. Safeguard Kontrolü
         if (!$this->safeguard->checkTarget($targetDir)) {
-            exit(1);
+            return;
         }
 
         // 3. Composer Kontrolü
@@ -42,7 +42,7 @@ class NewProjectCommand
             echo PHP_EOL . "❌ " . $this->translator->get('COMPOSER_MISSING_TITLE') . PHP_EOL;
             echo str_repeat("-", 50) . PHP_EOL;
             echo $this->translator->get('COMPOSER_MISSING_BODY') . PHP_EOL;
-            exit(1);
+            return;
         }
 
         // ── Başlık Ekranı ────────────────────────────────────

@@ -21,7 +21,7 @@ class MakeViewCommand
 
         if (!$target) {
             echo "❌ " . $this->translator->get('ERROR_VIEW_PATH_REQUIRED') . PHP_EOL;
-            exit(1);
+            return;
         }
 
         // Normalize path
@@ -36,7 +36,7 @@ class MakeViewCommand
         $viewPath = $projectRoot . '/public/' . $target;
 
         if (!$this->safeguard->checkTarget($viewPath)) {
-            exit(1);
+            return;
         }
 
         // Determine hierarchy for assets
@@ -57,7 +57,7 @@ class MakeViewCommand
         if (!file_exists($stubPath)) {
             echo "❌ " . $this->translator->get('ERROR_STUB_NOT_FOUND', ['path' => $stubPath]) . PHP_EOL;
             echo $this->translator->get('ERROR_RUN_FROM_ROOT') . PHP_EOL;
-            exit(1);
+            return;
         }
 
         // Generate Files
