@@ -57,8 +57,22 @@ class NewProjectCommand
         echo PHP_EOL;
 
         // Soru sor: Package Name, Author, Homepage vb.
-        $defaultPackage = 'artiframe/' . strtolower($projectName);
-        $packageName    = $this->ask('Package name (e.g. vendor/project)', $defaultPackage);
+        $cleanProjectName = strtolower(preg_replace('/[^a-zA-Z0-9_-]/', '', $projectName));
+        if (empty($cleanProjectName)) $cleanProjectName = 'project';
+        $defaultPackage = 'artiframe/' . $cleanProjectName;
+
+        $packageName = '';
+        while (!preg_match('/^[a-z0-9]([_.-]?[a-z0-9]+)*\/[a-z0-9](([_.]|-{1,2})?[a-z0-9]+)*$/', $packageName)) {
+            $packageName = $this->ask('Package name (e.g. vendor/project)', $defaultPackage);
+            
+            if (strpos($packageName, '/') === false && trim($packageName) !== '') {
+                $packageName = 'artiframe/' . trim($packageName);
+            }
+
+            if (!preg_match('/^[a-z0-9]([_.-]?[a-z0-9]+)*\/[a-z0-9](([_.]|-{1,2})?[a-z0-9]+)*$/', $packageName)) {
+                echo "  ❌ " . $this->translator->get('INVALID_PACKAGE_NAME', ['default' => 'vendor/project']) . "\n";
+            }
+        }
         $description    = $this->ask('Description', 'ArtiFrame Core PHP Application');
         $authorName     = $this->ask('Author name', 'Artilingo');
         $authorHomepage = $this->ask('Author homepage', 'https://artilingo.com');
@@ -392,7 +406,7 @@ class NewProjectCommand
 
     private function createDynamicFiles(string $targetDir, string $packageName, string $description, string $authorName, string $authorHomepage, string $type, string $license): void
     {
-        $licenseHeader = "<?php\n/**\n * ArtiFrame Core Engine\n *\n * @package     ArtiFrame\n * @author      Artilingo\n * @license     AGPLv3 (Attribution-ShareAlike Required)\n * @link        https://artiframe.org\n *\n * NOTICE: This file is part of the ArtiFrame ecosystem.\n * Any derivative works or patches MUST retain this original copyright notice\n * and remain open-source under the AGPLv3 license.\n */\n";
+        $licenseHeader = "<?php\n/**\n * ArtiFrame Core Engine\n *\n * @package     ArtiFrame\n * @author      Artilingo\n * @license     AGPLv3 (Attribution-ShareAlike Required)\n * @link        https://artiframe.artilingo.com\n *\n * NOTICE: This file is part of the ArtiFrame ecosystem.\n * Any derivative works or patches MUST retain this original copyright notice\n * and remain open-source under the AGPLv3 license.\n */\n";
 
         $licenseLine = $license !== '' ? "\n  \"license\": \"$license\"," : "";
 
@@ -404,10 +418,7 @@ class NewProjectCommand
   "type": "$type",$licenseLine
   "require": {
     "php": ">=8.1",
-    "phpmailer/phpmailer": "^6.9",
-    "aws/aws-sdk-php": "^3.316",
-    "predis/predis": "^2.2",
-    "ramsey/uuid": "^4.7"
+    "predis/predis": "^2.2"
   },
   "autoload": {
     "psr-4": {
@@ -505,7 +516,7 @@ JSON;
  * @package     ArtiFrame
  * @author      Artilingo
  * @license     AGPLv3 (Attribution-ShareAlike Required)
- * @link        https://artiframe.org
+ * @link        https://artiframe.artilingo.com
  */
 
 namespace Src\Email;
@@ -571,7 +582,7 @@ EMAILPHP;
  * @package     ArtiFrame
  * @author      Artilingo
  * @license     AGPLv3 (Attribution-ShareAlike Required)
- * @link        https://artiframe.org
+ * @link        https://artiframe.artilingo.com
  */
 
 namespace Src\Service;
@@ -634,27 +645,82 @@ REDISPHP;
         // public/index.php — localized welcome page
         $lang    = $this->translator->getLang();
         $docFile = [
-            'tr' => ['file' => 'kilavuz.html',  'installed' => 'ArtiFrame Başarıyla Kuruldu!',        'guide' => 'Başlamak için'],
-            'en' => ['file' => 'guide.html',     'installed' => 'ArtiFrame Installed Successfully!',   'guide' => 'To get started, see'],
-            'de' => ['file' => 'handbuch.html',  'installed' => 'ArtiFrame Erfolgreich Installiert!',  'guide' => 'Für den Einstieg, siehe'],
-            'fr' => ['file' => 'guide_fr.html',  'installed' => 'ArtiFrame Installé avec Succès !',    'guide' => 'Pour commencer, consultez'],
-            'es' => ['file' => 'guia.html',       'installed' => '¡ArtiFrame Instalado Exitosamente!',  'guide' => 'Para comenzar, vea'],
+            'tr' => ['file' => 'kilavuz.html',  'installed' => 'Projeniz Başarıyla Oluşturuldu!',      'guide' => 'İlk adımlar için kılavuzu inceleyebilirsiniz:'],
+            'en' => ['file' => 'guide.html',     'installed' => 'Project Created Successfully!',        'guide' => 'Check out the guide for the first steps:'],
+            'de' => ['file' => 'handbuch.html',  'installed' => 'Projekt Erfolgreich Erstellt!',        'guide' => 'Für die ersten Schritte sehen Sie im Handbuch nach:'],
+            'fr' => ['file' => 'guide_fr.html',  'installed' => 'Projet Créé avec Succès !',            'guide' => 'Consultez le guide pour les premières étapes :'],
+            'es' => ['file' => 'guia.html',       'installed' => '¡Proyecto Creado Exitosamente!',      'guide' => 'Consulta la guía para los primeros pasos:'],
         ][$lang] ?? ['file' => 'guide.html', 'installed' => 'ArtiFrame Installed Successfully!', 'guide' => 'To get started, see'];
 
-        $indexContent = "<?php\nrequire_once __DIR__ . '/../app/ViewControl.php';\n?>\n"
+        $indexContent = "<?php\nrequire_once __DIR__ . '/../app/ViewControl.php';\n"
+            . "if (isset(\$_GET['guide'])) {\n"
+            . "    header('Content-Type: text/html; charset=utf-8');\n"
+            . "    readfile(__DIR__ . '/../{$docFile['file']}');\n"
+            . "    exit;\n"
+            . "}\n"
+            . "?>\n"
             . "<!DOCTYPE html>\n"
             . "<html lang=\"{$lang}\" data-theme=\"default\" data-mode=\"light\">\n"
             . "<head>\n"
             . "    <?php require_once __DIR__ . '/includes/head.php'; ?>\n"
             . "    <title>ArtiFrame | Welcome</title>\n"
+            . "    <style>\n"
+            . "        body {\n"
+            . "            margin: 0; padding: 0;\n"
+            . "            font-family: 'Inter', system-ui, -apple-system, sans-serif;\n"
+            . "            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);\n"
+            . "            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;\n"
+            . "        }\n"
+            . "        .card {\n"
+            . "            background: rgba(255, 255, 255, 0.7);\n"
+            . "            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);\n"
+            . "            border: 1px solid rgba(255,255,255,0.5); border-radius: 1.5rem;\n"
+            . "            padding: 3.5rem 4rem; text-align: center;\n"
+            . "            box-shadow: 0 20px 40px rgba(0,0,0,0.08);\n"
+            . "            max-width: 500px; animation: floatIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);\n"
+            . "            margin-bottom: 2rem;\n"
+            . "        }\n"
+            . "        @keyframes floatIn { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }\n"
+            . "        .logo svg { width: 120px; height: auto; margin-bottom: 1.5rem; filter: drop-shadow(0 8px 12px rgba(10, 152, 114, 0.25)); }\n"
+            . "        h1 {\n"
+            . "            font-size: 2.2rem; font-weight: 800; margin: 0 0 1rem 0;\n"
+            . "            background: linear-gradient(to right, #099772, #0a9872);\n"
+            . "            -webkit-background-clip: text; -webkit-text-fill-color: transparent;\n"
+            . "            letter-spacing: -0.025em;\n"
+            . "        }\n"
+            . "        p { font-size: 1.15rem; color: #4b5563; margin-bottom: 2rem; line-height: 1.6; }\n"
+            . "        .btn {\n"
+            . "            display: inline-block; background: linear-gradient(to right, #099772, #0a9872);\n"
+            . "            color: white; text-decoration: none; padding: 0.8rem 2.2rem;\n"
+            . "            border-radius: 9999px; font-weight: 600; font-size: 1rem;\n"
+            . "            transition: all 0.3s ease; box-shadow: 0 4px 14px 0 rgba(9, 151, 114, 0.39);\n"
+            . "        }\n"
+            . "        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(9, 151, 114, 0.45); }\n"
+            . "        .footer {\n"
+            . "            display: flex; align-items: center; gap: 0.5rem;\n"
+            . "            color: #6b7280; font-size: 0.875rem; font-weight: 500;\n"
+            . "            opacity: 0.7; transition: opacity 0.3s ease; animation: fadeIn 1.5s ease;\n"
+            . "        }\n"
+            . "        @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 0.7; } }\n"
+            . "        .footer:hover { opacity: 1; }\n"
+            . "        .artilingo-logo svg { height: 24px; width: auto; }\n"
+            . "    </style>\n"
             . "</head>\n"
             . "<body>\n"
-            . "    <main style=\"display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;font-family:'Inter',sans-serif;\">\n"
-            . "        <h1 style=\"background:linear-gradient(to right,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;\">\n"
-            . "            {$docFile['installed']}\n"
-            . "        </h1>\n"
-            . "        <p>{$docFile['guide']} <a href=\"/{$docFile['file']}\">{$docFile['file']}</a>.</p>\n"
-            . "    </main>\n"
+            . "    <div class=\"card\">\n"
+            . "        <div class=\"logo\">\n"
+            . "            " . trim(preg_replace('/<\?xml.*?\?>\n?/', '', file_get_contents(__DIR__ . '/../../assets/logo.svg'))) . "\n"
+            . "        </div>\n"
+            . "        <h1>{$docFile['installed']}</h1>\n"
+            . "        <p>{$docFile['guide']}</p>\n"
+            . "        <a href=\"?guide\" class=\"btn\">{$docFile['file']}</a>\n"
+            . "    </div>\n"
+            . "    <div class=\"footer\">\n"
+            . "        <span>Powered by</span>\n"
+            . "        <div class=\"artilingo-logo\">\n"
+            . "            " . trim(preg_replace('/<\?xml.*?\?>\n?/', '', file_get_contents(__DIR__ . '/../../public/assets/images/artilingo.svg'))) . "\n"
+            . "        </div>\n"
+            . "    </div>\n"
             . "</body>\n"
             . "</html>\n";
         file_put_contents($targetDir . '/public/index.php', $indexContent);

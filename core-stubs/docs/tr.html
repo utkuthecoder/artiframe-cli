@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ArtiFrame | Resmi Geliştirici Dokümantasyonu</title>
+
+<link rel="icon" type="image/png" href="../../public/assets/images/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="../../public/assets/images/favicon.svg" />
+<link rel="shortcut icon" href="../../public/assets/images/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="../../public/assets/images/apple-touch-icon.png" />
+<link rel="manifest" href="../../public/assets/images/site.webmanifest" />
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -271,9 +278,12 @@
         <a href="#cli-api">make:api</a>
         <a href="#cli-class">make:class</a>
         <a href="#cli-cliv">cli v</a>
+        <a href="#cli-show">show</a>
+        <a href="#cli-list">list</a>
+        <a href="#cli-go">go</a>
+        <a href="#cli-remove">remove</a>
         <a href="#cli-version">version</a>
-
-        
+        <a href="#cli-serve">serve</a>
         <a href="#cli-add">add</a>
         <div class="sb-cat">Entegre Servisler</div>
         <a href="#svc-iyzico">Iyzico <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Ücretli/Lisanslı Servis">$</span></a>
@@ -336,6 +346,14 @@
         <a href="#sh-slugify">slugify()</a>
         <a href="#sh-arrayonly">arrayOnly()</a>
 
+
+        <div class="sb-subcat">ID Generation & Utilities</div>
+        <a href="#sh-byteid">byteId()</a>
+        <a href="#sh-makeid">makeId()</a>
+        <a href="#sh-formatid">formatId()</a>
+        <a href="#sh-intid">intId()</a>
+        <a href="#sh-bigintid">bigintId()</a>
+        <a href="#sh-stringer">stringer()</a>
         <div class="sb-cat">API Güvenliği</div>
         <a href="#api-methods">HTTP Metod Kontrolü</a>
         <a href="#api-cors">CORS</a>
@@ -823,6 +841,60 @@ Example: /src/Service/PaymentService</code></pre>
     </section>
 
 
+    <!-- show -->
+    <section id="cli-show">
+        <h2><code>show</code> <span class="tag b-cli">CLI Komutu</span></h2>
+        <p>CLI'nin şu an hangi çalışma dizininde olduğunu ekrana basar. Navigasyon için kullanışlıdır.</p>
+        <pre><code>artiframe&gt; <span class="fn">show</span>
+  📍  Mevcut Çalışma Dizini:
+      C:\projeler\benim_projem</code></pre>
+    </section>
+
+    <!-- list -->
+    <section id="cli-list">
+        <h2><code>list</code> <span class="tag b-cli">CLI Komutu</span></h2>
+        <p>Mevcut dizinin içindeki dosyaları ve klasörleri öncelik sırasına göre ağaç yapısında listeler. Klasörlerin içindeki öğe sayısını ve dosyaların boyutlarını gösterir.</p>
+        <pre><code>artiframe&gt; <span class="fn">list</span>
+  📂 benim_projem/
+  │  ├── 📂 src/  (5 öğe)
+  │  ├── 📂 public/  (4 öğe)
+  │  ├── 📄 composer.json  [1.2 KB]
+  │  └── 📄 README.md  [4.5 KB]</code></pre>
+    </section>
+
+    <!-- go -->
+    <section id="cli-go">
+        <h2><code>go</code> <span class="tag b-cli">CLI Komutu</span></h2>
+        <p>CLI'nin etkileşimli kabuğundayken (Interactive Shell) dizinler arasında gezinmenizi sağlar. İşletim sistemi seviyesinde kalıcı bir etki yaratmaz ancak CLI açık kaldığı sürece çalışma dizininizi değiştirir.</p>
+        <pre><code>artiframe&gt; <span class="fn">go</span> <span class="st">public</span>
+  ✅  Dizin başarıyla değiştirildi.
+      C:\projeler\benim_projem\public
+
+artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
+  ✅  Dizin başarıyla değiştirildi.
+      C:\projeler\benim_projem</code></pre>
+    </section>
+
+    <!-- remove -->
+    <section id="cli-remove">
+        <h2><code>remove</code> <span class="tag b-cli">CLI Komutu</span></h2>
+        <p>Belirtilen bir dosyayı güvenle siler. <code>make</code> komutlarının zıttı olarak çalışır ve projedeki bağımlılıkları analiz ederek silme işlemi öncesinde uyarılarda bulunur:</p>
+        <ul>
+            <li><strong>Görünüm (View) Silinirse:</strong> Eğer dosya <code>public/</code> içerisindeyse ve bu dosyaya bağlı CSS/JS dosyaları <code>public/assets</code> içerisinde mevcutsa, size bunları da temizleyip temizlemeyeceğinizi sorar.</li>
+            <li><strong>Sınıf (Class) Silinirse:</strong> Eğer dosya <code>src/</code> veya <code>app/</code> altındaysa, <code>public/api/</code> dizinini tarar. Sildiğiniz sınıfın kullanıldığı API uçlarını ve satır numaralarını ekrana basarak uyarı verir, ancak API'leri otomatik silmez (güvenlik gereği ilgili API'leri elle düzenlemeniz gerekir).</li>
+        </ul>
+        <pre><code>artiframe&gt; <span class="fn">remove</span> <span class="st">src/Auth/UserManager.php</span>
+⚠️  Bu dosyayı KÖKTEN silmek üzeresiniz. Emin misiniz? C:\...\src\Auth\UserManager.php [y/N]: y
+
+🚨 DİKKAT: Sildiğiniz UserManager sınıfı şu API dosyalarında kullanılıyor:
+   -&gt; C:\...\public\api\auth\login.php (Satır: 12)
+   -&gt; C:\...\public\api\auth\register.php (Satır: 15)
+
+📌 Yukarıdaki API dosyalarındaki ilgili satırları kendiniz düzenlemeli veya silmelisiniz.
+
+✅ Dosya başarıyla silindi: C:\...\src\Auth\UserManager.php</code></pre>
+    </section>
+
     <!-- version -->
     <section id="cli-version">
         <h2><code>version</code> <span class="tag b-cli">CLI Komutu</span></h2>
@@ -848,6 +920,17 @@ Example: /src/Service/PaymentService</code></pre>
     </section>
 
     
+    <!-- serve -->
+    <section id="cli-serve">
+        <h2><code>serve</code> <span class="tag b-cli">CLI Komutu</span></h2>
+        <p>Projeyi test etmek için yerel bir geliştirme sunucusu (localhost) başlatır. Ek bir web sunucusu kurmanıza (XAMPP, Nginx vs.) gerek kalmadan projenizi saniyeler içinde ayağa kaldırır ve tarayıcınızda otomatik açar.</p>
+        <pre><code>artiframe&gt; <span class="fn">serve</span>
+  🚀  Geliştirme sunucusu başlatılıyor: http://localhost:8000
+      Durdurmak için CTRL+C tuşlarına basın.</code></pre>
+        <p>İsterseniz farklı bir port numarası belirtebilirsiniz:</p>
+        <pre><code>artiframe&gt; <span class="fn">serve</span> <span class="st">8080</span></code></pre>
+    </section>
+
     <!-- add -->
     <section id="cli-add">
         <h2><code>add</code> <span class="tag b-cli">CLI Komutu</span></h2>
@@ -4530,7 +4613,101 @@ if ($response['status'] === 'success') {
 <span class="cm">// Değerleri ekrana basar ve sistemi durdurur.</span></code></pre>
     </section>
 
+
+    <!-- ====== ID GENERATION & UTILITIES ====== -->
+    <section id="id-generation-utilities">
+
+        <h2 id="sh-byteid">System Helpers - <code>byteId()</code> <span class="tag b-api">SystemMethod</span></h2>
+        <div class="info-box">
+            Native, yüksek performanslı ve sıralı (Time-ordered) raw 16-byte <strong>UUIDv7</strong> üretir.
+        </div>
+        <p>Veritabanında ID kolonlarını <code>BINARY(16)</code> olarak tutarak devasa bir indexleme ve JOIN performansı elde etmek istediğinizde yeni kayıtları bu fonksiyonla oluşturursunuz.</p>
+        <div class="code-block">
+            <div class="code-header">
+                <span class="code-lang">PHP</span>
+            </div>
+            <pre><code><span class="kw">use</span> Bin\SystemMethod;
+
+<span class="var">$rawId</span> = SystemMethod::<span class="fn">byteId</span>();
+<span class="cm">// Veya global helper: byteId();</span>
+
+<span class="var">$db</span>-&gt;<span class="fn">prepare</span>(<span class="st">"INSERT INTO users (id, name) VALUES (?, ?)"</span>)-&gt;<span class="fn">execute</span>([<span class="var">$rawId</span>, <span class="st">'Utku'</span>]);</code></pre>
+        </div>
+
+        <h2 id="sh-makeid">System Helpers - <code>makeId()</code> <span class="tag b-api">SystemMethod</span></h2>
+        <div class="info-box">
+            Native, standart 36 karakterlik <strong>UUIDv7</strong> string'i üretir.
+        </div>
+        <p>Veritabanında <code>CHAR(36)</code> veya <code>VARCHAR(36)</code> kullanacaksanız ve raw binary verilerle uğraşmak istemiyorsanız bu fonksiyonla doğrudan string formatında UUID üretebilirsiniz.</p>
+        <div class="code-block">
+            <div class="code-header">
+                <span class="code-lang">PHP</span>
+            </div>
+            <pre><code><span class="kw">use</span> Bin\SystemMethod;
+
+<span class="var">$stringId</span> = SystemMethod::<span class="fn">makeId</span>();
+<span class="cm">// Örnek Çıktı: 0190ed84-3f12-7a91-8bc4-91823741abcd</span></code></pre>
+        </div>
+
+        <h2 id="sh-formatid">System Helpers - <code>formatId()</code> <span class="tag b-api">SystemMethod</span></h2>
+        <div class="info-box">
+            Raw 16-byte binary UUID'leri 36 karakterlik standart string'e dönüştürür.
+        </div>
+        <p>Veritabanından çektiğiniz <code>BINARY(16)</code> verisini arayüze (API/JSON) göndermeden önce okunabilir formata sokar.</p>
+        <div class="code-block">
+            <div class="code-header">
+                <span class="code-lang">PHP</span>
+            </div>
+            <pre><code><span class="kw">use</span> Bin\SystemMethod;
+
+<span class="var">$user</span> = <span class="var">$db</span>-&gt;<span class="fn">query</span>(<span class="st">"SELECT id FROM users LIMIT 1"</span>)-&gt;<span class="fn">fetch</span>();
+<span class="var">$readableId</span> = SystemMethod::<span class="fn">formatId</span>(<span class="var">$user</span>[<span class="st">'id'</span>]);
+<span class="cm">// Örnek Çıktı: 0190ed84-3f12-7a91-8bc4-91823741abcd</span></code></pre>
+        </div>
+
+        <h2 id="sh-intid">System Helpers - <code>intId()</code> <span class="tag b-api">SystemMethod</span></h2>
+        <div class="info-box">
+            Güvenli, rastgele <code>INT</code> ID üretir. (Max 9 Hane)
+        </div>
+        <p>Geleneksel veritabanı performansından vazgeçmek istemiyorsanız kullanabileceğiniz geleneksel Integer üreticisidir.</p>
+        <div class="code-block">
+            <div class="code-header">
+                <span class="code-lang">PHP</span>
+            </div>
+            <pre><code><span class="var">$id</span> = <span class="fn">intId</span>(8);
+<span class="cm">// Örnek Çıktı: 49201834</span></code></pre>
+        </div>
+
+        <h2 id="sh-bigintid">System Helpers - <code>bigintId()</code> <span class="tag b-api">SystemMethod</span></h2>
+        <div class="info-box">
+            Güvenli, rastgele <code>BIGINT</code> ID üretir. (Varsayılan 15 hane - JS için güvenli sınır)
+        </div>
+        <p>Eğer Snowflake (Twitter) usulü devasa rakamsal ID'ler kullanacaksanız bu fonksiyon hayat kurtarır. 15 haneden büyük istiyorsanız veri kaybını önlemek için string olarak alabilirsiniz.</p>
+        <div class="code-block">
+            <div class="code-header">
+                <span class="code-lang">PHP</span>
+            </div>
+            <pre><code><span class="var">$id</span> = <span class="fn">bigintId</span>(); <span class="cm">// 15 haneli INT döner</span>
+<span class="var">$massiveId</span> = <span class="fn">bigintId</span>(18, <span class="kw">true</span>); <span class="cm">// 18 haneli STRING döner (JS için güvenli)</span></code></pre>
+        </div>
+
+        <h2 id="sh-stringer">System Helpers - <code>stringer()</code> <span class="tag b-api">SystemMethod</span></h2>
+        <div class="info-box">
+            Değerleri Javascript'in devasa sayı (BIGINT) duyarsızlığına karşı güvenli bir şekilde string'e sarmalar.
+        </div>
+        <p>15 haneden büyük sayısal (BigInt vb.) değişkenleri View katmanında DOM'a basarken Javascript'in yuvarlama hatalarından (Precision Loss) korur.</p>
+        <div class="code-block">
+            <div class="code-header">
+                <span class="code-lang">HTML / PHP</span>
+            </div>
+            <pre><code><span class="cm">&lt;!-- JS'in bozmasını engellemek için stringer ile sarmalıyoruz --&gt;</span>
+&lt;button data-id=<span class="st">"&lt;?=</span> <span class="fn">stringer</span>(<span class="var">$data</span>[<span class="st">'id'</span>]) <span class="st">?&gt;"</span>&gt;Sil&lt;/button&gt;</code></pre>
+        </div>
+
+    </section>
+
     <!-- ====== API GÜVENLİĞİ ====== -->
+
     <section id="api-methods">
         <h2>API — HTTP Metod Kontrolü <span class="tag b-sec">ApiControl</span></h2>
         <p><code class="ic">$allowedMethods</code> dizisi, ApiControl require'ından <strong>önce</strong> tanımlanmalıdır. ApiControl bu diziyi okuyarak izin verilmeyen metodlardan gelen istekleri otomatik olarak <code class="ic">405 Method Not Allowed</code> ile reddeder.</p>
@@ -4788,5 +4965,14 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Çok f
     }
 </script>
 
+
+        <a href="../../public/index.html" class="btn-back-home" style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: var(--surface, #111); color: var(--text-primary, #fff); border: 1px solid var(--border, #333); padding: 10px 15px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: all 0.2s;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Home
+        </a>
+        <style>
+            .btn-back-home:hover { border-color: var(--accent, #00E599) !important; color: var(--accent, #00E599) !important; transform: translateY(-2px); }
+        </style>
+        
 </body>
 </html>

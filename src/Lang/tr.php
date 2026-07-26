@@ -130,4 +130,33 @@ return [
     'ADD_EDIT_ENV'        => 'Lütfen .env dosyasındaki API anahtarlarını doldurun.',
     'ADD_STUB_MISSING'    => ':name için servis şablonu bulunamadı.',
     'ADD_SERVICE_EXISTS'  => 'Servis dosyası zaten mevcut: :path (atlandı)',
+
+    // Show / List
+    'SHOW_CURRENT_DIR'    => 'Mevcut Çalışma Dizini:',
+    'HELP_SHOW_DESC'      => 'Şu an bulunulan dizini gösterir.',
+    'HELP_LIST_DESC'      => 'Mevcut dizinin içerik ağacını listeler.',
+
+    // Go
+    'GO_MISSING_DIR'      => 'Lütfen gitmek istediğiniz dizini belirtin. (Örn: go public veya go back)',
+    'GO_NOT_FOUND'        => 'Belirtilen dizin bulunamadı: :dir',
+    'GO_SUCCESS'          => 'Dizin başarıyla değiştirildi.',
+    'HELP_GO_DESC'        => 'Bulunduğunuz dizini değiştirmenizi sağlar.',
+
+    // Remove
+    'REMOVE_TARGET_REQUIRED' => 'Lütfen silmek istediğiniz dosyanın adını veya yolunu belirtin.',
+    'REMOVE_FILE_NOT_FOUND'  => 'Belirtilen dosya bulunamadı: :path',
+    'REMOVE_CONFIRM_FILE'    => 'Bu dosyayı KÖKTEN silmek üzeresiniz. Emin misiniz? :path',
+    'REMOVE_CONFIRM_ASSETS'  => 'Bu View dosyasına bağlı CSS ve JS dosyaları da kalıcı olarak silinsin mi?',
+    'REMOVE_FOUND_APIS'      => 'DİKKAT: Sildiğiniz :class sınıfı şu API dosyalarında kullanılıyor:',
+    'REMOVE_API_WARNING'     => 'Yukarıdaki API dosyalarındaki ilgili satırları kendiniz düzenlemeli veya silmelisiniz.',
+    'REMOVE_SUCCESS'         => 'Dosya başarıyla silindi: :path',
+    'HELP_REMOVE_DESC'       => 'Bir dosyayı (ve onaylarsanız bağımlılıklarını) güvenle siler.',
+
+    // Serve
+    'SERVE_NOT_PROJECT' => 'Bu dizin geçerli bir ArtiFrame projesi değil (public/index.php bulunamadı).',
+    'SERVE_STARTING'    => 'Geliştirme sunucusu başlatılıyor: :url',
+    'SERVE_STOP_INFO'   => 'Durdurmak için CTRL+C tuşlarına basın.',
+    'HELP_SERVE_DESC'   => 'Lokal geliştirme sunucusunu başlatır.',
+
+    'INVALID_PACKAGE_NAME' => 'Geçersiz paket adı. Format şuna benzemeli: vendor/project',
 ];

@@ -130,4 +130,33 @@ return [
     'ADD_EDIT_ENV'        => 'Por favor complete las claves API en su archivo .env.',
     'ADD_STUB_MISSING'    => 'Plantilla de servicio no encontrada para :name.',
     'ADD_SERVICE_EXISTS'  => 'El archivo de servicio ya existe: :path (omitido)',
+
+    // Show / List
+    'SHOW_CURRENT_DIR'    => 'Directorio de trabajo actual:',
+    'HELP_SHOW_DESC'      => 'Muestra el directorio de trabajo actual.',
+    'HELP_LIST_DESC'      => 'Enumera el árbol de directorios del directorio actual.',
+
+    // Go
+    'GO_MISSING_DIR'      => 'Especifique el directorio. (ej. go public o go back)',
+    'GO_NOT_FOUND'        => 'No se encontró el directorio especificado: :dir',
+    'GO_SUCCESS'          => 'Directorio cambiado con éxito.',
+    'HELP_GO_DESC'        => 'Le permite cambiar el directorio actual.',
+
+    // Remove
+    'REMOVE_TARGET_REQUIRED' => 'Especifique el nombre o la ruta del archivo que desea eliminar.',
+    'REMOVE_FILE_NOT_FOUND'  => 'No se encontró el archivo especificado: :path',
+    'REMOVE_CONFIRM_FILE'    => 'Está a punto de eliminar DEFINITIVAMENTE este archivo. ¿Está seguro? :path',
+    'REMOVE_CONFIRM_ASSETS'  => '¿Desea eliminar también definitivamente los archivos CSS y JS asociados a esta Vista?',
+    'REMOVE_FOUND_APIS'      => 'ADVERTENCIA: La clase :class eliminada se utiliza en estos archivos de API:',
+    'REMOVE_API_WARNING'     => 'Debe editar o eliminar manualmente las líneas relevantes en los archivos de API anteriores.',
+    'REMOVE_SUCCESS'         => 'Archivo eliminado con éxito: :path',
+    'HELP_REMOVE_DESC'       => 'Elimina de forma segura un archivo (y sus dependencias si se confirma).',
+
+    // Serve
+    'SERVE_NOT_PROJECT' => 'Este directorio no es un proyecto ArtiFrame válido (falta public/index.php).',
+    'SERVE_STARTING'    => 'Iniciando el servidor de desarrollo en: :url',
+    'SERVE_STOP_INFO'   => 'Presione CTRL+C para detener el servidor.',
+    'HELP_SERVE_DESC'   => 'Inicia el servidor de desarrollo local.',
+
+    'INVALID_PACKAGE_NAME' => 'Nombre de paquete no válido. El formato debería ser: vendor/project',
 ];

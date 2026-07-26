@@ -6,7 +6,7 @@
  * @package     ArtiFrame
  * @author      Artilingo
  * @license     AGPLv3 (Attribution-ShareAlike Required)
- * @link        https://artiframe.org
+ * @link        https://artiframe.artilingo.com
  */
 
 // Define constants

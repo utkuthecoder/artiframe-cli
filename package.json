@@ -21,11 +21,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/artilingo/artiframe.git"
+    "url": "git+https://github.com/utkuthecoder/artiframe-cli.git"
   },
-  "homepage": "https://artiframe.org",
+  "homepage": "https://artiframe.artilingo.com",
   "bugs": {
-    "url": "https://github.com/artilingo/artiframe/issues"
+    "url": "https://github.com/utkuthecoder/artiframe-cli/issues"
   },
   "keywords": [
     "php",

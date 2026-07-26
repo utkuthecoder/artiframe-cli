@@ -130,4 +130,33 @@ return [
     'ADD_EDIT_ENV'        => 'Veuillez remplir les clés API dans votre fichier .env.',
     'ADD_STUB_MISSING'    => 'Modèle de service introuvable pour :name.',
     'ADD_SERVICE_EXISTS'  => 'Le fichier de service existe déjà : :path (ignoré)',
+
+    // Show / List
+    'SHOW_CURRENT_DIR'    => 'Répertoire de travail actuel :',
+    'HELP_SHOW_DESC'      => 'Affiche le répertoire de travail actuel.',
+    'HELP_LIST_DESC'      => 'Affiche l\'arborescence du répertoire actuel.',
+
+    // Go
+    'GO_MISSING_DIR'      => 'Veuillez spécifier le répertoire. (ex: go public ou go back)',
+    'GO_NOT_FOUND'        => 'Le répertoire spécifié est introuvable : :dir',
+    'GO_SUCCESS'          => 'Répertoire modifié avec succès.',
+    'HELP_GO_DESC'        => 'Permet de changer de répertoire courant.',
+
+    // Remove
+    'REMOVE_TARGET_REQUIRED' => 'Veuillez spécifier le nom ou le chemin du fichier que vous souhaitez supprimer.',
+    'REMOVE_FILE_NOT_FOUND'  => 'Le fichier spécifié est introuvable : :path',
+    'REMOVE_CONFIRM_FILE'    => 'Vous êtes sur le point de supprimer DÉFINITIVEMENT ce fichier. Êtes-vous sûr ? :path',
+    'REMOVE_CONFIRM_ASSETS'  => 'Les fichiers CSS et JS associés à cette Vue doivent-ils également être supprimés définitivement ?',
+    'REMOVE_FOUND_APIS'      => 'ATTENTION : La classe :class supprimée est utilisée dans ces fichiers API :',
+    'REMOVE_API_WARNING'     => 'Vous devez modifier ou supprimer manuellement les lignes concernées dans les fichiers API ci-dessus.',
+    'REMOVE_SUCCESS'         => 'Fichier supprimé avec succès : :path',
+    'HELP_REMOVE_DESC'       => 'Supprime un fichier (et ses dépendances si confirmé) en toute sécurité.',
+
+    // Serve
+    'SERVE_NOT_PROJECT' => 'Ce répertoire n\'est pas un projet ArtiFrame valide (public/index.php manquant).',
+    'SERVE_STARTING'    => 'Démarrage du serveur de développement : :url',
+    'SERVE_STOP_INFO'   => 'Appuyez sur CTRL+C pour arrêter le serveur.',
+    'HELP_SERVE_DESC'   => 'Démarre le serveur de développement local.',
+
+    'INVALID_PACKAGE_NAME' => 'Nom de package invalide. Le format doit ressembler à : vendor/project',
 ];

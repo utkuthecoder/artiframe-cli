@@ -5,7 +5,7 @@
  * @package     ArtiFrame
  * @author      Artilingo
  * @license     AGPLv3 (Attribution-ShareAlike Required)
- * @link        https://artiframe.org
+ * @link        https://artiframe.artilingo.com
  *
  * NOTICE: This file is part of the ArtiFrame ecosystem.
  * Any derivative works or patches MUST retain this original copyright notice
@@ -284,125 +284,264 @@ class SystemMethod
         $text = preg_replace('/-+/', '-', $text);
         return trim($text, '-');
     }
+
+    /**
+     * Natively generates a raw 16-byte binary UUIDv7.
+     * Ideal for BINARY(16) database columns (High performance indexing).
+     *
+     * @return string 16-byte raw binary string
+     */
+    public static function byteId(): string
+    {
+        // Get current timestamp in milliseconds (48-bit)
+        $ts = (int)(microtime(true) * 1000);
+        $timeHex = str_pad(dechex($ts), 12, '0', STR_PAD_LEFT);
+        $timeBin = hex2bin($timeHex);
+        
+        // Generate 10 bytes of randomness
+        $rand = random_bytes(10);
+        
+        // Set UUID Version (7) -> 4 bits of the 7th byte
+        $rand[0] = chr((ord($rand[0]) & 0x0F) | 0x70);
+        
+        // Set UUID Variant (10) -> 2 bits of the 9th byte
+        $rand[2] = chr((ord($rand[2]) & 0x3F) | 0x80);
+        
+        // Return exactly 16 bytes (6 bytes time + 10 bytes rand)
+        return $timeBin . $rand;
+    }
+
+    /**
+     * Converts a raw 16-byte binary UUID into its standard string representation.
+     * (e.g. 0190ed84-3f12-7a91-8bc4-91823741abcd)
+     *
+     * @param string $binaryUuid 16-byte binary string
+     * @return string 36-character hyphenated UUID string
+     */
+    public static function formatId(string $binaryUuid): string
+    {
+        if (strlen($binaryUuid) !== 16) {
+            throw new \InvalidArgumentException("Invalid binary UUID length. Expected 16 bytes.");
+        }
+        
+        $hex = bin2hex($binaryUuid);
+        
+        return sprintf(
+            '%s-%s-%s-%s-%s',
+            substr($hex, 0, 8),
+            substr($hex, 8, 4),
+            substr($hex, 12, 4),
+            substr($hex, 16, 4),
+            substr($hex, 20, 12)
+        );
+    }
+
+    /**
+     * Generates a standard formatted UUIDv7 string.
+     *
+     * @return string 36-character hyphenated UUID string
+     */
+    public static function makeId(): string
+    {
+        return self::formatId(self::byteId());
+    }
+
+    /**
+     * Rastgele Integer ID üretir. (Max 9 hane - MySQL INT sınırı)
+     */
+    public static function intId(int $length = 8): int
+    {
+        if ($length > 9) $length = 9;
+        if ($length < 1) $length = 1;
+        
+        $min = (int) str_pad('1', $length, '0');
+        $max = (int) str_pad('9', $length, '9');
+        
+        return random_int($min, $max);
+    }
+
+    /**
+     * Rastgele BigInt ID üretir.
+     * Javascript MAX_SAFE_INTEGER (15 hane) sınırını aşmamak için varsayılan 15'tir.
+     * 16-18 hane istenirse veri kaybını önlemek için asString = true önerilir.
+     */
+    public static function bigintId(int $length = 15, bool $asString = false)
+    {
+        if ($length > 18) $length = 18;
+        if ($length < 1) $length = 1;
+
+        $min = str_pad('1', $length, '0');
+        $max = str_pad('9', $length, '9');
+
+        $result = random_int((int)$min, (int)$max);
+
+        return $asString ? (string) $result : $result;
+    }
+
+    /**
+     * Gelen veriyi (özellikle BigInt ID'leri) güvenli bir şekilde string'e çevirir.
+     * Javascript'te 15 haneyi aşan sayılardaki veri kaybını engellemek için
+     * View dosyalarında data-id=<?= stringer($id) ?> şeklinde kullanılır.
+     */
+    public static function stringer($value): string
+    {
+        return (string) $value;
+    }
 }
 
 // Global helper functions for backend methods
-if (!function_exists('verifyEmail')) {
+if (!function_exists(__NAMESPACE__ . '\\verifyEmail')) {
     function verifyEmail(string $email): bool {
         return \Bin\SystemMethod::verifyEmail($email);
     }
 }
 
-if (!function_exists('sanitizeInt')) {
+if (!function_exists(__NAMESPACE__ . '\\sanitizeInt')) {
     function sanitizeInt($value): int {
         return \Bin\SystemMethod::sanitizeInt($value);
     }
 }
 
-if (!function_exists('sanitizeString')) {
+if (!function_exists(__NAMESPACE__ . '\\sanitizeString')) {
     function sanitizeString(string $value): string {
         return \Bin\SystemMethod::sanitizeString($value);
     }
 }
 
-if (!function_exists('isPost')) {
+if (!function_exists(__NAMESPACE__ . '\\isPost')) {
     function isPost(): bool {
         return \Bin\SystemMethod::isPost();
     }
 }
 
-if (!function_exists('jsonResponse')) {
+if (!function_exists(__NAMESPACE__ . '\\jsonResponse')) {
     function jsonResponse(array $data, int $statusCode = 200): void {
         \Bin\SystemMethod::jsonResponse($data, $statusCode);
     }
 }
 
-if (!function_exists('apiResponse')) {
+if (!function_exists(__NAMESPACE__ . '\\apiResponse')) {
     function apiResponse(string $status, string $message, array $data = [], \Throwable $exception = null): void {
         \Bin\SystemMethod::apiResponse($status, $message, $data, $exception);
     }
 }
 
-if (!function_exists('generateCsrf')) {
+if (!function_exists(__NAMESPACE__ . '\\generateCsrf')) {
     function generateCsrf(): string {
         return \Bin\SystemMethod::generateCsrf();
     }
 }
 
-if (!function_exists('verifyCsrf')) {
+if (!function_exists(__NAMESPACE__ . '\\verifyCsrf')) {
     function verifyCsrf(?string $token): bool {
         return \Bin\SystemMethod::verifyCsrf($token);
     }
 }
 
-if (!function_exists('isAjax')) {
+if (!function_exists(__NAMESPACE__ . '\\isAjax')) {
     function isAjax(): bool {
         return \Bin\SystemMethod::isAjax();
     }
 }
 
-if (!function_exists('isGet')) {
+if (!function_exists(__NAMESPACE__ . '\\isGet')) {
     function isGet(): bool {
         return \Bin\SystemMethod::isGet();
     }
 }
 
-if (!function_exists('isPut')) {
+if (!function_exists(__NAMESPACE__ . '\\isPut')) {
     function isPut(): bool {
         return \Bin\SystemMethod::isPut();
     }
 }
 
-if (!function_exists('isDelete')) {
+if (!function_exists(__NAMESPACE__ . '\\isDelete')) {
     function isDelete(): bool {
         return \Bin\SystemMethod::isDelete();
     }
 }
 
-if (!function_exists('getClientIp')) {
+if (!function_exists(__NAMESPACE__ . '\\getClientIp')) {
     function getClientIp(): string {
         return \Bin\SystemMethod::getClientIp();
     }
 }
 
-if (!function_exists('redirect')) {
+if (!function_exists(__NAMESPACE__ . '\\redirect')) {
     function redirect(string $url): void {
         \Bin\SystemMethod::redirect($url);
     }
 }
 
-if (!function_exists('generateToken')) {
+if (!function_exists(__NAMESPACE__ . '\\generateToken')) {
     function generateToken(int $length = 32): string {
         return \Bin\SystemMethod::generateToken($length);
     }
 }
 
-if (!function_exists('sanitizeEmail')) {
+if (!function_exists(__NAMESPACE__ . '\\sanitizeEmail')) {
     function sanitizeEmail(string $email): string {
         return \Bin\SystemMethod::sanitizeEmail($email);
     }
 }
 
-if (!function_exists('sanitizeFloat')) {
+if (!function_exists(__NAMESPACE__ . '\\sanitizeFloat')) {
     function sanitizeFloat($value): float {
         return \Bin\SystemMethod::sanitizeFloat($value);
     }
 }
 
-if (!function_exists('arrayOnly')) {
+if (!function_exists(__NAMESPACE__ . '\\arrayOnly')) {
     function arrayOnly(array $source, array $keys): array {
         return \Bin\SystemMethod::arrayOnly($source, $keys);
     }
 }
 
-if (!function_exists('dd')) {
+if (!function_exists(__NAMESPACE__ . '\\dd')) {
     function dd(...$vars): void {
         \Bin\SystemMethod::dd(...$vars);
     }
 }
 
-if (!function_exists('slugify')) {
+if (!function_exists(__NAMESPACE__ . '\\slugify')) {
     function slugify(string ...$texts): string {
         return \Bin\SystemMethod::slugify(...$texts);
+    }
+}
+
+if (!function_exists(__NAMESPACE__ . '\\byteId')) {
+    function byteId(): string {
+        return \Bin\SystemMethod::byteId();
+    }
+}
+
+if (!function_exists(__NAMESPACE__ . '\\formatId')) {
+    function formatId(string $binaryUuid): string {
+        return \Bin\SystemMethod::formatId($binaryUuid);
+    }
+}
+
+if (!function_exists(__NAMESPACE__ . '\\makeId')) {
+    function makeId(): string {
+        return \Bin\SystemMethod::makeId();
+    }
+}
+
+if (!function_exists(__NAMESPACE__ . '\\intId')) {
+    function intId(int $length = 8): int {
+        return \Bin\SystemMethod::intId($length);
+    }
+}
+
+if (!function_exists(__NAMESPACE__ . '\\bigintId')) {
+    function bigintId(int $length = 15, bool $asString = false) {
+        return \Bin\SystemMethod::bigintId($length, $asString);
+    }
+}
+
+if (!function_exists(__NAMESPACE__ . '\\stringer')) {
+    function stringer($value): string {
+        return \Bin\SystemMethod::stringer($value);
     }
 }

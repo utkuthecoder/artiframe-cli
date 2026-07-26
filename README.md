@@ -230,7 +230,7 @@ artiframe> version upgrade minor
 
 <div align="center">
 
-**[artiframe.org](https://artiframe.org)** · **[npmjs.com/package/@artilingo/artiframe-cli](https://www.npmjs.com/package/@artilingo/artiframe-cli)** · **[GitHub](https://github.com/artilingo/artiframe)**
+**[artiframe.artilingo.com](https://artiframe.artilingo.com)** · **[npmjs.com/package/@artilingo/artiframe-cli](https://www.npmjs.com/package/@artilingo/artiframe-cli)** · **[GitHub](https://github.com/utkuthecoder/artiframe-cli)**
 
 © Artilingo — Licensed under [AGPLv3](https://www.gnu.org/licenses/agpl-3.0)
 

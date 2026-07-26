@@ -130,4 +130,33 @@ return [
     'ADD_EDIT_ENV'        => 'Bitte füllen Sie die API-Schlüssel in Ihrer .env-Datei aus.',
     'ADD_STUB_MISSING'    => 'Service-Vorlage für :name nicht gefunden.',
     'ADD_SERVICE_EXISTS'  => 'Service-Datei existiert bereits: :path (übersprungen)',
+
+    // Show / List
+    'SHOW_CURRENT_DIR'    => 'Aktuelles Arbeitsverzeichnis:',
+    'HELP_SHOW_DESC'      => 'Zeigt das aktuelle Arbeitsverzeichnis an.',
+    'HELP_LIST_DESC'      => 'Listet den Verzeichnisbaum des aktuellen Verzeichnisses auf.',
+
+    // Go
+    'GO_MISSING_DIR'      => 'Bitte geben Sie das Verzeichnis an. (z.B. go public oder go back)',
+    'GO_NOT_FOUND'        => 'Das angegebene Verzeichnis wurde nicht gefunden: :dir',
+    'GO_SUCCESS'          => 'Verzeichnis erfolgreich gewechselt.',
+    'HELP_GO_DESC'        => 'Ermöglicht den Wechsel des aktuellen Verzeichnisses.',
+
+    // Remove
+    'REMOVE_TARGET_REQUIRED' => 'Bitte geben Sie den Namen oder Pfad der zu entfernenden Datei an.',
+    'REMOVE_FILE_NOT_FOUND'  => 'Die angegebene Datei wurde nicht gefunden: :path',
+    'REMOVE_CONFIRM_FILE'    => 'Sie sind im Begriff, diese Datei DAUERHAFT zu löschen. Sind Sie sicher? :path',
+    'REMOVE_CONFIRM_ASSETS'  => 'Sollen die mit dieser View verbundenen CSS- und JS-Dateien ebenfalls dauerhaft gelöscht werden?',
+    'REMOVE_FOUND_APIS'      => 'ACHTUNG: Die gelöschte Klasse :class wird in diesen API-Dateien verwendet:',
+    'REMOVE_API_WARNING'     => 'Sie müssen die entsprechenden Zeilen in den obigen API-Dateien manuell bearbeiten oder entfernen.',
+    'REMOVE_SUCCESS'         => 'Datei erfolgreich gelöscht: :path',
+    'HELP_REMOVE_DESC'       => 'Entfernt eine Datei (und bei Bestätigung ihre Abhängigkeiten) sicher.',
+
+    // Serve
+    'SERVE_NOT_PROJECT' => 'Dieses Verzeichnis ist kein gültiges ArtiFrame-Projekt (public/index.php fehlt).',
+    'SERVE_STARTING'    => 'Entwicklungsserver wird gestartet: :url',
+    'SERVE_STOP_INFO'   => 'Drücken Sie STRG+C, um den Server zu stoppen.',
+    'HELP_SERVE_DESC'   => 'Startet den lokalen Entwicklungsserver.',
+
+    'INVALID_PACKAGE_NAME' => 'Ungültiger Paketname. Das Format sollte wie folgt aussehen: vendor/project',
 ];

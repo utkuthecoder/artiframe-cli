@@ -130,4 +130,33 @@ return [
     'ADD_EDIT_ENV'        => 'Please fill in the API keys in your .env file.',
     'ADD_STUB_MISSING'    => 'Service template not found for :name.',
     'ADD_SERVICE_EXISTS'  => 'Service file already exists: :path (skipped)',
+
+    // Show / List
+    'SHOW_CURRENT_DIR'    => 'Current Working Directory:',
+    'HELP_SHOW_DESC'      => 'Shows the current working directory.',
+    'HELP_LIST_DESC'      => 'Lists the directory tree of the current directory.',
+
+    // Go
+    'GO_MISSING_DIR'      => 'Please specify the directory to go to. (e.g., go public or go back)',
+    'GO_NOT_FOUND'        => 'The specified directory was not found: :dir',
+    'GO_SUCCESS'          => 'Directory changed successfully.',
+    'HELP_GO_DESC'        => 'Allows you to change the current directory.',
+
+    // Remove
+    'REMOVE_TARGET_REQUIRED' => 'Please specify the name or path of the file you want to remove.',
+    'REMOVE_FILE_NOT_FOUND'  => 'The specified file was not found: :path',
+    'REMOVE_CONFIRM_FILE'    => 'You are about to PERMANENTLY delete this file. Are you sure? :path',
+    'REMOVE_CONFIRM_ASSETS'  => 'Should the CSS and JS files associated with this View also be permanently deleted?',
+    'REMOVE_FOUND_APIS'      => 'WARNING: The deleted :class class is used in these API files:',
+    'REMOVE_API_WARNING'     => 'You must manually edit or remove the relevant lines in the API files above.',
+    'REMOVE_SUCCESS'         => 'File deleted successfully: :path',
+    'HELP_REMOVE_DESC'       => 'Safely removes a file (and its dependencies if confirmed).',
+
+    // Serve
+    'SERVE_NOT_PROJECT' => 'This directory is not a valid ArtiFrame project (public/index.php missing).',
+    'SERVE_STARTING'    => 'Starting development server at: :url',
+    'SERVE_STOP_INFO'   => 'Press CTRL+C to stop the server.',
+    'HELP_SERVE_DESC'   => 'Starts the local development server.',
+
+    'INVALID_PACKAGE_NAME' => 'Invalid package name. Format should look like: vendor/project',
 ];

@@ -171,6 +171,20 @@ class App
     private function routeCommand(string $commandName, array $commandArgs): void
     {
         switch ($commandName) {
+
+
+            case 'go':
+                (new \ArtiFrame\Cli\Commands\GoCommand($this->translator))->execute($commandArgs);
+                break;
+
+            case 'show':
+                (new \ArtiFrame\Cli\Commands\ShowCommand($this->translator))->execute($commandArgs);
+                break;
+
+            case 'list':
+                (new \ArtiFrame\Cli\Commands\ListCommand($this->translator))->execute($commandArgs);
+                break;
+
             case 'new':
                 (new \ArtiFrame\Cli\Commands\NewProjectCommand($this->translator))->execute($commandArgs);
                 break;
@@ -189,6 +203,16 @@ class App
                 
             case 'lang':
                 (new \ArtiFrame\Cli\Commands\LangCommand($this->translator))->execute($commandArgs);
+                break;
+
+
+            case 'remove':
+                (new \ArtiFrame\Cli\Commands\RemoveCommand($this->translator))->execute($commandArgs);
+                break;
+
+
+            case 'serve':
+                (new \ArtiFrame\Cli\Commands\ServeCommand($this->translator))->execute($commandArgs);
                 break;
 
             case 'add':
@@ -228,6 +252,25 @@ class App
         echo "  " . $d . "─────────────────────────────────────────────────────────────" . $r . PHP_EOL;
         echo PHP_EOL;
 
+
+
+        // go
+        echo "  " . $g . "go" . $r . " " . $y . "<dir>" . $r . PHP_EOL;
+        echo "  " . $d . "│" . $r . "   " . $t->get('HELP_GO_DESC') . PHP_EOL;
+        echo "  " . $d . "├── " . $r . "Example: " . $lg . "go src" . $r . PHP_EOL;
+        echo "  " . $d . "└── " . $r . "Example: " . $lg . "go back" . $r . PHP_EOL;
+        echo PHP_EOL;
+        // show
+        echo "  " . $g . "show" . $r . PHP_EOL;
+        echo "  " . $d . "│" . $r . "   " . $t->get('HELP_SHOW_DESC') . PHP_EOL;
+        echo "  " . $d . "└── " . $r . "Example: " . $lg . "show" . $r . PHP_EOL;
+        echo PHP_EOL;
+
+        // list
+        echo "  " . $g . "list" . $r . PHP_EOL;
+        echo "  " . $d . "│" . $r . "   " . $t->get('HELP_LIST_DESC') . PHP_EOL;
+        echo "  " . $d . "└── " . $r . "Example: " . $lg . "list" . $r . PHP_EOL;
+        echo PHP_EOL;
         // new
         echo "  " . $g . "new" . $r . " " . $y . "<project-path>" . $r . PHP_EOL;
         echo "  " . $d . "│" . $r . "   " . $t->get('HELP_NEW_DESC') . PHP_EOL;
@@ -290,6 +333,20 @@ class App
         echo "  " . $d . "└── " . $r . "Example: " . $lg . "lang en" . $r . $d . "     (direct)" . $r . PHP_EOL;
         echo PHP_EOL;
 
+
+        // remove
+        echo "  " . $g . "remove" . $r . " " . $y . "<file-path>" . $r . PHP_EOL;
+        echo "  " . $d . "│" . $r . "   " . $t->get('HELP_REMOVE_DESC') . PHP_EOL;
+        echo "  " . $d . "├── " . $r . "Example: " . $lg . "remove public/pages/about.php" . $r . PHP_EOL;
+        echo "  " . $d . "└── " . $r . "Example: " . $lg . "remove src/Auth/UserManager.php" . $r . PHP_EOL;
+        echo PHP_EOL;
+
+        // serve
+        echo "  " . $g . "serve" . $r . " " . $y . "[port]" . $r . PHP_EOL;
+        echo "  " . $d . "│" . $r . "   " . $t->get('HELP_SERVE_DESC') . PHP_EOL;
+        echo "  " . $d . "├── " . $r . "Example: " . $lg . "serve" . $r . $d . "       (Port: 8000)" . $r . PHP_EOL;
+        echo "  " . $d . "└── " . $r . "Example: " . $lg . "serve 8080" . $r . PHP_EOL;
+        echo PHP_EOL;
         // add
         echo "  " . $g . "add" . $r . " " . $y . "<package>" . $r . PHP_EOL;
         echo "  " . $d . "│" . $r . "   " . $t->get('HELP_ADD_DESC') . PHP_EOL;

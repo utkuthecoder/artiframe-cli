@@ -5,7 +5,7 @@
  * @package     ArtiFrame
  * @author      Artilingo
  * @license     AGPLv3 (Attribution-ShareAlike Required)
- * @link        https://artiframe.org
+ * @link        https://artiframe.artilingo.com
  *
  * NOTICE: This file is part of the ArtiFrame ecosystem.
  * Any derivative works or patches MUST retain this original copyright notice
@@ -38,7 +38,7 @@ class ViewMethod
     public static function escapeUrl(?string $url): string
     {
         if (empty($url)) return '#';
-        return filter_var($url, FILTER_SANITIZE_URL);
+        return self::display(filter_var($url, FILTER_SANITIZE_URL));
     }
 
     /**
@@ -296,16 +296,16 @@ class ViewMethod
         $text = str_replace($search, $replace, $text);
         $text = preg_replace('/[^a-z0-9\-]/', '-', $text);
         $text = preg_replace('/-+/', '-', $text);
-        return trim($text, '-');
+        return self::display(trim($text, '-'));
     }
 
     /**
      * Menülerde geçerli sayfa ise belirtilen class'ı döndürür.
      */
-    public static function activeClass(string $path, string $className = 'active'): string
+    public static function activeClass(?string $path, string $className = 'active'): string
     {
         $currentUri = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
-        return ($currentUri === $path) ? $className : '';
+        return ($currentUri === $path) ? self::display($className) : '';
     }
 
     /**
@@ -348,115 +348,115 @@ class ViewMethod
 }
 
 // Geliştiriciler (Özellikle Juniorlar) için kullanımı en kolay global yardımcı fonksiyonlar
-if (!function_exists('display')) {
+if (!function_exists(__NAMESPACE__ . '\\display')) {
     function display($data, string $default = ''): string {
         return \Bin\ViewMethod::display($data, $default);
     }
 }
 
-if (!function_exists('escapeUrl')) {
+if (!function_exists(__NAMESPACE__ . '\\escapeUrl')) {
     function escapeUrl(?string $url): string {
         return \Bin\ViewMethod::escapeUrl($url);
     }
 }
 
-if (!function_exists('formatDate')) {
+if (!function_exists(__NAMESPACE__ . '\\formatDate')) {
     function formatDate(?string $date, string $format = 'd.m.Y H:i'): string {
         return \Bin\ViewMethod::formatDate($date, $format);
     }
 }
 
-if (!function_exists('csrfField')) {
+if (!function_exists(__NAMESPACE__ . '\\csrfField')) {
     function csrfField(): string {
         return \Bin\ViewMethod::csrfField();
     }
 }
 
-if (!function_exists('day')) {
+if (!function_exists(__NAMESPACE__ . '\\day')) {
     function day($date): string {
         return \Bin\ViewMethod::day($date);
     }
 }
 
-if (!function_exists('month')) {
+if (!function_exists(__NAMESPACE__ . '\\month')) {
     function month($date): string {
         return \Bin\ViewMethod::month($date);
     }
 }
 
-if (!function_exists('year')) {
+if (!function_exists(__NAMESPACE__ . '\\year')) {
     function year($date): string {
         return \Bin\ViewMethod::year($date);
     }
 }
 
-if (!function_exists('timeOnly')) {
+if (!function_exists(__NAMESPACE__ . '\\timeOnly')) {
     function timeOnly($date): string {
         return \Bin\ViewMethod::timeOnly($date);
     }
 }
 
-if (!function_exists('fulldate')) {
+if (!function_exists(__NAMESPACE__ . '\\fulldate')) {
     function fulldate($date): string {
         return \Bin\ViewMethod::fulldate($date);
     }
 }
 
-if (!function_exists('monthName')) {
+if (!function_exists(__NAMESPACE__ . '\\monthName')) {
     function monthName($date, string $lang = 'tr'): string {
         return \Bin\ViewMethod::monthName($date, $lang);
     }
 }
 
-if (!function_exists('fulldateName')) {
+if (!function_exists(__NAMESPACE__ . '\\fulldateName')) {
     function fulldateName($date, string $lang = 'tr'): string {
         return \Bin\ViewMethod::fulldateName($date, $lang);
     }
 }
 
-if (!function_exists('timeAgo')) {
+if (!function_exists(__NAMESPACE__ . '\\timeAgo')) {
     function timeAgo($date, string $lang = 'tr'): string {
         return \Bin\ViewMethod::timeAgo($date, $lang);
     }
 }
 
-if (!function_exists('truncate')) {
+if (!function_exists(__NAMESPACE__ . '\\truncate')) {
     function truncate(?string $text, int $length = 100, string $append = '...'): string {
         return \Bin\ViewMethod::truncate($text, $length, $append);
     }
 }
 
-if (!function_exists('money')) {
+if (!function_exists(__NAMESPACE__ . '\\money')) {
     function money($amount, string $currency = 'usd'): string {
         return \Bin\ViewMethod::money($amount, $currency);
     }
 }
 
-if (!function_exists('slugify')) {
+if (!function_exists(__NAMESPACE__ . '\\slugify')) {
     function slugify(string ...$texts): string {
         return \Bin\ViewMethod::slugify(...$texts);
     }
 }
 
-if (!function_exists('activeClass')) {
+if (!function_exists(__NAMESPACE__ . '\\activeClass')) {
     function activeClass(string $path, string $className = 'active'): string {
         return \Bin\ViewMethod::activeClass($path, $className);
     }
 }
 
-if (!function_exists('formatSize')) {
+if (!function_exists(__NAMESPACE__ . '\\formatSize')) {
     function formatSize(int $bytes): string {
         return \Bin\ViewMethod::formatSize($bytes);
     }
 }
 
-if (!function_exists('maskEmail')) {
+if (!function_exists(__NAMESPACE__ . '\\maskEmail')) {
     function maskEmail(?string $email): string {
         return \Bin\ViewMethod::maskEmail($email);
     }
 }
 
-if (!function_exists('maskPhone')) {
+if (!function_exists(__NAMESPACE__ . '\\maskPhone')) {
     function maskPhone(?string $phone): string {
         return \Bin\ViewMethod::maskPhone($phone);
     }
