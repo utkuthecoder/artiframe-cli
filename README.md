@@ -1,10 +1,12 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/utkuthecoder/artiframe-cli/refs/heads/main/assets/banner.jpg" alt="ArtiFrame Logo" width="180" />
+<img src="https://raw.githubusercontent.com/utkuthecoder/artiframe-cli/refs/heads/main/assets/banner.jpg" alt="ArtiFrame - Open Sourced PHP Framework" width="100%" />
 
-# ArtiFrame
+<br />
 
 **Zero-dependency · Native PHP · Multilingual CLI**
+
+<br />
 
 [![npm version](https://img.shields.io/npm/v/@artilingo/artiframe-cli?color=00c88c&style=flat-square)](https://www.npmjs.com/package/@artilingo/artiframe-cli)
 [![npm downloads](https://img.shields.io/npm/dm/@artilingo/artiframe-cli?color=58a6ff&style=flat-square)](https://www.npmjs.com/package/@artilingo/artiframe-cli)
