@@ -35,8 +35,9 @@ class ViewMethod
     /**
      * URL'leri güvenli hale getirir, zararlı karakterleri temizler.
      */
-    public static function escapeUrl(string $url): string
+    public static function escapeUrl(?string $url): string
     {
+        if (empty($url)) return '#';
         return filter_var($url, FILTER_SANITIZE_URL);
     }
 
@@ -47,7 +48,7 @@ class ViewMethod
     {
         if (empty($date)) return '-';
         $time = strtotime($date);
-        return $time ? date($format, $time) : '-';
+        return self::display($time ? date($format, $time) : '-');
     }
 
     /**
@@ -68,7 +69,7 @@ class ViewMethod
     public static function day($date): string
     {
         if (empty($date)) return '-';
-        return date('d', is_numeric($date) ? $date : strtotime($date));
+        return self::display(date('d', is_numeric($date) ? $date : strtotime($date)));
     }
 
     /**
@@ -77,7 +78,7 @@ class ViewMethod
     public static function month($date): string
     {
         if (empty($date)) return '-';
-        return date('m', is_numeric($date) ? $date : strtotime($date));
+        return self::display(date('m', is_numeric($date) ? $date : strtotime($date)));
     }
 
     /**
@@ -86,7 +87,7 @@ class ViewMethod
     public static function year($date): string
     {
         if (empty($date)) return '-';
-        return date('Y', is_numeric($date) ? $date : strtotime($date));
+        return self::display(date('Y', is_numeric($date) ? $date : strtotime($date)));
     }
 
     /**
@@ -95,7 +96,7 @@ class ViewMethod
     public static function timeOnly($date): string
     {
         if (empty($date)) return '-';
-        return date('H:i', is_numeric($date) ? $date : strtotime($date));
+        return self::display(date('H:i', is_numeric($date) ? $date : strtotime($date)));
     }
 
     /**
@@ -104,7 +105,7 @@ class ViewMethod
     public static function fulldate($date): string
     {
         if (empty($date)) return '-';
-        return date('d.m.Y', is_numeric($date) ? $date : strtotime($date));
+        return self::display(date('d.m.Y', is_numeric($date) ? $date : strtotime($date)));
     }
 
     /**
@@ -123,7 +124,7 @@ class ViewMethod
         ];
         $lang = strtolower($lang);
         if (!isset($months[$lang])) $lang = 'en';
-        return $months[$lang][$m];
+        return self::display($months[$lang][$m]);
     }
 
     /**
@@ -139,9 +140,9 @@ class ViewMethod
         
         // İngilizce'de ay öne gelebilir (July 24, 2026) ama basitlik açısından formatı koruyabiliriz veya dile göre değiştirebiliriz.
         if (strtolower($lang) === 'en') {
-            return "{$mName} {$d}, {$y}";
+            return self::display("{$mName} {$d}, {$y}");
         }
-        return "{$d} {$mName} {$y}";
+        return self::display("{$d} {$mName} {$y}");
     }
 
     /**
@@ -152,7 +153,7 @@ class ViewMethod
         if (empty($date)) return '-';
         $time = is_numeric($date) ? $date : strtotime($date);
         $diff = time() - $time;
-        if ($diff < 1) return ($lang === 'tr') ? 'şimdi' : 'just now';
+        if ($diff < 1) return self::display(($lang === 'tr') ? 'şimdi' : 'just now');
 
         $tokens = [
             31536000 => 'year',
@@ -192,7 +193,7 @@ class ViewMethod
             if ($lang === 'de') {
                 $formatted = str_replace(['Jahren', 'Monaten', 'Wocheen', 'Tagen', 'Stundeen', 'Minuteen', 'Sekundeen'], ['Jahren', 'Monaten', 'Wochen', 'Tagen', 'Stunden', 'Minuten', 'Sekunden'], $formatted);
             }
-            return $formatted;
+            return self::display($formatted);
         }
         return '-';
     }
@@ -202,10 +203,11 @@ class ViewMethod
     /**
      * Uzun metinleri keser ve sonuna ... ekler
      */
-    public static function truncate(string $text, int $length = 100, string $append = '...'): string
+    public static function truncate(?string $text, int $length = 100, string $append = '...'): string
     {
+        if (empty($text)) return '';
         $text = strip_tags($text);
-        if (mb_strlen($text, 'UTF-8') <= $length) return $text;
+        if (mb_strlen($text, 'UTF-8') <= $length) return self::display($text);
         
         $truncated = mb_substr($text, 0, $length, 'UTF-8');
         // Son kelimeyi bölmemek için son boşluğa kadar al
@@ -215,7 +217,7 @@ class ViewMethod
                 $truncated = mb_substr($truncated, 0, $lastSpace, 'UTF-8');
             }
         }
-        return $truncated . $append;
+        return self::display($truncated . $append);
     }
 
     // --- Para Birimi Formatlama ---
@@ -223,8 +225,11 @@ class ViewMethod
     /**
      * Tutar ve para birimi sembolü formatlama
      */
-    public static function money(float $amount, string $currency = 'usd'): string
+    public static function money($amount, string $currency = 'usd'): string
     {
+        if ($amount === null || $amount === '') return '-';
+        $amount = (float)$amount;
+        
         $currencies = [
             'usd' => '$',   // US Dollar
             'eur' => '€',   // Euro
@@ -261,10 +266,84 @@ class ViewMethod
         
         // USD ve GBP gibi birimlerde sembol genelde başa gelir, TL veya EUR'da sona.
         if (in_array($currency, ['usd', 'gbp', 'aud', 'cad', 'sgd', 'hkd', 'nzd', 'mxn', 'brl'])) {
-            return $symbol . $formattedAmount;
+            return self::display($symbol . $formattedAmount);
         }
         
-        return $formattedAmount . ' ' . $symbol;
+        return self::display($formattedAmount . ' ' . $symbol);
+    }
+
+    /**
+     * Metni URL dostu bir slug'a çevirir (Örn: "Merhaba Dünya!" -> "merhaba-dunya")
+     */
+    public static function slugify(string ...$texts): string
+    {
+        $text = implode('-', $texts);
+        $text = mb_strtolower($text, 'UTF-8');
+        
+        $search = [
+            'ç', 'ğ', 'ı', 'ö', 'ş', 'ü', // TR
+            'ä', 'ß',                     // DE
+            'ñ',                          // ES
+            'é', 'è', 'ê', 'ë', 'à', 'á', 'â', 'î', 'ï', 'í', 'ô', 'ó', 'ú', 'û', 'ù', 'æ', 'œ' // FR & ES
+        ];
+        $replace = [
+            'c', 'g', 'i', 'o', 's', 'u',
+            'ae', 'ss',
+            'n',
+            'e', 'e', 'e', 'e', 'a', 'a', 'a', 'i', 'i', 'i', 'o', 'o', 'u', 'u', 'u', 'ae', 'oe'
+        ];
+        
+        $text = str_replace($search, $replace, $text);
+        $text = preg_replace('/[^a-z0-9\-]/', '-', $text);
+        $text = preg_replace('/-+/', '-', $text);
+        return trim($text, '-');
+    }
+
+    /**
+     * Menülerde geçerli sayfa ise belirtilen class'ı döndürür.
+     */
+    public static function activeClass(string $path, string $className = 'active'): string
+    {
+        $currentUri = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+        return ($currentUri === $path) ? $className : '';
+    }
+
+    /**
+     * Dosya boyutlarını okunabilir formata çevirir (KB, MB, GB vb.)
+     */
+    public static function formatSize(int $bytes): string
+    {
+        if ($bytes <= 0) return '0 B';
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        $power = floor(log($bytes, 1024));
+        return self::display(number_format($bytes / pow(1024, $power), 2, ',', '.') . ' ' . $units[$power]);
+    }
+
+    /**
+     * E-posta adresini KVKK/GDPR kapsamında maskeler (Örn: u***@artilingo.com)
+     */
+    public static function maskEmail(?string $email): string
+    {
+        if (empty($email)) return '-';
+        if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) return self::display($email);
+        list($first, $last) = explode('@', $email);
+        $first = mb_substr($first, 0, 1, 'UTF-8') . str_repeat('*', max(mb_strlen($first, 'UTF-8') - 1, 3));
+        return self::display($first . '@' . $last);
+    }
+
+    /**
+     * Telefon numarasını KVKK kapsamında maskeler (Örn: +90 555 *** ** 67)
+     */
+    public static function maskPhone(?string $phone): string
+    {
+        if (empty($phone)) return '-';
+        $phoneStr = preg_replace('/[^\d\+]/', '', $phone);
+        $len = strlen($phoneStr);
+        if ($len < 6) return self::display($phone);
+        $start = substr($phoneStr, 0, 3);
+        $end = substr($phoneStr, -2);
+        $masked = $start . str_repeat('*', max($len - 5, 3)) . $end;
+        return self::display($masked);
     }
 }
 
@@ -276,7 +355,7 @@ if (!function_exists('display')) {
 }
 
 if (!function_exists('escapeUrl')) {
-    function escapeUrl(string $url): string {
+    function escapeUrl(?string $url): string {
         return \Bin\ViewMethod::escapeUrl($url);
     }
 }
@@ -342,13 +421,43 @@ if (!function_exists('timeAgo')) {
 }
 
 if (!function_exists('truncate')) {
-    function truncate(string $text, int $length = 100, string $append = '...'): string {
+    function truncate(?string $text, int $length = 100, string $append = '...'): string {
         return \Bin\ViewMethod::truncate($text, $length, $append);
     }
 }
 
 if (!function_exists('money')) {
-    function money(float $amount, string $currency = 'usd'): string {
+    function money($amount, string $currency = 'usd'): string {
         return \Bin\ViewMethod::money($amount, $currency);
+    }
+}
+
+if (!function_exists('slugify')) {
+    function slugify(string ...$texts): string {
+        return \Bin\ViewMethod::slugify(...$texts);
+    }
+}
+
+if (!function_exists('activeClass')) {
+    function activeClass(string $path, string $className = 'active'): string {
+        return \Bin\ViewMethod::activeClass($path, $className);
+    }
+}
+
+if (!function_exists('formatSize')) {
+    function formatSize(int $bytes): string {
+        return \Bin\ViewMethod::formatSize($bytes);
+    }
+}
+
+if (!function_exists('maskEmail')) {
+    function maskEmail(?string $email): string {
+        return \Bin\ViewMethod::maskEmail($email);
+    }
+}
+
+if (!function_exists('maskPhone')) {
+    function maskPhone(?string $phone): string {
+        return \Bin\ViewMethod::maskPhone($phone);
     }
 }

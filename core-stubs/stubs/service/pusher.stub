@@ -1,0 +1,232 @@
+<?php
+
+namespace Service;
+
+use Pusher\Pusher;
+
+/**
+ * Pusher Realtime Service
+ *
+ * Provides a clean interface for Pusher Channels — broadcasting events,
+ * authenticating private/presence channels, and querying channel state.
+ * Uses the pusher/pusher-php-server SDK. All configuration from $_ENV.
+ *
+ * Required environment variables:
+ *   PUSHER_APP_ID     — Your Pusher application ID
+ *   PUSHER_APP_KEY    — Your Pusher application key
+ *   PUSHER_APP_SECRET — Your Pusher application secret
+ *   PUSHER_CLUSTER    — Pusher cluster region (e.g., 'eu', 'us2', 'ap1')
+ *
+ * @package Service
+ */
+class PusherService
+{
+    /**
+     * The Pusher SDK client instance.
+     *
+     * @var \Pusher\Pusher
+     */
+    private Pusher $pusher;
+
+    /**
+     * Create a new PusherService instance.
+     *
+     * Initializes the Pusher SDK client using credentials
+     * and cluster configuration from environment variables.
+     *
+     * @throws \Pusher\PusherException If credentials are invalid or missing
+     */
+    public function __construct()
+    {
+        $this->pusher = new Pusher(
+            $_ENV['PUSHER_APP_KEY'],
+            $_ENV['PUSHER_APP_SECRET'],
+            $_ENV['PUSHER_APP_ID'],
+            [
+                'cluster'   => $_ENV['PUSHER_CLUSTER'] ?? 'mt1',
+                'useTLS'    => true,
+                'encrypted' => true,
+            ]
+        );
+    }
+
+    /**
+     * Broadcast an event to a single channel.
+     *
+     * Triggers an event on the specified channel, delivering
+     * the given data payload to all subscribers of that channel.
+     *
+     * Channel naming conventions:
+     *   - Public channels: 'my-channel'
+     *   - Private channels: 'private-my-channel'
+     *   - Presence channels: 'presence-my-channel'
+     *
+     * @param  string $channel The channel name to broadcast on
+     * @param  string $event   The event name to trigger
+     * @param  array  $data    The event payload data
+     * @return bool            True on success, false on failure
+     */
+    public function broadcast(string $channel, string $event, array $data): bool
+    {
+        try {
+            $response = $this->pusher->trigger($channel, $event, $data);
+
+            return (bool) $response;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Broadcast an event to multiple channels simultaneously.
+     *
+     * Triggers the same event with the same payload across
+     * multiple channels in a single API call. Pusher limits
+     * this to a maximum of 100 channels per call.
+     *
+     * @param  array  $channels List of channel names (max 100)
+     * @param  string $event    The event name to trigger
+     * @param  array  $data     The event payload data
+     * @return bool             True on success, false on failure
+     */
+    public function broadcastToMany(array $channels, string $event, array $data): bool
+    {
+        try {
+            $response = $this->pusher->trigger($channels, $event, $data);
+
+            return (bool) $response;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Send an event to a specific user via their user channel.
+     *
+     * Uses Pusher's user event feature to deliver a message directly
+     * to a single authenticated user, regardless of which channels
+     * they are subscribed to. The user must have been authenticated
+     * with a user ID on the client side.
+     *
+     * @param  string $userId The target user's unique identifier
+     * @param  string $event  The event name to trigger
+     * @param  array  $data   The event payload data
+     * @return bool           True on success, false on failure
+     */
+    public function toUser(string $userId, string $event, array $data): bool
+    {
+        try {
+            $response = $this->pusher->sendToUser($userId, $event, $data);
+
+            return (bool) $response;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Get information about a specific channel.
+     *
+     * Returns metadata about the channel including whether it is
+     * currently occupied and, for presence channels, the user count.
+     *
+     * @param  string $channel The channel name to query
+     * @return array           Channel info ['occupied' => bool, 'user_count' => int|null]
+     *                         Returns empty array on failure
+     */
+    public function channelInfo(string $channel): array
+    {
+        try {
+            $info = $this->pusher->getChannelInfo($channel, [
+                'info' => 'user_count,subscription_count',
+            ]);
+
+            return [
+                'occupied'           => $info->occupied ?? false,
+                'user_count'         => $info->user_count ?? null,
+                'subscription_count' => $info->subscription_count ?? null,
+            ];
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * List all active (occupied) channels.
+     *
+     * Optionally filters channels by a name prefix. For example,
+     * passing 'presence-' will return only active presence channels.
+     *
+     * @param  string $prefix Optional channel name prefix filter
+     * @return array          List of active channel names
+     */
+    public function channels(string $prefix = ''): array
+    {
+        try {
+            $params = [];
+
+            if ($prefix !== '') {
+                $params['filter_by_prefix'] = $prefix;
+            }
+
+            $result = $this->pusher->getChannels($params);
+
+            if (isset($result->channels)) {
+                return array_keys((array) $result->channels);
+            }
+
+            return [];
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Authenticate a private or presence channel subscription.
+     *
+     * This method should be called from your authentication endpoint
+     * when a client attempts to subscribe to a private or presence channel.
+     * Returns the authentication signature string that the client SDK expects.
+     *
+     * For presence channels, use presenceAuth() instead to include user data.
+     *
+     * @param  string $channelName The channel being subscribed to
+     * @param  string $socketId    The connecting socket's ID
+     * @return string              JSON-encoded authentication response
+     */
+    public function auth(string $channelName, string $socketId): string
+    {
+        try {
+            return $this->pusher->authorizeChannel($channelName, $socketId);
+        } catch (\Exception $e) {
+            return json_encode(['error' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Authenticate a presence channel subscription with user data.
+     *
+     * Similar to auth() but also attaches user identity and optional
+     * metadata to the presence channel. This allows other subscribers
+     * to see who is present in the channel.
+     *
+     * @param  string $channelName The presence channel being subscribed to
+     * @param  string $socketId    The connecting socket's ID
+     * @param  string $userId      The unique identifier for the subscribing user
+     * @param  array  $userInfo    Optional additional user metadata (e.g., name, avatar)
+     * @return string              JSON-encoded authentication response with user data
+     */
+    public function presenceAuth(string $channelName, string $socketId, string $userId, array $userInfo = []): string
+    {
+        try {
+            $presenceData = [
+                'user_id'   => $userId,
+                'user_info' => $userInfo,
+            ];
+
+            return $this->pusher->authorizePresenceChannel($channelName, $socketId, $userId, $userInfo);
+        } catch (\Exception $e) {
+            return json_encode(['error' => $e->getMessage()]);
+        }
+    }
+}

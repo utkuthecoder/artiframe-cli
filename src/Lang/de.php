@@ -103,4 +103,31 @@ return [
     'VERSION_UPDATE_SUCCESS'   => '✅  Update abgeschlossen! Bitte Terminal neu starten.',
     'VERSION_UPDATE_FAILED'    => '❌  Update fehlgeschlagen.',
     'HELP_CLI_VERSION_DESC'    => 'CLI-Version anzeigen und nach Updates suchen.',
+
+    // Terminal Launch
+    'TERMINAL_OPENED'    => 'Neues Terminal im Projektverzeichnis geöffnet.',
+    'TERMINAL_CLOSE_OLD' => 'Sie können dieses Fenster schließen.',
+    'TERMINAL_FALLBACK'  => 'Terminal konnte nicht automatisch geöffnet werden. Bitte navigieren Sie zum Projektverzeichnis:',
+
+    // AddCommand
+    'ADD_MISSING_NAME'    => 'Paketname nicht angegeben. Verwendung: add <paketname>',
+    'ADD_NOT_FOUND'       => '":name" wurde nicht im ArtiFrame-Paketregister gefunden.',
+    'ADD_NO_PROJECT'      => 'Kein ArtiFrame-Projekt in diesem Verzeichnis gefunden. (composer.json fehlt)',
+    'ADD_INSTALLING'      => ':name wird installiert... (:composer)',
+    'ADD_FAILED'          => 'Installation von :name fehlgeschlagen.',
+    'ADD_SUCCESS'          => ':name erfolgreich installiert! (:composer)',
+    'ADD_SERVICE_NEEDED'  => 'Service-Klasse muss erstellt werden: :path',
+    'ADD_LIST_TITLE'      => 'Verfügbare Pakete',
+    'ADD_CAT_INTEGRATED'  => 'Integriert (Composer + Service-Klasse)',
+    'ADD_CAT_DIRECT'      => 'Direkt verwendbar (Nur Composer)',
+    'HELP_ADD_DESC'       => 'Fügt ein ArtiFrame-genehmigtes Paket zum Projekt hinzu.',
+    'HELP_ADD_LIST'       => 'Listet alle Pakete auf',
+
+    // AddCommand (Extended)
+    'ADD_ALREADY'         => ':name ist bereits in diesem Projekt installiert.',
+    'ADD_SERVICE_CREATED' => 'Service-Klasse erstellt: :path',
+    'ADD_ENV_UPDATED'     => '.env und .env.example Dateien aktualisiert.',
+    'ADD_EDIT_ENV'        => 'Bitte füllen Sie die API-Schlüssel in Ihrer .env-Datei aus.',
+    'ADD_STUB_MISSING'    => 'Service-Vorlage für :name nicht gefunden.',
+    'ADD_SERVICE_EXISTS'  => 'Service-Datei existiert bereits: :path (übersprungen)',
 ];

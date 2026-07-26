@@ -1,0 +1,139 @@
+<?php
+
+/**
+ * Sentry Error Tracking Configuration
+ *
+ * Initializes the Sentry SDK for error reporting and provides
+ * helper functions for capturing exceptions and messages.
+ *
+ * Required ENV variables:
+ *   SENTRY_DSN — Sentry Data Source Name (project DSN from sentry.io)
+ *
+ * Optional ENV variables:
+ *   APP_ENV     — "0" for production, "1" for development (default: 0)
+ *   APP_VERSION — Application version string, used as Sentry release tag
+ *
+ * Usage:
+ *   require_once __DIR__ . '/sentry.php';
+ *
+ *   // Capture an exception
+ *   try { ... } catch (\Throwable $e) {
+ *       $eventId = captureError($e);
+ *   }
+ *
+ *   // Capture an informational message
+ *   captureMessage('Deployment completed', 'info');
+ */
+
+// ---------------------------------------------------------------
+//  Guard — only initialize when a DSN is available
+// ---------------------------------------------------------------
+if (empty($_ENV['SENTRY_DSN'])) {
+    /**
+     * No-op fallback when Sentry is not configured.
+     *
+     * @param  \Throwable $e The exception (ignored).
+     * @return string|null   Always returns null.
+     */
+    function captureError(\Throwable $e): ?string
+    {
+        return null;
+    }
+
+    /**
+     * No-op fallback when Sentry is not configured.
+     *
+     * @param  string $message The message (ignored).
+     * @param  string $level   Severity level (ignored).
+     * @return string|null     Always returns null.
+     */
+    function captureMessage(string $message, string $level = 'info'): ?string
+    {
+        return null;
+    }
+
+    return;
+}
+
+// ---------------------------------------------------------------
+//  Determine environment & sample rate
+// ---------------------------------------------------------------
+
+/** @var bool Whether the application is running in production mode */
+$isProduction = ($_ENV['APP_ENV'] ?? '0') === '0';
+
+/** @var string Human-readable environment name for Sentry */
+$environment = $isProduction ? 'production' : 'development';
+
+/**
+ * Sample rate:
+ *   1.0 — capture 100 % of events in production
+ *   0.0 — capture nothing in development (use captureError/captureMessage explicitly)
+ */
+$sampleRate = $isProduction ? 1.0 : 0.0;
+
+// ---------------------------------------------------------------
+//  Sentry initialization
+// ---------------------------------------------------------------
+
+$options = [
+    'dsn'         => $_ENV['SENTRY_DSN'],
+    'environment' => $environment,
+    'sample_rate' => $sampleRate,
+];
+
+// Attach release version when available
+if (!empty($_ENV['APP_VERSION'])) {
+    $options['release'] = $_ENV['APP_VERSION'];
+}
+
+\Sentry\init($options);
+
+// ---------------------------------------------------------------
+//  Helper functions
+// ---------------------------------------------------------------
+
+/**
+ * Capture a Throwable and send it to Sentry.
+ *
+ * @param  \Throwable $e The exception or error to report.
+ * @return string|null   The Sentry event ID, or null on failure.
+ */
+function captureError(\Throwable $e): ?string
+{
+    try {
+        $eventId = \Sentry\captureException($e);
+        return $eventId ? (string) $eventId : null;
+    } catch (\Throwable $inner) {
+        error_log('[Sentry::captureError] Failed to report: ' . $inner->getMessage());
+        return null;
+    }
+}
+
+/**
+ * Capture a plain-text message and send it to Sentry.
+ *
+ * Supported severity levels: fatal, error, warning, info, debug.
+ *
+ * @param  string $message Human-readable message to log.
+ * @param  string $level   Sentry severity level (default: info).
+ * @return string|null     The Sentry event ID, or null on failure.
+ */
+function captureMessage(string $message, string $level = 'info'): ?string
+{
+    try {
+        $severity = match ($level) {
+            'fatal'   => \Sentry\Severity::fatal(),
+            'error'   => \Sentry\Severity::error(),
+            'warning' => \Sentry\Severity::warning(),
+            'debug'   => \Sentry\Severity::debug(),
+            default   => \Sentry\Severity::info(),
+        };
+
+        $eventId = \Sentry\captureMessage($message, $severity);
+        return $eventId ? (string) $eventId : null;
+    } catch (\Throwable $inner) {
+        error_log('[Sentry::captureMessage] Failed to report: ' . $inner->getMessage());
+        return null;
+    }
+}

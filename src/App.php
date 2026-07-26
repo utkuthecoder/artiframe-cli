@@ -191,6 +191,10 @@ class App
                 (new \ArtiFrame\Cli\Commands\LangCommand($this->translator))->execute($commandArgs);
                 break;
 
+            case 'add':
+                (new \ArtiFrame\Cli\Commands\AddCommand($this->translator))->execute($commandArgs);
+                break;
+
             case 'version':
                 // Always routes to project version manager
                 (new \ArtiFrame\Cli\Commands\VersionCommand($this->translator))->execute($commandArgs);
@@ -284,6 +288,14 @@ class App
         echo "  " . $d . "│" . $r . "   " . $t->get('HELP_LANG_DESC') . PHP_EOL;
         echo "  " . $d . "├── " . $r . "Example: " . $lg . "lang" . $r . $d . "        (interactive)" . $r . PHP_EOL;
         echo "  " . $d . "└── " . $r . "Example: " . $lg . "lang en" . $r . $d . "     (direct)" . $r . PHP_EOL;
+        echo PHP_EOL;
+
+        // add
+        echo "  " . $g . "add" . $r . " " . $y . "<package>" . $r . PHP_EOL;
+        echo "  " . $d . "│" . $r . "   " . $t->get('HELP_ADD_DESC') . PHP_EOL;
+        echo "  " . $d . "├── " . $r . "Example: " . $lg . "add iyzico" . $r . PHP_EOL;
+        echo "  " . $d . "├── " . $r . "Example: " . $lg . "add phpmailer" . $r . PHP_EOL;
+        echo "  " . $d . "└── " . $r . $lg . "add list" . $r . $d . "       " . $t->get('HELP_ADD_LIST') . $r . PHP_EOL;
         echo PHP_EOL;
 
         // help / exit

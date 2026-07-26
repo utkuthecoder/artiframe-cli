@@ -1,0 +1,377 @@
+<?php
+
+namespace Service;
+
+use Aws\S3\S3Client;
+use Aws\S3\Exception\S3Exception;
+
+/**
+ * S3Storage — Wrapper for AWS S3 SDK.
+ *
+ * Provides simple methods for uploading, downloading, deleting, listing,
+ * and managing files on Amazon S3, MinIO, DigitalOcean Spaces, or any
+ * S3-compatible object storage.
+ *
+ * Required ENV variables:
+ *   AWS_ACCESS_KEY_ID     — IAM access key
+ *   AWS_SECRET_ACCESS_KEY — IAM secret key
+ *   AWS_DEFAULT_REGION    — e.g. "eu-central-1"
+ *   AWS_BUCKET            — Default bucket name
+ *
+ * Optional ENV variables:
+ *   AWS_ENDPOINT          — Custom endpoint URL (MinIO, Spaces, etc.)
+ *
+ * @package Service
+ */
+class S3Storage
+{
+    /** @var S3Client AWS S3 client instance */
+    private S3Client $client;
+
+    /** @var string Default bucket name */
+    private string $bucket;
+
+    /**
+     * Create the S3 client from environment variables.
+     *
+     * When AWS_ENDPOINT is set the client connects to a custom
+     * S3-compatible service (MinIO, DigitalOcean Spaces, Cloudflare R2, etc.).
+     */
+    public function __construct()
+    {
+        $region   = $_ENV['AWS_DEFAULT_REGION'] ?? 'us-east-1';
+        $endpoint = $_ENV['AWS_ENDPOINT'] ?? null;
+
+        $config = [
+            'version'     => 'latest',
+            'region'      => $region,
+            'credentials' => [
+                'key'    => $_ENV['AWS_ACCESS_KEY_ID'],
+                'secret' => $_ENV['AWS_SECRET_ACCESS_KEY'],
+            ],
+        ];
+
+        // Custom endpoint for S3-compatible services
+        if ($endpoint) {
+            $config['endpoint']                = $endpoint;
+            $config['use_path_style_endpoint'] = true;
+        }
+
+        $this->client = new S3Client($config);
+        $this->bucket = $_ENV['AWS_BUCKET'];
+    }
+
+    // ---------------------------------------------------------------
+    //  Upload
+    // ---------------------------------------------------------------
+
+    /**
+     * Upload a local file to S3.
+     *
+     * @param  string $localPath  Absolute path to the local file.
+     * @param  string $remotePath Object key (path) in the bucket.
+     * @param  string $acl        Canned ACL: private, public-read, etc.
+     * @return array{status: bool, url: string|null, error: string|null}
+     */
+    public function upload(string $localPath, string $remotePath, string $acl = 'private'): array
+    {
+        try {
+            $result = $this->client->putObject([
+                'Bucket'      => $this->bucket,
+                'Key'         => $remotePath,
+                'SourceFile'  => $localPath,
+                'ACL'         => $acl,
+                'ContentType' => mime_content_type($localPath) ?: 'application/octet-stream',
+            ]);
+
+            return [
+                'status' => true,
+                'url'    => $result['ObjectURL'] ?? $this->url($remotePath),
+                'error'  => null,
+            ];
+        } catch (S3Exception $e) {
+            error_log('[S3Storage::upload] ' . $e->getMessage());
+            return ['status' => false, 'url' => null, 'error' => $e->getMessage()];
+        }
+    }
+
+    // ---------------------------------------------------------------
+    //  Upload from String
+    // ---------------------------------------------------------------
+
+    /**
+     * Upload content from a string directly to S3.
+     *
+     * Useful for storing generated data (JSON, CSV, HTML) without
+     * writing a temporary file to disk first.
+     *
+     * @param  string $content     The raw string content to store.
+     * @param  string $remotePath  Object key (path) in the bucket.
+     * @param  string $contentType MIME type, e.g. "application/json".
+     * @param  string $acl         Canned ACL: private, public-read, etc.
+     * @return array{status: bool, url: string|null, error: string|null}
+     */
+    public function uploadFromString(string $content, string $remotePath, string $contentType, string $acl = 'private'): array
+    {
+        try {
+            $result = $this->client->putObject([
+                'Bucket'      => $this->bucket,
+                'Key'         => $remotePath,
+                'Body'        => $content,
+                'ACL'         => $acl,
+                'ContentType' => $contentType,
+            ]);
+
+            return [
+                'status' => true,
+                'url'    => $result['ObjectURL'] ?? $this->url($remotePath),
+                'error'  => null,
+            ];
+        } catch (S3Exception $e) {
+            error_log('[S3Storage::uploadFromString] ' . $e->getMessage());
+            return ['status' => false, 'url' => null, 'error' => $e->getMessage()];
+        }
+    }
+
+    // ---------------------------------------------------------------
+    //  Download
+    // ---------------------------------------------------------------
+
+    /**
+     * Download a file from S3 to a local path.
+     *
+     * @param  string $remotePath Object key in the bucket.
+     * @param  string $localPath  Absolute local destination path.
+     * @return bool   True on success.
+     */
+    public function download(string $remotePath, string $localPath): bool
+    {
+        try {
+            $this->client->getObject([
+                'Bucket' => $this->bucket,
+                'Key'    => $remotePath,
+                'SaveAs' => $localPath,
+            ]);
+
+            return true;
+        } catch (S3Exception $e) {
+            error_log('[S3Storage::download] ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    // ---------------------------------------------------------------
+    //  Delete
+    // ---------------------------------------------------------------
+
+    /**
+     * Delete a single object from S3.
+     *
+     * @param  string $remotePath Object key to delete.
+     * @return bool   True on success.
+     */
+    public function delete(string $remotePath): bool
+    {
+        try {
+            $this->client->deleteObject([
+                'Bucket' => $this->bucket,
+                'Key'    => $remotePath,
+            ]);
+
+            return true;
+        } catch (S3Exception $e) {
+            error_log('[S3Storage::delete] ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Delete multiple objects from S3 in a single request.
+     *
+     * @param  array<string> $remotePaths List of object keys to delete.
+     * @return bool  True when all objects are deleted successfully.
+     */
+    public function deleteMany(array $remotePaths): bool
+    {
+        try {
+            $objects = array_map(fn(string $key) => ['Key' => $key], $remotePaths);
+
+            $this->client->deleteObjects([
+                'Bucket' => $this->bucket,
+                'Delete' => [
+                    'Objects' => $objects,
+                    'Quiet'   => true,
+                ],
+            ]);
+
+            return true;
+        } catch (S3Exception $e) {
+            error_log('[S3Storage::deleteMany] ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    // ---------------------------------------------------------------
+    //  URL helpers
+    // ---------------------------------------------------------------
+
+    /**
+     * Get the public URL for an object.
+     *
+     * @param  string $remotePath Object key in the bucket.
+     * @return string The public URL.
+     */
+    public function url(string $remotePath): string
+    {
+        return $this->client->getObjectUrl($this->bucket, $remotePath);
+    }
+
+    /**
+     * Generate a pre-signed (temporary) URL for private objects.
+     *
+     * @param  string $remotePath Object key in the bucket.
+     * @param  int    $minutes    Link validity in minutes (default 60).
+     * @return string Pre-signed URL.
+     */
+    public function signedUrl(string $remotePath, int $minutes = 60): string
+    {
+        $command = $this->client->getCommand('GetObject', [
+            'Bucket' => $this->bucket,
+            'Key'    => $remotePath,
+        ]);
+
+        $request = $this->client->createPresignedRequest($command, "+{$minutes} minutes");
+
+        return (string) $request->getUri();
+    }
+
+    // ---------------------------------------------------------------
+    //  Existence check
+    // ---------------------------------------------------------------
+
+    /**
+     * Check whether an object exists in the bucket.
+     *
+     * @param  string $remotePath Object key to check.
+     * @return bool   True if the object exists.
+     */
+    public function exists(string $remotePath): bool
+    {
+        try {
+            return $this->client->doesObjectExistV2($this->bucket, $remotePath);
+        } catch (S3Exception $e) {
+            error_log('[S3Storage::exists] ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    // ---------------------------------------------------------------
+    //  List objects
+    // ---------------------------------------------------------------
+
+    /**
+     * List objects under a given prefix (folder).
+     *
+     * Returns an array of associative arrays with key, size, and
+     * last_modified for each object.
+     *
+     * @param  string $prefix Key prefix to filter by (e.g. "uploads/").
+     * @return array<int, array{key: string, size: int, last_modified: string}>
+     */
+    public function list(string $prefix = ''): array
+    {
+        try {
+            $results = [];
+            $params  = [
+                'Bucket' => $this->bucket,
+                'Prefix' => $prefix,
+            ];
+
+            $paginator = $this->client->getPaginator('ListObjectsV2', $params);
+
+            foreach ($paginator as $page) {
+                $contents = $page['Contents'] ?? [];
+                foreach ($contents as $object) {
+                    $results[] = [
+                        'key'           => $object['Key'],
+                        'size'          => $object['Size'],
+                        'last_modified' => $object['LastModified']->format('Y-m-d H:i:s'),
+                    ];
+                }
+            }
+
+            return $results;
+        } catch (S3Exception $e) {
+            error_log('[S3Storage::list] ' . $e->getMessage());
+            return [];
+        }
+    }
+
+    // ---------------------------------------------------------------
+    //  Copy & Move
+    // ---------------------------------------------------------------
+
+    /**
+     * Copy an object to a new key within the same bucket.
+     *
+     * @param  string $from Source object key.
+     * @param  string $to   Destination object key.
+     * @return bool   True on success.
+     */
+    public function copy(string $from, string $to): bool
+    {
+        try {
+            $this->client->copyObject([
+                'Bucket'     => $this->bucket,
+                'CopySource' => "{$this->bucket}/{$from}",
+                'Key'        => $to,
+            ]);
+
+            return true;
+        } catch (S3Exception $e) {
+            error_log('[S3Storage::copy] ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Move an object to a new key (copy + delete).
+     *
+     * @param  string $from Source object key.
+     * @param  string $to   Destination object key.
+     * @return bool   True when copy and delete both succeed.
+     */
+    public function move(string $from, string $to): bool
+    {
+        if ($this->copy($from, $to)) {
+            return $this->delete($from);
+        }
+
+        return false;
+    }
+
+    // ---------------------------------------------------------------
+    //  File size
+    // ---------------------------------------------------------------
+
+    /**
+     * Get the size of an object in bytes.
+     *
+     * @param  string $remotePath Object key in the bucket.
+     * @return int    File size in bytes, or -1 on failure.
+     */
+    public function size(string $remotePath): int
+    {
+        try {
+            $result = $this->client->headObject([
+                'Bucket' => $this->bucket,
+                'Key'    => $remotePath,
+            ]);
+
+            return (int) ($result['ContentLength'] ?? 0);
+        } catch (S3Exception $e) {
+            error_log('[S3Storage::size] ' . $e->getMessage());
+            return -1;
+        }
+    }
+}

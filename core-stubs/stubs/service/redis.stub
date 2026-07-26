@@ -1,0 +1,361 @@
+<?php
+
+namespace Service;
+
+use Predis\Client;
+
+/**
+ * Redis Cache Service
+ *
+ * Provides a clean, simple interface for Redis caching operations
+ * using the predis/predis SDK. All configuration is read from $_ENV.
+ *
+ * Required environment variables:
+ *   REDIS_HOST     — Redis server hostname (default: 127.0.0.1)
+ *   REDIS_PORT     — Redis server port (default: 6379)
+ *   REDIS_PASSWORD — Redis authentication password (default: null)
+ *   REDIS_DATABASE — Redis database index (default: 0)
+ *
+ * @package Service
+ */
+class RedisCache
+{
+    /**
+     * The Predis client instance.
+     *
+     * @var \Predis\Client
+     */
+    private Client $client;
+
+    /**
+     * Create a new RedisCache instance.
+     *
+     * Initializes the Predis client using connection parameters
+     * from environment variables. Falls back to sensible defaults
+     * if variables are not set.
+     *
+     * @throws \Predis\Connection\ConnectionException If unable to connect to Redis
+     */
+    public function __construct()
+    {
+        $this->client = new Client([
+            'scheme'   => 'tcp',
+            'host'     => $_ENV['REDIS_HOST'] ?? '127.0.0.1',
+            'port'     => (int) ($_ENV['REDIS_PORT'] ?? 6379),
+            'password' => $_ENV['REDIS_PASSWORD'] ?? null,
+            'database' => (int) ($_ENV['REDIS_DATABASE'] ?? 0),
+        ]);
+    }
+
+    /**
+     * Get a value from the cache.
+     *
+     * Automatically attempts to JSON-decode the stored value.
+     * If decoding fails, the raw string value is returned.
+     *
+     * @param  string $key     The cache key
+     * @param  mixed  $default Default value if key does not exist
+     * @return mixed           The cached value, decoded JSON, or default
+     */
+    public function get(string $key, mixed $default = null): mixed
+    {
+        try {
+            $value = $this->client->get($key);
+
+            if ($value === null) {
+                return $default;
+            }
+
+            $decoded = json_decode($value, true);
+
+            return (json_last_error() === JSON_ERROR_NONE) ? $decoded : $value;
+        } catch (\Exception $e) {
+            return $default;
+        }
+    }
+
+    /**
+     * Store a value in the cache.
+     *
+     * Arrays and objects are automatically JSON-encoded before storage.
+     * Scalar values are stored as-is.
+     *
+     * @param  string $key   The cache key
+     * @param  mixed  $value The value to store
+     * @param  int    $ttl   Time-to-live in seconds (0 = no expiry)
+     * @return bool          True on success, false on failure
+     */
+    public function set(string $key, mixed $value, int $ttl = 0): bool
+    {
+        try {
+            $serialized = (is_array($value) || is_object($value))
+                ? json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+                : $value;
+
+            if ($ttl > 0) {
+                $result = $this->client->setex($key, $ttl, $serialized);
+            } else {
+                $result = $this->client->set($key, $serialized);
+            }
+
+            return (string) $result === 'OK';
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Check if a key exists in the cache.
+     *
+     * @param  string $key The cache key
+     * @return bool        True if the key exists
+     */
+    public function has(string $key): bool
+    {
+        try {
+            return (bool) $this->client->exists($key);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Delete a key from the cache.
+     *
+     * @param  string $key The cache key to delete
+     * @return bool        True if the key was deleted, false if it didn't exist or on error
+     */
+    public function forget(string $key): bool
+    {
+        try {
+            return $this->client->del([$key]) > 0;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Get a value from cache, or execute a callback and store the result.
+     *
+     * This is the classic "cache-aside" pattern. If the key exists in cache,
+     * its value is returned. Otherwise, the callback is executed, its return
+     * value is stored in cache with the given TTL, and then returned.
+     *
+     * @param  string   $key      The cache key
+     * @param  int      $ttl      Time-to-live in seconds
+     * @param  callable $callback Function to execute if key is not cached
+     * @return mixed              The cached or freshly computed value
+     */
+    public function remember(string $key, int $ttl, callable $callback): mixed
+    {
+        if ($this->has($key)) {
+            return $this->get($key);
+        }
+
+        $value = $callback();
+        $this->set($key, $value, $ttl);
+
+        return $value;
+    }
+
+    /**
+     * Increment a numeric value stored at the given key.
+     *
+     * If the key does not exist, it is initialized to 0 before incrementing.
+     *
+     * @param  string $key    The cache key
+     * @param  int    $amount Amount to increment by (default: 1)
+     * @return int            The new value after incrementing
+     */
+    public function increment(string $key, int $amount = 1): int
+    {
+        try {
+            return $this->client->incrby($key, $amount);
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Decrement a numeric value stored at the given key.
+     *
+     * If the key does not exist, it is initialized to 0 before decrementing.
+     *
+     * @param  string $key    The cache key
+     * @param  int    $amount Amount to decrement by (default: 1)
+     * @return int            The new value after decrementing
+     */
+    public function decrement(string $key, int $amount = 1): int
+    {
+        try {
+            return $this->client->decrby($key, $amount);
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Clear all keys in the current Redis database.
+     *
+     * WARNING: This removes ALL data from the selected database.
+     * Use with caution in production environments.
+     *
+     * @return bool True on success, false on failure
+     */
+    public function flush(): bool
+    {
+        try {
+            $result = $this->client->flushdb();
+            return (string) $result === 'OK';
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * List all keys matching the given pattern.
+     *
+     * Supports Redis glob-style patterns:
+     *   * — matches any sequence of characters
+     *   ? — matches any single character
+     *   [abc] — matches a, b, or c
+     *
+     * WARNING: KEYS is O(N) and should not be used in production on large datasets.
+     * Consider SCAN-based alternatives for large keyspaces.
+     *
+     * @param  string $pattern Glob-style pattern (default: '*' for all keys)
+     * @return array           List of matching key names
+     */
+    public function keys(string $pattern = '*'): array
+    {
+        try {
+            return $this->client->keys($pattern);
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Get the remaining time-to-live for a key.
+     *
+     * @param  string $key The cache key
+     * @return int         TTL in seconds, -1 if no expiry is set, -2 if key does not exist
+     */
+    public function ttl(string $key): int
+    {
+        try {
+            return $this->client->ttl($key);
+        } catch (\Exception $e) {
+            return -2;
+        }
+    }
+
+    /**
+     * Set an expiry (timeout) on an existing key.
+     *
+     * @param  string $key     The cache key
+     * @param  int    $seconds Number of seconds until the key expires
+     * @return bool            True if the timeout was set, false if key does not exist or on error
+     */
+    public function expire(string $key, int $seconds): bool
+    {
+        try {
+            return (bool) $this->client->expire($key, $seconds);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Set a field value in a Redis hash.
+     *
+     * Arrays and objects are automatically JSON-encoded.
+     *
+     * @param  string $hash  The hash key name
+     * @param  string $field The field name within the hash
+     * @param  mixed  $value The value to store
+     * @return bool          True on success
+     */
+    public function hSet(string $hash, string $field, mixed $value): bool
+    {
+        try {
+            $serialized = (is_array($value) || is_object($value))
+                ? json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+                : $value;
+
+            $this->client->hset($hash, $field, $serialized);
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Get a field value from a Redis hash.
+     *
+     * Automatically attempts to JSON-decode the stored value.
+     *
+     * @param  string $hash    The hash key name
+     * @param  string $field   The field name within the hash
+     * @param  mixed  $default Default value if field does not exist
+     * @return mixed           The field value, decoded JSON, or default
+     */
+    public function hGet(string $hash, string $field, mixed $default = null): mixed
+    {
+        try {
+            $value = $this->client->hget($hash, $field);
+
+            if ($value === null) {
+                return $default;
+            }
+
+            $decoded = json_decode($value, true);
+
+            return (json_last_error() === JSON_ERROR_NONE) ? $decoded : $value;
+        } catch (\Exception $e) {
+            return $default;
+        }
+    }
+
+    /**
+     * Get all fields and values from a Redis hash.
+     *
+     * Each value is automatically JSON-decoded if possible.
+     *
+     * @param  string $hash The hash key name
+     * @return array        Associative array of field => value pairs
+     */
+    public function hGetAll(string $hash): array
+    {
+        try {
+            $data = $this->client->hgetall($hash);
+            $result = [];
+
+            foreach ($data as $field => $value) {
+                $decoded = json_decode($value, true);
+                $result[$field] = (json_last_error() === JSON_ERROR_NONE) ? $decoded : $value;
+            }
+
+            return $result;
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Delete a field from a Redis hash.
+     *
+     * @param  string $hash  The hash key name
+     * @param  string $field The field name to delete
+     * @return bool          True if the field was removed, false if it didn't exist or on error
+     */
+    public function hDel(string $hash, string $field): bool
+    {
+        try {
+            return $this->client->hdel($hash, [$field]) > 0;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+}

@@ -56,6 +56,21 @@ class NewProjectCommand
         echo "  " . $this->translator->get('LOCATION_LABEL') . "  : " . $targetDir   . PHP_EOL;
         echo PHP_EOL;
 
+        // Soru sor: Package Name, Author, Homepage vb.
+        $defaultPackage = 'artiframe/' . strtolower($projectName);
+        $packageName    = $this->ask('Package name (e.g. vendor/project)', $defaultPackage);
+        $description    = $this->ask('Description', 'ArtiFrame Core PHP Application');
+        $authorName     = $this->ask('Author name', 'Artilingo');
+        $authorHomepage = $this->ask('Author homepage', 'https://artilingo.com');
+        $type           = $this->askChoice('Type', ['project', 'library', 'composer-plugin'], 'project');
+        
+        $licenses = ['AGPL-3.0-or-later', 'MIT', 'Apache-2.0', 'GPL-2.0-or-later', 'GPL-3.0-or-later', 'BSD-2-Clause', 'BSD-3-Clause', 'ISC', 'proprietary', 'none'];
+        $license        = $this->askChoice('License', $licenses, 'AGPL-3.0-or-later');
+
+        if ($license === 'none') {
+            $license = '';
+        }
+
         // Toplam adım sayısını hesapla
         $coreStubs    = \ARTIFRAME_CLI_ROOT . '/core-stubs';
         $stubCount    = $this->countFiles($coreStubs);
@@ -104,7 +119,7 @@ class NewProjectCommand
 
         // ── FAZ 3: DİNAMİK DOSYALAR ──────────────────────────
         $this->printPhaseHeader(3, 4, $this->translator->get('PHASE_FILES'), $dynamicCount);
-        $this->createDynamicFiles($targetDir);
+        $this->createDynamicFiles($targetDir, $packageName, $description, $authorName, $authorHomepage, $type, $license);
         $this->finishPhase();
 
         // ── FAZ 4: COMPOSER ──────────────────────────────────
@@ -129,9 +144,59 @@ class NewProjectCommand
         $this->printDirectoryTree($targetDir, $projectName);
 
         echo PHP_EOL;
-        echo "  " . $this->translator->get('NEXT_STEPS') . PHP_EOL;
-        echo "     cd " . $projectName . PHP_EOL;
-        echo "     " . $this->translator->get('NEXT_STEPS_EDIT_ENV') . PHP_EOL;
+        echo "  " . $this->translator->get('NEXT_STEPS_EDIT_ENV') . PHP_EOL;
+        echo PHP_EOL;
+
+        // Yeni terminal penceresini proje dizininde aç ve artiframe başlat
+        $this->launchProjectTerminal($targetDir);
+    }
+
+    /**
+     * Proje dizininde yeni bir terminal penceresi açar ve artiframe'i başlatır.
+     * Windows, macOS ve Linux'u otomatik algılar.
+     */
+    private function launchProjectTerminal(string $targetDir): void
+    {
+        $escapedDir = escapeshellarg($targetDir);
+
+        if (PHP_OS_FAMILY === 'Windows') {
+            // Windows: Yeni bir PowerShell penceresi aç, proje dizinine git, artiframe başlat
+            $cmd = 'start powershell -NoExit -Command "Set-Location ' . $escapedDir . '; artiframe"';
+            pclose(popen($cmd, 'r'));
+        } elseif (PHP_OS_FAMILY === 'Darwin') {
+            // macOS: Terminal.app ile yeni pencere
+            $script = 'tell application "Terminal" to do script "cd ' . $escapedDir . ' && artiframe"';
+            exec('osascript -e ' . escapeshellarg($script) . ' &');
+        } else {
+            // Linux: Yaygın terminal emülatörlerini dene
+            $terminals = [
+                'gnome-terminal' => 'gnome-terminal --working-directory=' . $escapedDir . ' -- bash -c "artiframe; exec bash"',
+                'konsole'        => 'konsole --workdir ' . $escapedDir . ' -e bash -c "artiframe; exec bash"',
+                'xfce4-terminal' => 'xfce4-terminal --working-directory=' . $escapedDir . ' -e "bash -c \'artiframe; exec bash\'"',
+                'xterm'          => 'xterm -e "cd ' . $escapedDir . ' && artiframe && bash"',
+            ];
+
+            $launched = false;
+            foreach ($terminals as $bin => $termCmd) {
+                $check = trim(shell_exec('which ' . $bin . ' 2>/dev/null') ?? '');
+                if ($check !== '') {
+                    exec($termCmd . ' &');
+                    $launched = true;
+                    break;
+                }
+            }
+
+            if (!$launched) {
+                // Hiçbir terminal bulunamadıysa fallback: sadece yolu göster
+                echo "  ⚠️  " . $this->translator->get('TERMINAL_FALLBACK') . PHP_EOL;
+                echo "     cd " . basename($targetDir) . PHP_EOL;
+                echo PHP_EOL;
+                return;
+            }
+        }
+
+        echo "  🖥️  " . $this->translator->get('TERMINAL_OPENED') . PHP_EOL;
+        echo "  ✅  " . $this->translator->get('TERMINAL_CLOSE_OLD') . PHP_EOL;
         echo PHP_EOL;
     }
 
@@ -325,17 +390,18 @@ class NewProjectCommand
 
     // ─── Dinamik Dosya Üretici ────────────────────────────────
 
-    private function createDynamicFiles(string $targetDir): void
+    private function createDynamicFiles(string $targetDir, string $packageName, string $description, string $authorName, string $authorHomepage, string $type, string $license): void
     {
         $licenseHeader = "<?php\n/**\n * ArtiFrame Core Engine\n *\n * @package     ArtiFrame\n * @author      Artilingo\n * @license     AGPLv3 (Attribution-ShareAlike Required)\n * @link        https://artiframe.org\n *\n * NOTICE: This file is part of the ArtiFrame ecosystem.\n * Any derivative works or patches MUST retain this original copyright notice\n * and remain open-source under the AGPLv3 license.\n */\n";
+
+        $licenseLine = $license !== '' ? "\n  \"license\": \"$license\"," : "";
 
         // composer.json
         $composerJson = <<<JSON
 {
-  "name": "artiframe/project",
-  "description": "ArtiFrame Core PHP Application",
-  "type": "project",
-  "license": "AGPL-3.0-or-later",
+  "name": "$packageName",
+  "description": "$description",
+  "type": "$type",$licenseLine
   "require": {
     "php": ">=8.1",
     "phpmailer/phpmailer": "^6.9",
@@ -352,8 +418,8 @@ class NewProjectCommand
   },
   "authors": [
     {
-      "name": "Artilingo",
-      "homepage": "https://artilingo.com"
+      "name": "$authorName",
+      "homepage": "$authorHomepage"
     }
   ],
   "config": {
@@ -629,5 +695,27 @@ MANIFEST;
     {
         $command = "cd " . escapeshellarg($targetDir) . " && composer install";
         passthru($command);
+    }
+
+    // ─── Kullanıcı Girdisi ────────────────────────────────────
+
+    private function ask(string $question, string $default = ''): string
+    {
+        $defaultStr = $default !== '' ? " [$default]" : '';
+        echo "  \033[38;5;81m?\033[0m $question$defaultStr: ";
+        $answer = trim(fgets(STDIN));
+        return $answer === '' ? $default : $answer;
+    }
+
+    private function askChoice(string $question, array $choices, string $default): string
+    {
+        $choicesStr = implode(', ', $choices);
+        while (true) {
+            $answer = $this->ask("$question ($choicesStr)", $default);
+            if (in_array($answer, $choices)) {
+                return $answer;
+            }
+            echo "  \033[1;31m✖\033[0m Geçersiz seçim. Lütfen seçeneklerden birini girin.\n";
+        }
     }
 }

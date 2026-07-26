@@ -103,4 +103,31 @@ return [
     'VERSION_UPDATE_SUCCESS'   => '✅  Güncelleme tamamlandı! Terminali yeniden başlatın.',
     'VERSION_UPDATE_FAILED'    => '❌  Güncelleme başarısız oldu.',
     'HELP_CLI_VERSION_DESC'    => 'CLI sürümünü gösterir ve güncelleme kontrol eder.',
+
+    // Terminal Launch
+    'TERMINAL_OPENED'    => 'Yeni terminal proje dizininde açıldı.',
+    'TERMINAL_CLOSE_OLD' => 'Bu pencereyi kapatabilirsiniz.',
+    'TERMINAL_FALLBACK'  => 'Terminal otomatik açılamadı. Lütfen proje dizinine gidin:',
+
+    // AddCommand
+    'ADD_MISSING_NAME'    => 'Paket adı belirtilmedi. Kullanım: add <paket-adi>',
+    'ADD_NOT_FOUND'       => '":name" ArtiFrame paket kayıtlarında bulunamadı.',
+    'ADD_NO_PROJECT'      => 'Bu dizinde bir ArtiFrame projesi bulunamadı. (composer.json eksik)',
+    'ADD_INSTALLING'      => ':name kuruluyor... (:composer)',
+    'ADD_FAILED'          => ':name kurulumu başarısız oldu.',
+    'ADD_SUCCESS'          => ':name başarıyla kuruldu! (:composer)',
+    'ADD_SERVICE_NEEDED'  => 'Servis sınıfı oluşturulmalı: :path',
+    'ADD_LIST_TITLE'      => 'Kullanılabilir Paketler',
+    'ADD_CAT_INTEGRATED'  => 'Entegrasyonlu (Composer + Servis Sınıfı)',
+    'ADD_CAT_DIRECT'      => 'Direkt Kullanılabilir (Sadece Composer)',
+    'HELP_ADD_DESC'       => 'ArtiFrame onaylı bir paketi projeye ekler.',
+    'HELP_ADD_LIST'       => 'Tüm paketleri listeler',
+
+    // AddCommand (Extended)
+    'ADD_ALREADY'         => ':name zaten bu projede kurulu.',
+    'ADD_SERVICE_CREATED' => 'Servis sınıfı oluşturuldu: :path',
+    'ADD_ENV_UPDATED'     => '.env ve .env.example dosyaları güncellendi.',
+    'ADD_EDIT_ENV'        => 'Lütfen .env dosyasındaki API anahtarlarını doldurun.',
+    'ADD_STUB_MISSING'    => ':name için servis şablonu bulunamadı.',
+    'ADD_SERVICE_EXISTS'  => 'Servis dosyası zaten mevcut: :path (atlandı)',
 ];

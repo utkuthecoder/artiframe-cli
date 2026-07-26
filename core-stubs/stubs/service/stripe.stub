@@ -1,0 +1,526 @@
+<?php
+
+namespace Service;
+
+/**
+ * Stripe Payment Service
+ *
+ * Provides a clean wrapper around the stripe-php SDK for payment processing,
+ * customer management, subscriptions, product creation, and webhook handling.
+ *
+ * Required environment variables:
+ *   STRIPE_SECRET_KEY      — Your Stripe secret API key
+ *   STRIPE_PUBLISHABLE_KEY — Your Stripe publishable key (for front-end reference)
+ *   STRIPE_WEBHOOK_SECRET  — Webhook endpoint signing secret
+ *
+ * @package Service
+ */
+class Stripe
+{
+    /**
+     * Stripe publishable key (exposed for front-end usage).
+     *
+     * @var string
+     */
+    private string $publishableKey;
+
+    /**
+     * Webhook signing secret.
+     *
+     * @var string
+     */
+    private string $webhookSecret;
+
+    /**
+     * Create a new Stripe service instance.
+     *
+     * Sets the API key globally for the Stripe SDK and stores
+     * the publishable key and webhook secret for later use.
+     */
+    public function __construct()
+    {
+        \Stripe\Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
+        $this->publishableKey = $_ENV['STRIPE_PUBLISHABLE_KEY'];
+        $this->webhookSecret  = $_ENV['STRIPE_WEBHOOK_SECRET'];
+    }
+
+    /**
+     * Create a PaymentIntent.
+     *
+     * Use this for the recommended Stripe payment flow where the client
+     * confirms the payment on the front-end using the returned client_secret.
+     *
+     * @param float  $amount   Amount in major currency units (e.g. 19.99)
+     * @param string $currency ISO currency code (default: usd)
+     * @param array  $metadata Arbitrary key-value metadata
+     * @return array Standardised response with clientSecret and paymentIntentId
+     */
+    public function createPaymentIntent(float $amount, string $currency = 'usd', array $metadata = []): array
+    {
+        try {
+            $intent = \Stripe\PaymentIntent::create([
+                'amount'   => (int) round($amount * 100),
+                'currency' => strtolower($currency),
+                'metadata' => $metadata,
+                'automatic_payment_methods' => ['enabled' => true],
+            ]);
+
+            return [
+                'status'  => 'success',
+                'message' => 'PaymentIntent created.',
+                'data'    => [
+                    'paymentIntentId' => $intent->id,
+                    'clientSecret'    => $intent->client_secret,
+                    'amount'          => $intent->amount,
+                    'currency'        => $intent->currency,
+                    'status'          => $intent->status,
+                ],
+            ];
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => ['stripeCode' => $e->getStripeCode()],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+
+    /**
+     * Confirm an existing PaymentIntent server-side.
+     *
+     * Typically the client confirms, but this allows server-side confirmation
+     * for scenarios like off-session payments.
+     *
+     * @param string $paymentIntentId The PaymentIntent ID to confirm
+     * @return array Standardised response
+     */
+    public function confirmPayment(string $paymentIntentId): array
+    {
+        try {
+            $intent = \Stripe\PaymentIntent::retrieve($paymentIntentId);
+            $intent->confirm();
+
+            return [
+                'status'  => 'success',
+                'message' => 'PaymentIntent confirmed.',
+                'data'    => [
+                    'paymentIntentId' => $intent->id,
+                    'status'          => $intent->status,
+                    'amount'          => $intent->amount,
+                    'currency'        => $intent->currency,
+                ],
+            ];
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => ['stripeCode' => $e->getStripeCode()],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+
+    /**
+     * Create a direct charge (legacy flow).
+     *
+     * Use createPaymentIntent() for new integrations. This method is provided
+     * for backward compatibility with token/source-based flows.
+     *
+     * @param float  $amount      Amount in major currency units
+     * @param string $source      Token or source ID (tok_xxx or src_xxx)
+     * @param string $currency    ISO currency code (default: usd)
+     * @param string $description Charge description
+     * @return array Standardised response with chargeId
+     */
+    public function charge(float $amount, string $source, string $currency = 'usd', string $description = ''): array
+    {
+        try {
+            $charge = \Stripe\Charge::create([
+                'amount'      => (int) round($amount * 100),
+                'currency'    => strtolower($currency),
+                'source'      => $source,
+                'description' => $description,
+            ]);
+
+            return [
+                'status'  => 'success',
+                'message' => 'Charge created successfully.',
+                'data'    => [
+                    'chargeId' => $charge->id,
+                    'amount'   => $charge->amount,
+                    'currency' => $charge->currency,
+                    'paid'     => $charge->paid,
+                    'status'   => $charge->status,
+                    'receipt'  => $charge->receipt_url,
+                ],
+            ];
+        } catch (\Stripe\Exception\CardException $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [
+                    'stripeCode'  => $e->getStripeCode(),
+                    'declineCode' => $e->getDeclineCode(),
+                ],
+            ];
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => ['stripeCode' => $e->getStripeCode()],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+
+    /**
+     * Refund a charge.
+     *
+     * @param string     $chargeId The charge ID to refund
+     * @param float|null $amount   Partial refund amount (null = full refund)
+     * @return array Standardised response with refundId
+     */
+    public function refund(string $chargeId, float $amount = null): array
+    {
+        try {
+            $params = ['charge' => $chargeId];
+
+            if ($amount !== null) {
+                $params['amount'] = (int) round($amount * 100);
+            }
+
+            $refund = \Stripe\Refund::create($params);
+
+            return [
+                'status'  => 'success',
+                'message' => 'Refund processed successfully.',
+                'data'    => [
+                    'refundId' => $refund->id,
+                    'amount'   => $refund->amount,
+                    'currency' => $refund->currency,
+                    'status'   => $refund->status,
+                    'chargeId' => $refund->charge,
+                ],
+            ];
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => ['stripeCode' => $e->getStripeCode()],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+
+    /**
+     * Create a Stripe Customer.
+     *
+     * Customers are required for subscriptions and saved payment methods.
+     *
+     * @param string $email    Customer e-mail
+     * @param string $name     Customer full name
+     * @param array  $metadata Arbitrary key-value metadata
+     * @return array Standardised response with customerId
+     */
+    public function createCustomer(string $email, string $name = '', array $metadata = []): array
+    {
+        try {
+            $params = [
+                'email'    => $email,
+                'metadata' => $metadata,
+            ];
+
+            if ($name !== '') {
+                $params['name'] = $name;
+            }
+
+            $customer = \Stripe\Customer::create($params);
+
+            return [
+                'status'  => 'success',
+                'message' => 'Customer created successfully.',
+                'data'    => [
+                    'customerId' => $customer->id,
+                    'email'      => $customer->email,
+                    'name'       => $customer->name,
+                    'created'    => date('Y-m-d H:i:s', $customer->created),
+                ],
+            ];
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => ['stripeCode' => $e->getStripeCode()],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+
+    /**
+     * Create a subscription for a customer.
+     *
+     * The customer must already have a default payment method attached.
+     *
+     * @param string $customerId Stripe customer ID
+     * @param string $priceId    Stripe price ID (price_xxx)
+     * @return array Standardised response with subscriptionId
+     */
+    public function subscribe(string $customerId, string $priceId): array
+    {
+        try {
+            $subscription = \Stripe\Subscription::create([
+                'customer' => $customerId,
+                'items'    => [['price' => $priceId]],
+                'payment_behavior' => 'default_incomplete',
+                'expand'   => ['latest_invoice.payment_intent'],
+            ]);
+
+            $latestInvoice = $subscription->latest_invoice;
+            $clientSecret  = null;
+
+            if (is_object($latestInvoice) && $latestInvoice->payment_intent) {
+                $clientSecret = $latestInvoice->payment_intent->client_secret;
+            }
+
+            return [
+                'status'  => 'success',
+                'message' => 'Subscription created.',
+                'data'    => [
+                    'subscriptionId' => $subscription->id,
+                    'status'         => $subscription->status,
+                    'currentPeriodStart' => date('Y-m-d H:i:s', $subscription->current_period_start),
+                    'currentPeriodEnd'   => date('Y-m-d H:i:s', $subscription->current_period_end),
+                    'clientSecret'       => $clientSecret,
+                ],
+            ];
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => ['stripeCode' => $e->getStripeCode()],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+
+    /**
+     * Cancel a subscription.
+     *
+     * Cancels immediately. For end-of-period cancellation, modify the
+     * subscription's cancel_at_period_end flag instead.
+     *
+     * @param string $subscriptionId Stripe subscription ID
+     * @return array Standardised response
+     */
+    public function cancelSubscription(string $subscriptionId): array
+    {
+        try {
+            $subscription = \Stripe\Subscription::retrieve($subscriptionId);
+            $subscription->cancel();
+
+            return [
+                'status'  => 'success',
+                'message' => 'Subscription cancelled.',
+                'data'    => [
+                    'subscriptionId' => $subscription->id,
+                    'status'         => $subscription->status,
+                    'canceledAt'     => $subscription->canceled_at
+                        ? date('Y-m-d H:i:s', $subscription->canceled_at)
+                        : null,
+                ],
+            ];
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => ['stripeCode' => $e->getStripeCode()],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+
+    /**
+     * Create a Product and its associated Price in one call.
+     *
+     * Simplifies the two-step Stripe flow of creating a product first,
+     * then attaching a recurring or one-time price to it.
+     *
+     * @param string $name     Product name
+     * @param float  $price    Unit price in major currency units
+     * @param string $currency ISO currency code (default: usd)
+     * @return array Standardised response with productId and priceId
+     */
+    public function createProduct(string $name, float $price, string $currency = 'usd'): array
+    {
+        try {
+            $product = \Stripe\Product::create([
+                'name' => $name,
+            ]);
+
+            $priceObj = \Stripe\Price::create([
+                'product'     => $product->id,
+                'unit_amount' => (int) round($price * 100),
+                'currency'    => strtolower($currency),
+            ]);
+
+            return [
+                'status'  => 'success',
+                'message' => 'Product and price created.',
+                'data'    => [
+                    'productId' => $product->id,
+                    'priceId'   => $priceObj->id,
+                    'name'      => $product->name,
+                    'amount'    => $priceObj->unit_amount,
+                    'currency'  => $priceObj->currency,
+                ],
+            ];
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => ['stripeCode' => $e->getStripeCode()],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+
+    /**
+     * Verify and parse a Stripe webhook event.
+     *
+     * Validates the webhook signature using the signing secret and returns
+     * the parsed event data. Call this from your webhook endpoint handler.
+     *
+     * @param string $payload   Raw request body (file_get_contents('php://input'))
+     * @param string $signature Stripe-Signature header value
+     * @return array Standardised response with event type and data
+     */
+    public function webhook(string $payload, string $signature): array
+    {
+        try {
+            $event = \Stripe\Webhook::constructEvent(
+                $payload,
+                $signature,
+                $this->webhookSecret
+            );
+
+            return [
+                'status'  => 'success',
+                'message' => 'Webhook verified.',
+                'data'    => [
+                    'eventId'   => $event->id,
+                    'eventType' => $event->type,
+                    'created'   => date('Y-m-d H:i:s', $event->created),
+                    'object'    => $event->data->object->toArray(),
+                ],
+            ];
+        } catch (\Stripe\Exception\SignatureVerificationException $e) {
+            return [
+                'status'  => 'error',
+                'message' => 'Webhook signature verification failed: ' . $e->getMessage(),
+                'data'    => [],
+            ];
+        } catch (\UnexpectedValueException $e) {
+            return [
+                'status'  => 'error',
+                'message' => 'Invalid webhook payload: ' . $e->getMessage(),
+                'data'    => [],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+
+    /**
+     * List recent PaymentIntents.
+     *
+     * @param int $limit Number of results to return (max 100, default 10)
+     * @return array Standardised response with array of payment intents
+     */
+    public function listPayments(int $limit = 10): array
+    {
+        try {
+            $intents = \Stripe\PaymentIntent::all([
+                'limit' => min($limit, 100),
+            ]);
+
+            $payments = [];
+            foreach ($intents->data as $intent) {
+                $payments[] = [
+                    'paymentIntentId' => $intent->id,
+                    'amount'          => $intent->amount,
+                    'currency'        => $intent->currency,
+                    'status'          => $intent->status,
+                    'created'         => date('Y-m-d H:i:s', $intent->created),
+                    'description'     => $intent->description,
+                    'metadata'        => $intent->metadata->toArray(),
+                ];
+            }
+
+            return [
+                'status'  => 'success',
+                'message' => count($payments) . ' payment(s) retrieved.',
+                'data'    => [
+                    'payments' => $payments,
+                    'hasMore'  => $intents->has_more,
+                ],
+            ];
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => ['stripeCode' => $e->getStripeCode()],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+}

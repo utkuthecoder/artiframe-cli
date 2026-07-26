@@ -103,4 +103,31 @@ return [
     'VERSION_UPDATE_SUCCESS'   => '✅  ¡Actualización completa! Por favor reinicie su terminal.',
     'VERSION_UPDATE_FAILED'    => '❌  Error en la actualización.',
     'HELP_CLI_VERSION_DESC'    => 'Mostrar versión CLI y verificar actualizaciones.',
+
+    // Terminal Launch
+    'TERMINAL_OPENED'    => 'Nueva terminal abierta en el directorio del proyecto.',
+    'TERMINAL_CLOSE_OLD' => 'Puede cerrar esta ventana.',
+    'TERMINAL_FALLBACK'  => 'No se pudo abrir la terminal automáticamente. Navegue al directorio del proyecto:',
+
+    // AddCommand
+    'ADD_MISSING_NAME'    => 'Nombre del paquete no especificado. Uso: add <nombre-paquete>',
+    'ADD_NOT_FOUND'       => '":name" no se encontró en el registro de paquetes ArtiFrame.',
+    'ADD_NO_PROJECT'      => 'No se encontró ningún proyecto ArtiFrame en este directorio. (composer.json faltante)',
+    'ADD_INSTALLING'      => 'Instalando :name... (:composer)',
+    'ADD_FAILED'          => 'La instalación de :name falló.',
+    'ADD_SUCCESS'          => '¡:name instalado exitosamente! (:composer)',
+    'ADD_SERVICE_NEEDED'  => 'Se debe crear la clase de servicio: :path',
+    'ADD_LIST_TITLE'      => 'Paquetes disponibles',
+    'ADD_CAT_INTEGRATED'  => 'Integrado (Composer + Clase de servicio)',
+    'ADD_CAT_DIRECT'      => 'Uso directo (Solo Composer)',
+    'HELP_ADD_DESC'       => 'Agrega un paquete aprobado por ArtiFrame al proyecto.',
+    'HELP_ADD_LIST'       => 'Lista todos los paquetes',
+
+    // AddCommand (Extended)
+    'ADD_ALREADY'         => ':name ya está instalado en este proyecto.',
+    'ADD_SERVICE_CREATED' => 'Clase de servicio creada: :path',
+    'ADD_ENV_UPDATED'     => 'Archivos .env y .env.example actualizados.',
+    'ADD_EDIT_ENV'        => 'Por favor complete las claves API en su archivo .env.',
+    'ADD_STUB_MISSING'    => 'Plantilla de servicio no encontrada para :name.',
+    'ADD_SERVICE_EXISTS'  => 'El archivo de servicio ya existe: :path (omitido)',
 ];

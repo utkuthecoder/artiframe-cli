@@ -1,0 +1,334 @@
+<?php
+
+namespace Service;
+
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
+use Intervention\Image\Interfaces\ImageInterface;
+
+/**
+ * ImageProcessor — Wrapper for Intervention Image v3.
+ *
+ * Provides simple methods for common image operations such as
+ * resizing, cropping, watermarking, format conversion, and compression.
+ *
+ * Required ENV variables:
+ *   IMAGE_DRIVER  — "gd" or "imagick" (default: gd)
+ *   IMAGE_QUALITY — Default JPEG/WebP quality 1-100 (default: 80)
+ *
+ * @package Service
+ */
+class ImageProcessor
+{
+    /** @var ImageManager Intervention Image manager instance */
+    private ImageManager $manager;
+
+    /** @var int Default output quality (1-100) */
+    private int $quality;
+
+    /**
+     * Initialize the image processor.
+     *
+     * Reads IMAGE_DRIVER and IMAGE_QUALITY from $_ENV.
+     * Falls back to GD driver and quality 80 when not specified.
+     */
+    public function __construct()
+    {
+        $driver = strtolower($_ENV['IMAGE_DRIVER'] ?? 'gd');
+
+        $this->manager = match ($driver) {
+            'imagick' => new ImageManager(new ImagickDriver()),
+            default   => new ImageManager(new GdDriver()),
+        };
+
+        $this->quality = (int) ($_ENV['IMAGE_QUALITY'] ?? 80);
+    }
+
+    // ---------------------------------------------------------------
+    //  Resize
+    // ---------------------------------------------------------------
+
+    /**
+     * Resize an image.
+     *
+     * When $height is null the aspect ratio is preserved automatically.
+     * When both dimensions are given the image is resized exactly.
+     *
+     * @param  string   $inputPath  Absolute path to source image.
+     * @param  string   $outputPath Absolute path for the resized image.
+     * @param  int      $width      Target width in pixels.
+     * @param  int|null $height     Target height in pixels (null = auto).
+     * @return bool     True on success.
+     */
+    public function resize(string $inputPath, string $outputPath, int $width, int $height = null): bool
+    {
+        try {
+            $image = $this->manager->read($inputPath);
+
+            if ($height === null) {
+                // Scale down proportionally
+                $image->scaleDown(width: $width);
+            } else {
+                $image->resize($width, $height);
+            }
+
+            $image->save($outputPath, quality: $this->quality);
+
+            return true;
+        } catch (\Throwable $e) {
+            error_log('[ImageProcessor::resize] ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    // ---------------------------------------------------------------
+    //  Crop
+    // ---------------------------------------------------------------
+
+    /**
+     * Crop a rectangular region from an image.
+     *
+     * @param  string $inputPath  Absolute path to source image.
+     * @param  string $outputPath Absolute path for the cropped image.
+     * @param  int    $width      Crop width in pixels.
+     * @param  int    $height     Crop height in pixels.
+     * @param  int    $x          X-offset from the top-left corner.
+     * @param  int    $y          Y-offset from the top-left corner.
+     * @return bool   True on success.
+     */
+    public function crop(string $inputPath, string $outputPath, int $width, int $height, int $x = 0, int $y = 0): bool
+    {
+        try {
+            $image = $this->manager->read($inputPath);
+            $image->crop($width, $height, $x, $y);
+            $image->save($outputPath, quality: $this->quality);
+
+            return true;
+        } catch (\Throwable $e) {
+            error_log('[ImageProcessor::crop] ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    // ---------------------------------------------------------------
+    //  Thumbnail
+    // ---------------------------------------------------------------
+
+    /**
+     * Create a square thumbnail by cover-cropping to the given size.
+     *
+     * The image is resized so the shortest side matches $size,
+     * then center-cropped to produce a perfect square.
+     *
+     * @param  string $inputPath  Absolute path to source image.
+     * @param  string $outputPath Absolute path for the thumbnail.
+     * @param  int    $size       Square dimension in pixels (default 200).
+     * @return bool   True on success.
+     */
+    public function thumbnail(string $inputPath, string $outputPath, int $size = 200): bool
+    {
+        try {
+            $image = $this->manager->read($inputPath);
+            $image->cover($size, $size);
+            $image->save($outputPath, quality: $this->quality);
+
+            return true;
+        } catch (\Throwable $e) {
+            error_log('[ImageProcessor::thumbnail] ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    // ---------------------------------------------------------------
+    //  Watermark
+    // ---------------------------------------------------------------
+
+    /**
+     * Overlay a watermark image onto the source image.
+     *
+     * @param  string $inputPath     Absolute path to source image.
+     * @param  string $outputPath    Absolute path for the watermarked image.
+     * @param  string $watermarkPath Absolute path to the watermark image (PNG recommended).
+     * @param  string $position      Placement position: top-left, top, top-right,
+     *                               left, center, right, bottom-left, bottom, bottom-right.
+     * @param  int    $opacity       Watermark opacity 0-100 (default 50).
+     * @return bool   True on success.
+     */
+    public function watermark(
+        string $inputPath,
+        string $outputPath,
+        string $watermarkPath,
+        string $position = 'bottom-right',
+        int $opacity = 50
+    ): bool {
+        try {
+            $image     = $this->manager->read($inputPath);
+            $watermark = $this->manager->read($watermarkPath);
+
+            // Map human-readable position to Intervention's place() arguments
+            $positionMap = [
+                'top-left'     => 'top-left',
+                'top'          => 'top',
+                'top-right'    => 'top-right',
+                'left'         => 'left',
+                'center'       => 'center',
+                'right'        => 'right',
+                'bottom-left'  => 'bottom-left',
+                'bottom'       => 'bottom',
+                'bottom-right' => 'bottom-right',
+            ];
+
+            $pos = $positionMap[$position] ?? 'bottom-right';
+
+            $image->place($watermark, $pos, opacity: $opacity);
+            $image->save($outputPath, quality: $this->quality);
+
+            return true;
+        } catch (\Throwable $e) {
+            error_log('[ImageProcessor::watermark] ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    // ---------------------------------------------------------------
+    //  Format Conversion — WebP
+    // ---------------------------------------------------------------
+
+    /**
+     * Convert an image to WebP format.
+     *
+     * When $outputPath is null the file is saved alongside the original
+     * with a .webp extension.
+     *
+     * @param  string      $inputPath  Absolute path to source image.
+     * @param  string|null $outputPath Destination path (null = auto).
+     * @param  int|null    $quality    WebP quality 1-100 (null = env default).
+     * @return bool        True on success.
+     */
+    public function toWebp(string $inputPath, string $outputPath = null, int $quality = null): bool
+    {
+        try {
+            $quality    = $quality ?? $this->quality;
+            $outputPath = $outputPath ?? preg_replace('/\.[^.]+$/', '.webp', $inputPath);
+
+            $image = $this->manager->read($inputPath);
+            $image->toWebp($quality)->save($outputPath);
+
+            return true;
+        } catch (\Throwable $e) {
+            error_log('[ImageProcessor::toWebp] ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    // ---------------------------------------------------------------
+    //  Compress
+    // ---------------------------------------------------------------
+
+    /**
+     * Re-compress an image to reduce file size.
+     *
+     * When $outputPath is null the original file is overwritten.
+     *
+     * @param  string      $inputPath  Absolute path to source image.
+     * @param  string|null $outputPath Destination path (null = overwrite original).
+     * @param  int|null    $quality    Quality 1-100 (null = env default).
+     * @return bool        True on success.
+     */
+    public function compress(string $inputPath, string $outputPath = null, int $quality = null): bool
+    {
+        try {
+            $quality    = $quality ?? $this->quality;
+            $outputPath = $outputPath ?? $inputPath;
+
+            $image = $this->manager->read($inputPath);
+            $image->save($outputPath, quality: $quality);
+
+            return true;
+        } catch (\Throwable $e) {
+            error_log('[ImageProcessor::compress] ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    // ---------------------------------------------------------------
+    //  Info
+    // ---------------------------------------------------------------
+
+    /**
+     * Retrieve basic information about an image file.
+     *
+     * @param  string $path Absolute path to the image.
+     * @return array{width: int, height: int, mime: string, size: int}
+     *         Associative array with image metadata.
+     *         Returns an array with an 'error' key on failure.
+     */
+    public function info(string $path): array
+    {
+        try {
+            $image = $this->manager->read($path);
+
+            return [
+                'width'  => $image->width(),
+                'height' => $image->height(),
+                'mime'   => mime_content_type($path),
+                'size'   => filesize($path),
+            ];
+        } catch (\Throwable $e) {
+            error_log('[ImageProcessor::info] ' . $e->getMessage());
+            return ['error' => $e->getMessage()];
+        }
+    }
+
+    // ---------------------------------------------------------------
+    //  Rotate
+    // ---------------------------------------------------------------
+
+    /**
+     * Rotate an image by a given angle (counter-clockwise).
+     *
+     * @param  string $inputPath  Absolute path to source image.
+     * @param  string $outputPath Absolute path for the rotated image.
+     * @param  float  $angle      Rotation angle in degrees.
+     * @return bool   True on success.
+     */
+    public function rotate(string $inputPath, string $outputPath, float $angle): bool
+    {
+        try {
+            $image = $this->manager->read($inputPath);
+            $image->rotate($angle);
+            $image->save($outputPath, quality: $this->quality);
+
+            return true;
+        } catch (\Throwable $e) {
+            error_log('[ImageProcessor::rotate] ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    // ---------------------------------------------------------------
+    //  Greyscale
+    // ---------------------------------------------------------------
+
+    /**
+     * Convert an image to greyscale.
+     *
+     * @param  string $inputPath  Absolute path to source image.
+     * @param  string $outputPath Absolute path for the greyscale image.
+     * @return bool   True on success.
+     */
+    public function greyscale(string $inputPath, string $outputPath): bool
+    {
+        try {
+            $image = $this->manager->read($inputPath);
+            $image->greyscale();
+            $image->save($outputPath, quality: $this->quality);
+
+            return true;
+        } catch (\Throwable $e) {
+            error_log('[ImageProcessor::greyscale] ' . $e->getMessage());
+            return false;
+        }
+    }
+}

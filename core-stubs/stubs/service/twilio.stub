@@ -1,0 +1,361 @@
+<?php
+
+namespace Service;
+
+use Twilio\Rest\Client;
+
+/**
+ * Twilio Communications Service
+ *
+ * Provides a simplified interface for Twilio's messaging, voice,
+ * and verification APIs using the twilio/sdk. All configuration
+ * is read from $_ENV.
+ *
+ * Required environment variables:
+ *   TWILIO_SID         — Your Twilio Account SID
+ *   TWILIO_AUTH_TOKEN  — Your Twilio Auth Token
+ *   TWILIO_FROM_NUMBER — Default "from" phone number (E.164 format, e.g., +15551234567)
+ *
+ * Optional environment variables:
+ *   TWILIO_VERIFY_SID  — Verify Service SID (required for verifyStart/verifyCheck)
+ *
+ * @package Service
+ */
+class TwilioService
+{
+    /**
+     * The Twilio REST API client instance.
+     *
+     * @var \Twilio\Rest\Client
+     */
+    private Client $client;
+
+    /**
+     * The default "from" phone number in E.164 format.
+     *
+     * @var string
+     */
+    private string $fromNumber;
+
+    /**
+     * Create a new TwilioService instance.
+     *
+     * Initializes the Twilio REST client using account credentials
+     * from environment variables.
+     *
+     * @throws \Twilio\Exceptions\ConfigurationException If SID or Auth Token are invalid
+     */
+    public function __construct()
+    {
+        $this->client     = new Client(
+            $_ENV['TWILIO_SID'],
+            $_ENV['TWILIO_AUTH_TOKEN']
+        );
+        $this->fromNumber = $_ENV['TWILIO_FROM_NUMBER'];
+    }
+
+    /**
+     * Send an SMS message.
+     *
+     * Sends a text message to the specified phone number using the
+     * configured "from" number.
+     *
+     * @param  string $to      Recipient phone number in E.164 format (e.g., +905551234567)
+     * @param  string $message The SMS body text (max 1600 characters)
+     * @return array           Result with keys: 'status', 'sid', 'message'
+     *                         On error: 'status' => 'error', 'message' => error description
+     */
+    public function sendSms(string $to, string $message): array
+    {
+        try {
+            $msg = $this->client->messages->create($to, [
+                'from' => $this->fromNumber,
+                'body' => $message,
+            ]);
+
+            return [
+                'status'  => $msg->status,
+                'sid'     => $msg->sid,
+                'message' => 'SMS sent successfully',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'sid'     => null,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * Send a WhatsApp message.
+     *
+     * Sends a message via the Twilio WhatsApp Business API.
+     * Both the sender and recipient numbers are prefixed with 'whatsapp:'.
+     *
+     * Note: Your Twilio number must be approved for WhatsApp messaging,
+     * or you must use the Twilio Sandbox for WhatsApp during development.
+     *
+     * @param  string $to      Recipient phone number in E.164 format (e.g., +905551234567)
+     * @param  string $message The message body text
+     * @return array           Result with keys: 'status', 'sid', 'message'
+     */
+    public function sendWhatsApp(string $to, string $message): array
+    {
+        try {
+            $msg = $this->client->messages->create("whatsapp:{$to}", [
+                'from' => "whatsapp:{$this->fromNumber}",
+                'body' => $message,
+            ]);
+
+            return [
+                'status'  => $msg->status,
+                'sid'     => $msg->sid,
+                'message' => 'WhatsApp message sent successfully',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'sid'     => null,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * Initiate a voice call.
+     *
+     * Places an outbound call to the specified number. The call behavior
+     * is defined by the TwiML document at the given URL. The TwiML URL
+     * should return instructions like <Say>, <Play>, <Gather>, etc.
+     *
+     * @param  string $to       Recipient phone number in E.164 format
+     * @param  string $twimlUrl URL pointing to a TwiML document that controls the call
+     * @return array            Result with keys: 'status', 'sid', 'message'
+     */
+    public function call(string $to, string $twimlUrl): array
+    {
+        try {
+            $call = $this->client->calls->create($to, $this->fromNumber, [
+                'url' => $twimlUrl,
+            ]);
+
+            return [
+                'status'  => $call->status,
+                'sid'     => $call->sid,
+                'message' => 'Call initiated successfully',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'sid'     => null,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * Start a phone number verification.
+     *
+     * Sends a verification code to the specified phone number using
+     * Twilio's Verify API. Supports SMS, voice call, and email channels.
+     *
+     * Requires the TWILIO_VERIFY_SID environment variable to be set
+     * with a valid Verify Service SID.
+     *
+     * @param  string $to      Phone number to verify in E.164 format
+     * @param  string $channel Delivery channel: 'sms', 'call', or 'email' (default: 'sms')
+     * @return array           Result with keys: 'status', 'sid', 'message'
+     *                         status will be 'pending' on success
+     */
+    public function verifyStart(string $to, string $channel = 'sms'): array
+    {
+        try {
+            $verifySid = $_ENV['TWILIO_VERIFY_SID'] ?? null;
+
+            if (!$verifySid) {
+                return [
+                    'status'  => 'error',
+                    'sid'     => null,
+                    'message' => 'TWILIO_VERIFY_SID environment variable is not set',
+                ];
+            }
+
+            $verification = $this->client->verify->v2
+                ->services($verifySid)
+                ->verifications
+                ->create($to, $channel);
+
+            return [
+                'status'  => $verification->status,
+                'sid'     => $verification->sid,
+                'message' => 'Verification code sent successfully',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'sid'     => null,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * Check a verification code.
+     *
+     * Validates the code entered by the user against the one sent
+     * via verifyStart(). Returns 'approved' status on a successful match.
+     *
+     * Requires the TWILIO_VERIFY_SID environment variable to be set.
+     *
+     * @param  string $to   The phone number that was verified (E.164 format)
+     * @param  string $code The verification code entered by the user
+     * @return array        Result with keys: 'status', 'sid', 'message'
+     *                      status will be 'approved' on successful verification
+     */
+    public function verifyCheck(string $to, string $code): array
+    {
+        try {
+            $verifySid = $_ENV['TWILIO_VERIFY_SID'] ?? null;
+
+            if (!$verifySid) {
+                return [
+                    'status'  => 'error',
+                    'sid'     => null,
+                    'message' => 'TWILIO_VERIFY_SID environment variable is not set',
+                ];
+            }
+
+            $check = $this->client->verify->v2
+                ->services($verifySid)
+                ->verificationChecks
+                ->create([
+                    'to'   => $to,
+                    'code' => $code,
+                ]);
+
+            return [
+                'status'  => $check->status,
+                'sid'     => $check->sid,
+                'message' => $check->status === 'approved'
+                    ? 'Verification successful'
+                    : 'Verification failed — invalid code',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'sid'     => null,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * Get the delivery status of a specific message.
+     *
+     * Fetches the current status of a previously sent message
+     * by its unique SID.
+     *
+     * Possible statuses: queued, sending, sent, delivered, undelivered, failed
+     *
+     * @param  string $messageSid The message SID (e.g., 'SMxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+     * @return array              Result with keys: 'status', 'sid', 'to', 'from',
+     *                            'date_sent', 'price', 'error_code', 'error_message'
+     */
+    public function getMessageStatus(string $messageSid): array
+    {
+        try {
+            $msg = $this->client->messages($messageSid)->fetch();
+
+            return [
+                'status'        => $msg->status,
+                'sid'           => $msg->sid,
+                'to'            => $msg->to,
+                'from'          => $msg->from,
+                'date_sent'     => $msg->dateSent ? $msg->dateSent->format('Y-m-d H:i:s') : null,
+                'price'         => $msg->price,
+                'error_code'    => $msg->errorCode,
+                'error_message' => $msg->errorMessage,
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'sid'     => $messageSid,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * List recent messages from your Twilio account.
+     *
+     * Retrieves the most recent messages ordered by date sent (descending).
+     * Each message includes its SID, status, direction, body preview,
+     * and timestamps.
+     *
+     * @param  int   $limit Maximum number of messages to return (default: 20, max: 1000)
+     * @return array        List of message arrays with keys:
+     *                      'sid', 'status', 'direction', 'from', 'to', 'body', 'date_sent'
+     */
+    public function listMessages(int $limit = 20): array
+    {
+        try {
+            $messages = $this->client->messages->read([], $limit);
+            $result   = [];
+
+            foreach ($messages as $msg) {
+                $result[] = [
+                    'sid'       => $msg->sid,
+                    'status'    => $msg->status,
+                    'direction' => $msg->direction,
+                    'from'      => $msg->from,
+                    'to'        => $msg->to,
+                    'body'      => $msg->body,
+                    'date_sent' => $msg->dateSent ? $msg->dateSent->format('Y-m-d H:i:s') : null,
+                ];
+            }
+
+            return $result;
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Send the same SMS message to multiple recipients.
+     *
+     * Iterates through the list of phone numbers and sends the
+     * message to each one individually. Returns a summary of
+     * successes and failures.
+     *
+     * @param  array  $recipients List of phone numbers in E.164 format
+     * @param  string $message    The SMS body text
+     * @return array              Summary with keys:
+     *                            'total', 'sent', 'failed', 'results' (per-recipient detail)
+     */
+    public function sendBulkSms(array $recipients, string $message): array
+    {
+        $results = [];
+        $sent    = 0;
+        $failed  = 0;
+
+        foreach ($recipients as $to) {
+            $result = $this->sendSms($to, $message);
+
+            if ($result['status'] !== 'error') {
+                $sent++;
+            } else {
+                $failed++;
+            }
+
+            $results[] = array_merge(['to' => $to], $result);
+        }
+
+        return [
+            'total'   => count($recipients),
+            'sent'    => $sent,
+            'failed'  => $failed,
+            'results' => $results,
+        ];
+    }
+}

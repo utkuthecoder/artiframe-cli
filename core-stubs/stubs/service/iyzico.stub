@@ -1,0 +1,637 @@
+<?php
+
+namespace Service;
+
+/**
+ * Iyzico Payment Service
+ *
+ * Provides a clean wrapper around the iyzipay-php SDK for payment processing,
+ * 3D Secure flows, refunds, cancellations, card vault, and marketplace sub-merchants.
+ *
+ * Required environment variables:
+ *   IYZICO_API_KEY    — Your iyzico API key
+ *   IYZICO_SECRET_KEY — Your iyzico secret key
+ *   IYZICO_BASE_URL   — API base URL (https://sandbox-api.iyzipay.com or https://api.iyzipay.com)
+ *
+ * @package Service
+ */
+class Iyzico
+{
+    /**
+     * Iyzipay connection options.
+     *
+     * @var \Iyzipay\Options
+     */
+    private \Iyzipay\Options $options;
+
+    /**
+     * Create a new Iyzico service instance.
+     *
+     * Reads API credentials and base URL from $_ENV and builds
+     * the \Iyzipay\Options object used by every SDK call.
+     */
+    public function __construct()
+    {
+        $this->options = new \Iyzipay\Options();
+        $this->options->setApiKey($_ENV['IYZICO_API_KEY']);
+        $this->options->setSecretKey($_ENV['IYZICO_SECRET_KEY']);
+        $this->options->setBaseUrl($_ENV['IYZICO_BASE_URL']);
+    }
+
+    /**
+     * Process a single (non-3D) payment.
+     *
+     * @param array $data {
+     *     @type float        $price       Base price
+     *     @type float        $paidPrice   Final charged price (including installment cost)
+     *     @type string       $currency    ISO currency code (default: TRY)
+     *     @type int          $installment Number of installments (default: 1)
+     *     @type array        $card {
+     *         @type string $holder Card holder full name
+     *         @type string $number Card number
+     *         @type string $month  Expiry month (2 digits)
+     *         @type string $year   Expiry year (4 digits)
+     *         @type string $cvc    CVC / CVV code
+     *     }
+     *     @type array        $buyer {
+     *         @type string $id      Merchant-side buyer ID
+     *         @type string $name    First name
+     *         @type string $surname Last name
+     *         @type string $email   E-mail address
+     *         @type string $phone   Phone number
+     *         @type string $ip      IP address of buyer
+     *         @type string $city    City
+     *         @type string $country Country
+     *         @type string $address Full address line
+     *         @type string $zipCode ZIP / postal code
+     *     }
+     *     @type array        $items  Array of basket items, each having name, price, category
+     * }
+     * @return array Standardised response with status, message, and data keys
+     */
+    public function pay(array $data): array
+    {
+        try {
+            $request = new \Iyzipay\Request\CreatePaymentRequest();
+            $request->setLocale(\Iyzipay\Model\Locale::TR);
+            $request->setConversationId(uniqid('pay_'));
+            $request->setPrice($data['price']);
+            $request->setPaidPrice($data['paidPrice']);
+            $request->setCurrency($data['currency'] ?? \Iyzipay\Model\Currency::TL);
+            $request->setInstallment($data['installment'] ?? 1);
+            $request->setPaymentChannel(\Iyzipay\Model\PaymentChannel::WEB);
+            $request->setPaymentGroup(\Iyzipay\Model\PaymentGroup::PRODUCT);
+
+            // Payment card
+            $card = new \Iyzipay\Model\PaymentCard();
+            $card->setCardHolderName($data['card']['holder']);
+            $card->setCardNumber($data['card']['number']);
+            $card->setExpireMonth($data['card']['month']);
+            $card->setExpireYear($data['card']['year']);
+            $card->setCvc($data['card']['cvc']);
+            $card->setRegisterCard(0);
+            $request->setPaymentCard($card);
+
+            // Buyer
+            $buyer = new \Iyzipay\Model\Buyer();
+            $buyer->setId($data['buyer']['id']);
+            $buyer->setName($data['buyer']['name']);
+            $buyer->setSurname($data['buyer']['surname']);
+            $buyer->setEmail($data['buyer']['email']);
+            $buyer->setGsmNumber($data['buyer']['phone']);
+            $buyer->setIp($data['buyer']['ip']);
+            $buyer->setCity($data['buyer']['city']);
+            $buyer->setCountry($data['buyer']['country']);
+            $buyer->setRegistrationAddress($data['buyer']['address']);
+            $buyer->setZipCode($data['buyer']['zipCode']);
+            $buyer->setIdentityNumber('00000000000');
+            $request->setBuyer($buyer);
+
+            // Shipping & billing address (use buyer address for both)
+            $address = new \Iyzipay\Model\Address();
+            $address->setContactName($data['buyer']['name'] . ' ' . $data['buyer']['surname']);
+            $address->setCity($data['buyer']['city']);
+            $address->setCountry($data['buyer']['country']);
+            $address->setAddress($data['buyer']['address']);
+            $address->setZipCode($data['buyer']['zipCode']);
+            $request->setShippingAddress($address);
+            $request->setBillingAddress($address);
+
+            // Basket items
+            $basketItems = [];
+            foreach ($data['items'] as $index => $item) {
+                $basketItem = new \Iyzipay\Model\BasketItem();
+                $basketItem->setId('ITEM_' . ($index + 1));
+                $basketItem->setName($item['name']);
+                $basketItem->setCategory1($item['category'] ?? 'Default');
+                $basketItem->setItemType(\Iyzipay\Model\BasketItemType::PHYSICAL);
+                $basketItem->setPrice($item['price']);
+                $basketItems[] = $basketItem;
+            }
+            $request->setBasketItems($basketItems);
+
+            $payment = \Iyzipay\Model\Payment::create($request, $this->options);
+
+            if ($payment->getStatus() === 'success') {
+                return [
+                    'status'  => 'success',
+                    'message' => 'Payment processed successfully.',
+                    'data'    => [
+                        'paymentId'            => $payment->getPaymentId(),
+                        'price'                => $payment->getPrice(),
+                        'paidPrice'            => $payment->getPaidPrice(),
+                        'currency'             => $payment->getCurrency(),
+                        'installment'          => $payment->getInstallment(),
+                        'paymentTransactionId' => $payment->getPaymentItems()[0]->getPaymentTransactionId() ?? null,
+                        'fraudStatus'          => $payment->getFraudStatus(),
+                    ],
+                ];
+            }
+
+            return [
+                'status'  => 'error',
+                'message' => $payment->getErrorMessage() ?? 'Payment failed.',
+                'data'    => ['errorCode' => $payment->getErrorCode()],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+
+    /**
+     * Initialise a 3D Secure payment flow.
+     *
+     * Returns an HTML snippet that must be rendered in the buyer's browser
+     * to redirect them to the bank's 3D Secure verification page.
+     *
+     * @param array $data Same structure as pay() with an additional `callbackUrl` key
+     * @return array Response containing threeDSHtmlContent on success
+     */
+    public function threeDSecureInit(array $data): array
+    {
+        try {
+            $request = new \Iyzipay\Request\CreatePaymentRequest();
+            $request->setLocale(\Iyzipay\Model\Locale::TR);
+            $request->setConversationId(uniqid('3ds_'));
+            $request->setPrice($data['price']);
+            $request->setPaidPrice($data['paidPrice']);
+            $request->setCurrency($data['currency'] ?? \Iyzipay\Model\Currency::TL);
+            $request->setInstallment($data['installment'] ?? 1);
+            $request->setPaymentChannel(\Iyzipay\Model\PaymentChannel::WEB);
+            $request->setPaymentGroup(\Iyzipay\Model\PaymentGroup::PRODUCT);
+            $request->setCallbackUrl($data['callbackUrl']);
+
+            // Payment card
+            $card = new \Iyzipay\Model\PaymentCard();
+            $card->setCardHolderName($data['card']['holder']);
+            $card->setCardNumber($data['card']['number']);
+            $card->setExpireMonth($data['card']['month']);
+            $card->setExpireYear($data['card']['year']);
+            $card->setCvc($data['card']['cvc']);
+            $card->setRegisterCard(0);
+            $request->setPaymentCard($card);
+
+            // Buyer
+            $buyer = new \Iyzipay\Model\Buyer();
+            $buyer->setId($data['buyer']['id']);
+            $buyer->setName($data['buyer']['name']);
+            $buyer->setSurname($data['buyer']['surname']);
+            $buyer->setEmail($data['buyer']['email']);
+            $buyer->setGsmNumber($data['buyer']['phone']);
+            $buyer->setIp($data['buyer']['ip']);
+            $buyer->setCity($data['buyer']['city']);
+            $buyer->setCountry($data['buyer']['country']);
+            $buyer->setRegistrationAddress($data['buyer']['address']);
+            $buyer->setZipCode($data['buyer']['zipCode']);
+            $buyer->setIdentityNumber('00000000000');
+            $request->setBuyer($buyer);
+
+            // Address
+            $address = new \Iyzipay\Model\Address();
+            $address->setContactName($data['buyer']['name'] . ' ' . $data['buyer']['surname']);
+            $address->setCity($data['buyer']['city']);
+            $address->setCountry($data['buyer']['country']);
+            $address->setAddress($data['buyer']['address']);
+            $address->setZipCode($data['buyer']['zipCode']);
+            $request->setShippingAddress($address);
+            $request->setBillingAddress($address);
+
+            // Basket items
+            $basketItems = [];
+            foreach ($data['items'] as $index => $item) {
+                $basketItem = new \Iyzipay\Model\BasketItem();
+                $basketItem->setId('ITEM_' . ($index + 1));
+                $basketItem->setName($item['name']);
+                $basketItem->setCategory1($item['category'] ?? 'Default');
+                $basketItem->setItemType(\Iyzipay\Model\BasketItemType::PHYSICAL);
+                $basketItem->setPrice($item['price']);
+                $basketItems[] = $basketItem;
+            }
+            $request->setBasketItems($basketItems);
+
+            $threedsInit = \Iyzipay\Model\ThreedsInitialize::create($request, $this->options);
+
+            if ($threedsInit->getStatus() === 'success') {
+                return [
+                    'status'  => 'success',
+                    'message' => '3D Secure initialisation successful.',
+                    'data'    => [
+                        'threeDSHtmlContent' => $threedsInit->getHtmlContent(),
+                    ],
+                ];
+            }
+
+            return [
+                'status'  => 'error',
+                'message' => $threedsInit->getErrorMessage() ?? '3D Secure initialisation failed.',
+                'data'    => ['errorCode' => $threedsInit->getErrorCode()],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+
+    /**
+     * Complete a 3D Secure payment after bank verification callback.
+     *
+     * Call this from your callback URL handler with the paymentId received
+     * from the bank's POST response.
+     *
+     * @param array $data {
+     *     @type string $paymentId The payment ID returned by the bank callback
+     * }
+     * @return array Standardised response
+     */
+    public function threeDSecureComplete(array $data): array
+    {
+        try {
+            $request = new \Iyzipay\Request\CreateThreedsPaymentRequest();
+            $request->setLocale(\Iyzipay\Model\Locale::TR);
+            $request->setConversationId(uniqid('3ds_complete_'));
+            $request->setPaymentId($data['paymentId']);
+
+            $threedsPayment = \Iyzipay\Model\ThreedsPayment::create($request, $this->options);
+
+            if ($threedsPayment->getStatus() === 'success') {
+                return [
+                    'status'  => 'success',
+                    'message' => '3D Secure payment completed successfully.',
+                    'data'    => [
+                        'paymentId'   => $threedsPayment->getPaymentId(),
+                        'price'       => $threedsPayment->getPrice(),
+                        'paidPrice'   => $threedsPayment->getPaidPrice(),
+                        'currency'    => $threedsPayment->getCurrency(),
+                        'fraudStatus' => $threedsPayment->getFraudStatus(),
+                    ],
+                ];
+            }
+
+            return [
+                'status'  => 'error',
+                'message' => $threedsPayment->getErrorMessage() ?? '3D Secure completion failed.',
+                'data'    => ['errorCode' => $threedsPayment->getErrorCode()],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+
+    /**
+     * Refund a specific payment transaction.
+     *
+     * @param string $paymentTransactionId The transaction ID to refund (from basket item)
+     * @param float  $price                Amount to refund
+     * @return array Standardised response
+     */
+    public function refund(string $paymentTransactionId, float $price): array
+    {
+        try {
+            $request = new \Iyzipay\Request\CreateRefundRequest();
+            $request->setLocale(\Iyzipay\Model\Locale::TR);
+            $request->setConversationId(uniqid('refund_'));
+            $request->setPaymentTransactionId($paymentTransactionId);
+            $request->setPrice($price);
+            $request->setCurrency(\Iyzipay\Model\Currency::TL);
+            $request->setIp('127.0.0.1');
+
+            $refund = \Iyzipay\Model\Refund::create($request, $this->options);
+
+            if ($refund->getStatus() === 'success') {
+                return [
+                    'status'  => 'success',
+                    'message' => 'Refund processed successfully.',
+                    'data'    => [
+                        'paymentId'            => $refund->getPaymentId(),
+                        'paymentTransactionId' => $refund->getPaymentTransactionId(),
+                        'price'                => $refund->getPrice(),
+                    ],
+                ];
+            }
+
+            return [
+                'status'  => 'error',
+                'message' => $refund->getErrorMessage() ?? 'Refund failed.',
+                'data'    => ['errorCode' => $refund->getErrorCode()],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+
+    /**
+     * Cancel an entire payment.
+     *
+     * @param string $paymentId The payment ID to cancel
+     * @return array Standardised response
+     */
+    public function cancel(string $paymentId): array
+    {
+        try {
+            $request = new \Iyzipay\Request\CreateCancelRequest();
+            $request->setLocale(\Iyzipay\Model\Locale::TR);
+            $request->setConversationId(uniqid('cancel_'));
+            $request->setPaymentId($paymentId);
+            $request->setIp('127.0.0.1');
+
+            $cancel = \Iyzipay\Model\Cancel::create($request, $this->options);
+
+            if ($cancel->getStatus() === 'success') {
+                return [
+                    'status'  => 'success',
+                    'message' => 'Payment cancelled successfully.',
+                    'data'    => [
+                        'paymentId' => $cancel->getPaymentId(),
+                        'price'     => $cancel->getPrice(),
+                        'currency'  => $cancel->getCurrency(),
+                    ],
+                ];
+            }
+
+            return [
+                'status'  => 'error',
+                'message' => $cancel->getErrorMessage() ?? 'Cancellation failed.',
+                'data'    => ['errorCode' => $cancel->getErrorCode()],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+
+    /**
+     * Save a card to the iyzico card vault for future payments.
+     *
+     * @param array  $cardData {
+     *     @type string $holder Card holder full name
+     *     @type string $number Card number
+     *     @type string $month  Expiry month
+     *     @type string $year   Expiry year
+     *     @type string $alias  A user-friendly card alias (e.g. "My Visa")
+     * }
+     * @param string $email Buyer e-mail (used as external identifier)
+     * @return array Standardised response with cardUserKey and cardToken
+     */
+    public function saveCard(array $cardData, string $email): array
+    {
+        try {
+            $request = new \Iyzipay\Request\CreateCardRequest();
+            $request->setLocale(\Iyzipay\Model\Locale::TR);
+            $request->setConversationId(uniqid('card_'));
+            $request->setEmail($email);
+            $request->setExternalId(md5($email));
+
+            $cardInfo = new \Iyzipay\Model\CardInformation();
+            $cardInfo->setCardAlias($cardData['alias'] ?? 'Default Card');
+            $cardInfo->setCardHolderName($cardData['holder']);
+            $cardInfo->setCardNumber($cardData['number']);
+            $cardInfo->setExpireMonth($cardData['month']);
+            $cardInfo->setExpireYear($cardData['year']);
+            $request->setCard($cardInfo);
+
+            $card = \Iyzipay\Model\Card::create($request, $this->options);
+
+            if ($card->getStatus() === 'success') {
+                return [
+                    'status'  => 'success',
+                    'message' => 'Card saved successfully.',
+                    'data'    => [
+                        'cardUserKey' => $card->getCardUserKey(),
+                        'cardToken'   => $card->getCardToken(),
+                        'cardAlias'   => $card->getCardAlias(),
+                        'lastFour'    => $card->getLastFourDigits(),
+                        'cardType'    => $card->getCardType(),
+                    ],
+                ];
+            }
+
+            return [
+                'status'  => 'error',
+                'message' => $card->getErrorMessage() ?? 'Card save failed.',
+                'data'    => ['errorCode' => $card->getErrorCode()],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+
+    /**
+     * Retrieve all saved cards for a given card user key.
+     *
+     * @param string $cardUserKey The user key returned when a card was first saved
+     * @return array Standardised response with array of cards
+     */
+    public function listCards(string $cardUserKey): array
+    {
+        try {
+            $request = new \Iyzipay\Request\RetrieveCardListRequest();
+            $request->setLocale(\Iyzipay\Model\Locale::TR);
+            $request->setConversationId(uniqid('cards_'));
+            $request->setCardUserKey($cardUserKey);
+
+            $cardList = \Iyzipay\Model\CardList::retrieve($request, $this->options);
+
+            if ($cardList->getStatus() === 'success') {
+                $cards = [];
+                foreach ($cardList->getCardDetails() as $card) {
+                    $cards[] = [
+                        'cardToken'      => $card->getCardToken(),
+                        'cardAlias'      => $card->getCardAlias(),
+                        'binNumber'      => $card->getBinNumber(),
+                        'lastFourDigits' => $card->getLastFourDigits(),
+                        'cardType'       => $card->getCardType(),
+                        'cardAssociation'=> $card->getCardAssociation(),
+                        'cardFamily'     => $card->getCardFamily(),
+                    ];
+                }
+
+                return [
+                    'status'  => 'success',
+                    'message' => 'Cards retrieved successfully.',
+                    'data'    => [
+                        'cardUserKey' => $cardList->getCardUserKey(),
+                        'cards'       => $cards,
+                    ],
+                ];
+            }
+
+            return [
+                'status'  => 'error',
+                'message' => $cardList->getErrorMessage() ?? 'Could not retrieve cards.',
+                'data'    => ['errorCode' => $cardList->getErrorCode()],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+
+    /**
+     * Query the status of an existing payment.
+     *
+     * @param string $paymentId The payment ID to query
+     * @return array Standardised response with payment details
+     */
+    public function checkPayment(string $paymentId): array
+    {
+        try {
+            $request = new \Iyzipay\Request\RetrievePaymentRequest();
+            $request->setLocale(\Iyzipay\Model\Locale::TR);
+            $request->setConversationId(uniqid('check_'));
+            $request->setPaymentId($paymentId);
+
+            $payment = \Iyzipay\Model\Payment::retrieve($request, $this->options);
+
+            if ($payment->getStatus() === 'success') {
+                $items = [];
+                if ($payment->getPaymentItems()) {
+                    foreach ($payment->getPaymentItems() as $item) {
+                        $items[] = [
+                            'itemId'               => $item->getItemId(),
+                            'paymentTransactionId'  => $item->getPaymentTransactionId(),
+                            'price'                 => $item->getPrice(),
+                            'paidPrice'             => $item->getPaidPrice(),
+                            'transactionStatus'     => $item->getTransactionStatus(),
+                        ];
+                    }
+                }
+
+                return [
+                    'status'  => 'success',
+                    'message' => 'Payment details retrieved.',
+                    'data'    => [
+                        'paymentId'    => $payment->getPaymentId(),
+                        'price'        => $payment->getPrice(),
+                        'paidPrice'    => $payment->getPaidPrice(),
+                        'currency'     => $payment->getCurrency(),
+                        'installment'  => $payment->getInstallment(),
+                        'paymentStatus'=> $payment->getPaymentStatus(),
+                        'fraudStatus'  => $payment->getFraudStatus(),
+                        'cardType'     => $payment->getCardType(),
+                        'lastFourDigits' => $payment->getLastFourDigits(),
+                        'items'        => $items,
+                    ],
+                ];
+            }
+
+            return [
+                'status'  => 'error',
+                'message' => $payment->getErrorMessage() ?? 'Could not retrieve payment.',
+                'data'    => ['errorCode' => $payment->getErrorCode()],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+
+    /**
+     * Register a new sub-merchant for marketplace payments.
+     *
+     * @param array $data {
+     *     @type string $name             Sub-merchant legal name
+     *     @type string $type             PERSONAL_COMPANY | PRIVATE_COMPANY | LIMITED_OR_JOINT_STOCK_COMPANY
+     *     @type string $taxOffice        Tax office name
+     *     @type string $taxNumber        Tax / identity number
+     *     @type string $legalCompanyName Legal company title
+     *     @type string $email            Contact e-mail
+     *     @type string $phone            Contact phone (GSM)
+     *     @type string $address          Registered address
+     *     @type string $iban             IBAN for payouts
+     *     @type string $currency         Currency code (default: TRY)
+     *     @type string $subMerchantExternalId  Unique external identifier
+     * }
+     * @return array Standardised response with subMerchantKey
+     */
+    public function createSubMerchant(array $data): array
+    {
+        try {
+            $request = new \Iyzipay\Request\CreateSubMerchantRequest();
+            $request->setLocale(\Iyzipay\Model\Locale::TR);
+            $request->setConversationId(uniqid('sub_'));
+            $request->setSubMerchantExternalId($data['subMerchantExternalId'] ?? uniqid('sm_'));
+            $request->setSubMerchantType($data['type'] ?? \Iyzipay\Model\SubMerchantType::LIMITED_OR_JOINT_STOCK_COMPANY);
+            $request->setAddress($data['address']);
+            $request->setTaxOffice($data['taxOffice'] ?? '');
+            $request->setLegalCompanyTitle($data['legalCompanyName'] ?? $data['name']);
+            $request->setEmail($data['email']);
+            $request->setGsmNumber($data['phone']);
+            $request->setName($data['name']);
+            $request->setIban($data['iban']);
+            $request->setIdentityNumber($data['taxNumber'] ?? '00000000000');
+            $request->setCurrency($data['currency'] ?? \Iyzipay\Model\Currency::TL);
+
+            $subMerchant = \Iyzipay\Model\SubMerchant::create($request, $this->options);
+
+            if ($subMerchant->getStatus() === 'success') {
+                return [
+                    'status'  => 'success',
+                    'message' => 'Sub-merchant created successfully.',
+                    'data'    => [
+                        'subMerchantKey' => $subMerchant->getSubMerchantKey(),
+                    ],
+                ];
+            }
+
+            return [
+                'status'  => 'error',
+                'message' => $subMerchant->getErrorMessage() ?? 'Sub-merchant creation failed.',
+                'data'    => ['errorCode' => $subMerchant->getErrorCode()],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+}

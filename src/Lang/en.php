@@ -103,4 +103,31 @@ return [
     'VERSION_UPDATE_SUCCESS'   => '✅  Update complete! Please restart your terminal.',
     'VERSION_UPDATE_FAILED'    => '❌  Update failed.',
     'HELP_CLI_VERSION_DESC'    => 'Show CLI version and check for updates.',
+
+    // Terminal Launch
+    'TERMINAL_OPENED'    => 'New terminal opened in project directory.',
+    'TERMINAL_CLOSE_OLD' => 'You can close this window.',
+    'TERMINAL_FALLBACK'  => 'Could not open terminal automatically. Please navigate to project directory:',
+
+    // AddCommand
+    'ADD_MISSING_NAME'    => 'Package name not specified. Usage: add <package-name>',
+    'ADD_NOT_FOUND'       => '":name" was not found in ArtiFrame package registry.',
+    'ADD_NO_PROJECT'      => 'No ArtiFrame project found in this directory. (composer.json missing)',
+    'ADD_INSTALLING'      => 'Installing :name... (:composer)',
+    'ADD_FAILED'          => ':name installation failed.',
+    'ADD_SUCCESS'          => ':name installed successfully! (:composer)',
+    'ADD_SERVICE_NEEDED'  => 'Service class needs to be created: :path',
+    'ADD_LIST_TITLE'      => 'Available Packages',
+    'ADD_CAT_INTEGRATED'  => 'Integrated (Composer + Service Class)',
+    'ADD_CAT_DIRECT'      => 'Direct Use (Composer Only)',
+    'HELP_ADD_DESC'       => 'Adds an ArtiFrame-approved package to the project.',
+    'HELP_ADD_LIST'       => 'Lists all packages',
+
+    // AddCommand (Extended)
+    'ADD_ALREADY'         => ':name is already installed in this project.',
+    'ADD_SERVICE_CREATED' => 'Service class created: :path',
+    'ADD_ENV_UPDATED'     => '.env and .env.example files updated.',
+    'ADD_EDIT_ENV'        => 'Please fill in the API keys in your .env file.',
+    'ADD_STUB_MISSING'    => 'Service template not found for :name.',
+    'ADD_SERVICE_EXISTS'  => 'Service file already exists: :path (skipped)',
 ];

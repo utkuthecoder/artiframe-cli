@@ -234,7 +234,7 @@
         <a href="#kurallar">Rule Set</a>
 
         <div class="sb-cat">CLI Tool</div>
-        <a href="#cli-giris">Introduction to CLI</a>
+        <a href="#cli-giris">Intro to CLI</a>
         <a href="#cli-new">new</a>
         <a href="#cli-view">make:view</a>
         <a href="#cli-api">make:api</a>
@@ -243,25 +243,27 @@
 
         <div class="sb-cat">View Helpers</div>
         <a href="#vh-display">display()</a>
-        <a href="#vh-escapeurl">escapeUrl()</a>
         <a href="#vh-csrf">csrfField()</a>
         <a href="#vh-dates">Date Functions</a>
         <a href="#vh-format">Formatting</a>
         <a href="#vh-money">money()</a>
+        <a href="#vh-strings">String Operations</a>
 
         <div class="sb-cat">System Helpers</div>
+        <a href="#sh-apiresponse">apiResponse()</a>
         <a href="#sh-json">jsonResponse()</a>
         <a href="#sh-csrf">verifyCsrf()</a>
         <a href="#sh-sanitize">Sanitize</a>
         <a href="#sh-request">HTTP & Request</a>
         <a href="#sh-security">Security</a>
+        <a href="#sh-utils">Practical Tools</a>
 
         <div class="sb-cat">API Security</div>
-        <a href="#api-methods">HTTP Method Control</a>
+        <a href="#api-methods">HTTP Method Check</a>
         <a href="#api-cors">CORS</a>
         <a href="#api-rate">Rate Limiting</a>
 
-        <div class="sb-cat">Practical</div>
+        <div class="sb-cat">Practice</div>
         <a href="#workflow">Full Workflow</a>
     </nav>
 </aside>
@@ -272,42 +274,42 @@
     <!-- ====== INTRODUCTION ====== -->
     <header id="page-header">
         <h1>ArtiFrame <span>Documentation</span></h1>
-        <p class="lead">A lightweight, fast ecosystem for scalable native PHP projects, built with zero external dependencies, strict rules, and a powerful CLI. Free from dependency bloat and Composer package soup, allowing you to focus on your business logic.</p>
+        <p class="lead">A scalable native PHP project framework with zero external dependencies, strict rules, and managed by a powerful CLI. No dependencies, free from composer package soup, allowing you to focus on your business logic in a lightweight and fast ecosystem.</p>
     </header>
 
     <!-- ====== INTRODUCTION & PHILOSOPHY ====== -->
     <section id="giris">
         <h2>Introduction & Philosophy</h2>
-        <p>ArtiFrame is based on the <strong>"Convention over Configuration"</strong> principle. The power of a framework comes not from the richness of the tools it offers, but from the consistency of the structure it establishes.</p>
+        <p>ArtiFrame is based on the <strong>"Convention over Configuration"</strong> principle. The power of a framework comes not from the richness of the tools it offers, but from the consistency of the order it establishes.</p>
 
         <div class="grid-2">
             <div class="card highlight">
                 <h3>Zero Overhead</h3>
-                <p>Zero dependencies on Composer packages, framework core bloat, or 3rd-party libraries. Every line of code is yours—free from bloat and unnecessary abstraction layers.</p>
+                <p>Zero dependency on third party Composer packages or libraries. Composer is only used to run the project's own PSR-4 autoloading mechanism. Every line of code is yours; free from unnecessary abstraction layers.</p>
             </div>
             <div class="card highlight">
-                <h3>Security First</h3>
-                <p>XSS protection, CSRF verification, sanitization against SQL injection, and HTTP method control come built-in by default. Security is not an option, but a standard.</p>
+                <h3>Security Comes First</h3>
+                <p>XSS protection, CSRF validation, sanitization against SQL injection, and HTTP method checking are built-in by default. Security is not an option, it's a standard.</p>
             </div>
             <div class="card highlight">
                 <h3>Strict Rule Set</h3>
-                <p>A junior developer joining the project grasps the <code class="ic">data-js</code> architecture and directory structure within minutes. Team alignment is guaranteed at the framework level.</p>
+                <p>A junior developer joining the project will grasp the <code class="ic">data-js</code> architecture and directory structure in minutes. Team harmony is guaranteed at the framework level.</p>
             </div>
             <div class="card highlight">
                 <h3>CLI First</h3>
-                <p>No manual creation of View, API, or class files. The CLI generates them from stub templates, links assets, and keeps the project consistent.</p>
+                <p>No manual creation of View, API, or class files. CLI generates them from stub files, sets up asset connections, and keeps the project consistent.</p>
             </div>
         </div>
 
         <div class="alert a-info">
-            <strong>ℹ️ AGPLv3 License:</strong> ArtiFrame is open-source. Derivative works you produce can be freely used provided the source code remains open. Copyright notices cannot be removed.
+            <strong>ℹ️ AGPLv3 License:</strong> ArtiFrame is open source. Derivative works you produce can be used freely provided the source code remains open. The copyright notice cannot be removed.
         </div>
     </section>
 
     <!-- ====== INSTALLATION ====== -->
     <section id="kurulum">
         <h2>Installation</h2>
-        <p>ArtiFrame CLI is installed as a global PHP tool. Install once, use across all projects.</p>
+        <p>ArtiFrame CLI is installed as a global PHP tool. Installed once, used in every project.</p>
 
         <h3>1. Install CLI Tool Globally</h3>
         <pre><code><span class="cm"># Global installation via NPM</span>
@@ -317,7 +319,7 @@ npm install -g @artilingo/artiframe-cli
 artiframe</code></pre>
 
         <h3>2. Interactive Shell</h3>
-        <p>Type simply <code class="ic">artiframe</code> in the terminal and press Enter. The CLI does not exit; an interactive shell opens that continuously listens for commands:</p>
+        <p>Just type <code class="ic">artiframe</code> in the terminal and press Enter. The CLI does not close; an interactive shell opens constantly listening for commands:</p>
         <pre><code>==================================================
         ArtiFrame CLI Interactive Shell v1.0.0
 ==================================================
@@ -327,35 +329,37 @@ artiframe&gt; </code></pre>
 
         <h3>3. Start a New Project</h3>
         <pre><code>artiframe&gt; new my-project</code></pre>
-        <p>This command creates the <code class="ic">my-project/</code> directory and copies the entire skeleton structure into it: <code class="ic">app/</code>, <code class="ic">bin/</code>, <code class="ic">config/</code>, <code class="ic">public/</code>, <code class="ic">src/</code>, <code class="ic">.env.example</code>, and the initial <code class="ic">index.php</code> page.</p>
+        <p>This command creates the <code class="ic">my-project/</code> directory and copies the entire skeletal structure into it: <code class="ic">app/</code>, <code class="ic">bin/</code>, <code class="ic">config/</code>, <code class="ic">public/</code>, <code class="ic">src/</code>, <code class="ic">.env.example</code>, and the first <code class="ic">index.php</code> page.</p>
+        <p>While the project is being created, the CLI will interactively ask you for the project's name (package), description, author information, type, and open source license, and injects this information into the new project's <code>composer.json</code> file.</p>
+        <p>When the process is complete, a <strong>new terminal window</strong> will automatically open in the project directory, and the <code>artiframe</code> CLI will start ready in that project!</p>
 
-        <h3>4. Environment Configuration</h3>
+        <h3>4. Environment Settings</h3>
         <pre><code>cp .env.example .env</code></pre>
-        <p>Open your <code class="ic">.env</code> file and fill in database and application configuration. This file is never committed to version control.</p>
+        <p>Open your <code class="ic">.env</code> file and fill in the database and application details. This file should never be committed to version control.</p>
 
         <div class="alert a-warn">
-            <strong>⚠️ Web Server Configuration:</strong> Direct Apache/Nginx's document root to the <code class="ic">/public/</code> folder. Other directories must never be exposed externally.
+            <strong>⚠️ Web Server Setup:</strong> Point the document root of Apache/Nginx to the <code class="ic">/public/</code> folder. Other directories should never be accessible from the outside.
         </div>
     </section>
 
     <!-- ====== DIRECTORY STRUCTURE ====== -->
     <section id="dizin">
         <h2>Directory Structure</h2>
-        <p>The architecture generated when a project is initialized ensures a clear Separation of Concerns (SoC).</p>
+        <p>The architecture created when the project starts ensures a clear separation of concerns (SoC).</p>
 
         <div class="tree">
 <span class="dir">project-name/</span>
 ├── <span class="dir">app/</span>                     <span class="note"># Infrastructure layer</span>
 │   ├── <span class="file">ViewControl.php</span>      <span class="note"># View (HTML page) bootstrapper</span>
 │   ├── <span class="file">ApiControl.php</span>       <span class="note"># API endpoint bootstrapper</span>
-│   ├── <span class="file">Database.php</span>         <span class="note"># PDO-based database connection</span>
+│   ├── <span class="file">Database.php</span>         <span class="note"># PDO based database connection</span>
 │   ├── <span class="file">DotEnv.php</span>           <span class="note"># .env reader</span>
 │   └── <span class="file">R2Manager.php</span>        <span class="note"># Cloudflare R2 file manager</span>
 │
 ├── <span class="dir warn">bin/</span>                     <span class="note"># ⚠️ Core system — do not edit directly</span>
 │   ├── <span class="file">SystemMethod.php</span>     <span class="note"># API/Backend global helpers</span>
 │   ├── <span class="file">ViewMethod.php</span>       <span class="note"># View/Frontend global helpers</span>
-│   └── <span class="dir">stubs/</span>               <span class="note"># Stub templates used by CLI</span>
+│   └── <span class="dir">stubs/</span>               <span class="note"># Template files used by CLI</span>
 │       ├── view.stub
 │       ├── api-standart.stub
 │       ├── api-switch-case.stub
@@ -364,25 +368,25 @@ artiframe&gt; </code></pre>
 ├── <span class="dir">config/</span>                  <span class="note"># Configuration files</span>
 │   └── <span class="file">app-version.php</span>      <span class="note"># APP_VERSION and APP_ENV constants</span>
 │
-├── <span class="dir">public/</span>                  <span class="note"># ← Web server's only public directory</span>
+├── <span class="dir">public/</span>                  <span class="note"># ← The only accessible directory for the web server</span>
 │   ├── <span class="dir safe">assets/</span>
-│   │   ├── <span class="dir">css/</span>             <span class="note"># View-specific CSS files</span>
-│   │   └── <span class="dir">js/</span>              <span class="note"># View-specific JS files</span>
+│   │   ├── <span class="dir">css/</span>             <span class="note"># View specific CSS files</span>
+│   │   └── <span class="dir">js/</span>              <span class="note"># View specific JS files</span>
 │   ├── <span class="dir">includes/</span>            <span class="note"># Shared components</span>
 │   │   ├── head.php
 │   │   ├── header.php
 │   │   └── footer.php
 │   ├── <span class="dir">api/</span>                 <span class="note"># API endpoint files</span>
-│   └── <span class="file">index.php</span>            <span class="note"># Main page</span>
+│   └── <span class="file">index.php</span>            <span class="note"># Home page</span>
 │
 ├── <span class="dir">src/</span>                     <span class="note"># Business logic and classes</span>
 ├── <span class="file">.env</span>                     <span class="note"># Environment variables (not in git)</span>
 ├── <span class="file">.env.example</span>            <span class="note"># Template — committed to git</span>
-└── <span class="file">guide.html</span>              <span class="note"># This document</span>
+└── <span class="file">kilavuz.html</span>            <span class="note"># This document</span>
         </div>
 
         <div class="alert a-danger">
-            <strong>🚫 Do not modify the bin/ directory:</strong> Files inside <code class="ic">bin/</code> are the core of the framework. Project-specific business logic is not added here. Classes and services you add belong under <code class="ic">src/</code>, and infrastructure components belong under <code class="ic">app/</code>.
+            <strong>🚫 Do not touch the bin/ directory:</strong> The files inside <code class="ic">bin/</code> are the core of the framework. Project-specific business logic is not added here. Classes and services you add should be placed under <code class="ic">src/</code>, and infrastructure components under <code class="ic">app/</code>.
         </div>
     </section>
 
@@ -395,7 +399,7 @@ artiframe&gt; </code></pre>
             <div class="card highlight">
                 <h3><span class="badge b-view">View</span> ViewControl.php</h3>
                 <p>Used for HTML pages (view files). Starts session, loads <code class="ic">ViewMethod</code>.</p>
-                <pre><code><span class="cm">// public/profile.php — AT THE VERY TOP, before outputting HTML</span>
+                <pre><code><span class="cm">// public/profile.php — AT THE VERY TOP, before printing HTML</span>
 <span class="kw">&lt;?php</span>
 <span class="fn">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>]
     . <span class="st">'/../app/ViewControl.php'</span>;
@@ -406,7 +410,7 @@ artiframe&gt; </code></pre>
             </div>
             <div class="card highlight">
                 <h3><span class="badge b-api">API</span> ApiControl.php</h3>
-                <p>Used for API endpoint files. Sets JSON header, checks HTTP method, loads <code class="ic">SystemMethod</code>.</p>
+                <p>Used for API endpoint files. Sets the JSON header, performs HTTP method checking, loads <code class="ic">SystemMethod</code>.</p>
                 <pre><code><span class="cm">// public/api/user/get.php</span>
 <span class="kw">&lt;?php</span>
 <span class="cm">// $allowedMethods MUST be defined before require</span>
@@ -420,18 +424,18 @@ artiframe&gt; </code></pre>
         </div>
 
         <div class="alert a-danger">
-            <strong>🚫 Never mix ViewControl and ApiControl:</strong> If ViewControl is required in an API file, it may return HTML headers instead of JSON headers, corrupting the entire API response. If ApiControl is required in an HTML page, the session won't start and the page will break.
+            <strong>🚫 ViewControl and ApiControl are never mixed:</strong> If ViewControl is required in an API file, an HTML header might be returned instead of a JSON header, breaking the entire API response. If ApiControl is required on an HTML page, the session won't start and the page will break.
         </div>
     </section>
 
-    <!-- ====== RULES ====== -->
+    <!-- ====== RULE SET ====== -->
     <section id="kurallar">
         <h2>Rule Set <span class="tag b-core">Standard</span></h2>
 
         <div class="card">
             <h3>Rule 1: data-js Architecture <span class="badge b-sec">Critical</span></h3>
-            <p>JavaScript events can never be listened to via a <code class="ic">class</code> or <code class="ic">id</code>. These are visual / style identifiers. All JS interactions are managed using the <code class="ic">data-js</code> attribute. When CSS deletes a class, JavaScript never breaks.</p>
-            <pre><code><span class="cm">&lt;!-- ❌ Anti-Pattern — not supported --&gt;</span>
+            <p>JavaScript events can never be listened to via a <code class="ic">class</code> or <code class="ic">id</code>. These are visual/style identifiers. All JS interactions are managed using the <code class="ic">data-js</code> attribute. JavaScript will never crash when CSS deletes a class.</p>
+            <pre><code><span class="cm">&lt;!-- ❌ Anti-Pattern — unsupported --&gt;</span>
 &lt;button id="submitBtn" class="btn"&gt;Submit&lt;/button&gt;
 <span class="cm">// JS: document.getElementById('submitBtn').addEventListener(...)</span>
 
@@ -442,8 +446,8 @@ artiframe&gt; </code></pre>
 
         <div class="card">
             <h3>Rule 2: Theme Architecture</h3>
-            <p>Dark/Light mode and themes are managed via <code class="ic">data-theme</code> and <code class="ic">data-mode</code> attributes on the <code class="ic">&lt;html&gt;</code> tag. Body classes are not used.</p>
-            <pre><code><span class="cm">&lt;!-- HTML opening tag coming from view.stub template --&gt;</span>
+            <p>Dark/Light mode and themes are managed via the <code class="ic">data-theme</code> and <code class="ic">data-mode</code> attributes on the <code class="ic">&lt;html&gt;</code> tag. Body classes are not used.</p>
+            <pre><code><span class="cm">&lt;!-- HTML opening tag from view.stub template --&gt;</span>
 &lt;html lang="en" data-theme="default" data-mode="light"&gt;
 
 <span class="cm">/* Theme definition in app.css */</span>
@@ -459,12 +463,12 @@ html[data-theme="default"][data-mode="light"] {
 
         <div class="card">
             <h3>Rule 3: Secure Data Flow</h3>
-            <p>All data coming from the database is wrapped with <code class="ic">display()</code> before being output to the DOM. All data arriving at the API is cleaned with <code class="ic">sanitizeString()</code> or <code class="ic">sanitizeInt()</code> before processing.</p>
+            <p>Every piece of data coming from the database is wrapped with <code class="ic">display()</code> before being output to the DOM. Every piece of data coming into the API is cleaned with <code class="ic">sanitizeString()</code> or <code class="ic">sanitizeInt()</code> before being processed.</p>
         </div>
 
         <div class="card">
             <h3>Rule 4: Error Management with APP_ENV</h3>
-            <p>The <code class="ic">APP_ENV</code> value in the <code class="ic">.env</code> file determines error visibility. In Production, error messages are not displayed to the user.</p>
+            <p>The <code class="ic">APP_ENV</code> value in the <code class="ic">.env</code> file determines error visibility. In production, error messages are not shown to the user.</p>
             <pre><code><span class="cm">// config/app-version.php</span>
 define(<span class="st">'APP_ENV'</span>, (int)<span class="var">$_ENV</span>[<span class="st">'APP_ENV'</span>]); <span class="cm">// 1=Debug, 0=Production</span>
 
@@ -480,20 +484,22 @@ define(<span class="st">'APP_ENV'</span>, (int)<span class="var">$_ENV</span>[<s
     <!-- ====== CLI INTRO ====== -->
     <section id="cli-giris">
         <h2>CLI Ecosystem</h2>
-        <p>ArtiFrame CLI opens an interactive shell when <code class="ic">artiframe</code> is typed in the terminal. All commands run within this shell. Commands can also be executed as single-shot runs.</p>
+        <p>The ArtiFrame CLI opens an interactive shell when <code class="ic">artiframe</code> is typed in the terminal. All commands run within this shell. Commands can also be run once.</p>
         <pre><code><span class="cm"># Interactive mode (recommended)</span>
 artiframe
 artiframe&gt; make:view admin/users.php
 
-<span class="cm"># Single-shot mode</span>
+<span class="cm"># Single run mode</span>
 artiframe make:view admin/users.php</code></pre>
     </section>
 
     <!-- new -->
     <section id="cli-new">
         <h2><code>new</code> <span class="tag b-cli">CLI Command</span></h2>
-        <p>Creates a new ArtiFrame project. Generates the entire directory skeleton, bootstrapper files, and initial index page.</p>
+        <p>Creates a new ArtiFrame project. Generates the entire directory skeleton, bootstrapper files, and the initial index page.</p>
         <pre><code>artiframe&gt; <span class="fn">new</span> <span class="st">project-name</span></code></pre>
+        <p><strong>Interactive Process:</strong> When the command is executed, it will ask you questions for the project's <code>composer.json</code> metadata (Package Name, Description, Author, Type, License). All licensing and details are determined at this stage.</p>
+        <p><strong>Auto Terminal:</strong> Once the project is successfully created, a brand new terminal window positioned in the project directory with <code>artiframe</code> started is automatically opened, according to your OS.</p>
         <p>Generated structure:</p>
         <div class="tree" style="font-size:0.82rem; line-height:1.7">
 project-name/
@@ -503,14 +509,14 @@ project-name/
 ├── public/ (index.php, assets/, includes/, api/)
 ├── src/
 ├── .env.example
-└── guide.html
+└── kilavuz.html
         </div>
     </section>
 
     <!-- make:view -->
     <section id="cli-view">
         <h2><code>make:view</code> <span class="tag b-cli">CLI Command</span></h2>
-        <p>Creates a new page (view) file and its dedicated CSS/JS assets. Assets are automatically linked to the page and cache-busting is applied via <code class="ic">?v=APP_VERSION</code>.</p>
+        <p>Generates a new page (view) file and its specific CSS/JS assets. Assets are automatically linked to the page and cache-busting is applied using <code class="ic">?v=APP_VERSION</code>.</p>
         <pre><code>artiframe&gt; <span class="fn">make:view</span> <span class="st">admin/users.php</span></code></pre>
         <p>Generated files:</p>
         <pre><code><span class="cm">✔  public/admin/users.php</span>
@@ -522,25 +528,25 @@ project-name/
     <!-- make:api -->
     <section id="cli-api">
         <h2><code>make:api</code> <span class="tag b-cli">CLI Command</span></h2>
-        <p>Creates an API endpoint file by choosing from two different templates. Every new API file comes pre-configured with the <code class="ic">$allowedMethods</code> variable and <code class="ic">ApiControl.php</code> require statement.</p>
+        <p>Generates an API endpoint file by choosing one of two different templates. Each new API file comes with the <code class="ic">$allowedMethods</code> variable and <code class="ic">ApiControl.php</code> requirement ready.</p>
 
         <div class="card">
             <h3><span class="badge b-api">standart</span> — Single Action API</h3>
-            <p>For endpoints performing a single task (login, submit, delete). Business logic is written directly.</p>
+            <p>For endpoints that do a single job (login, submit, delete). Business logic is written directly.</p>
             <pre><code>artiframe&gt; <span class="fn">make:api</span> <span class="st">standart</span> <span class="st">api/auth/login.php</span></code></pre>
             <pre><code><span class="kw">&lt;?php</span>
-<span class="var">$allowedMethods</span> = [<span class="st">'POST'</span>]; <span class="cm">// Accept POST only</span>
+<span class="var">$allowedMethods</span> = [<span class="st">'POST'</span>]; <span class="cm">// Only accept POST</span>
 <span class="fn">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/../app/ApiControl.php'</span>;
 
 <span class="kw">use</span> Bin\SystemMethod;
 
-<span class="cm">// Business logic here...</span>
+<span class="cm">// Business logic goes here...</span>
 <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'success'</span>], <span class="nu">200</span>);</code></pre>
         </div>
 
         <div class="card">
-            <h3><span class="badge b-api">switch-case</span> — Multi-Action API</h3>
-            <p>A structure managing CRUD operations for a module in a single endpoint. The action to perform is determined by the <code class="ic">action</code> parameter.</p>
+            <h3><span class="badge b-api">switch-case</span> — Multi Action API</h3>
+            <p>A structure that manages CRUD operations for a module in a single endpoint. The action to be taken is determined by the <code class="ic">action</code> parameter.</p>
             <pre><code>artiframe&gt; <span class="fn">make:api</span> <span class="st">switch-case</span> <span class="st">api/user/manage.php</span></code></pre>
             <pre><code><span class="kw">&lt;?php</span>
 <span class="var">$allowedMethods</span> = [<span class="st">'POST'</span>];
@@ -569,18 +575,18 @@ project-name/
     <!-- make:class -->
     <section id="cli-class">
         <h2><code>make:class</code> <span class="tag b-cli">CLI Command</span></h2>
-        <p>Creates a new PHP class file with namespace and boilerplate ready. The namespace is automatically generated based on the file path. If a directory other than <strong>app/</strong> and <strong>src/</strong> (e.g., <strong>private/</strong>) is used, the CLI will automatically run the <code>composer dump-autoload</code> script in the background.</p>
+        <p>Generates a new PHP class file with namespace and class boilerplate ready. The namespace is determined automatically based on the class path. If a directory other than <strong>app/</strong> and <strong>src/</strong> (e.g. <strong>private/</strong>) is used, the CLI tool automatically runs the <code>composer dump-autoload</code> script in the background.</p>
         <pre><code>artiframe&gt; <span class="fn">make:class</span> <span class="st">src/Service/EmailService.php</span></code></pre>
-        <p>If the class directory is not specified, the command will return an error:</p>
+        <p>If the class directory is not specified, the command returns an error:</p>
         <pre><code>artiframe&gt; <span class="fn">make:class</span>
-❌ Error: Directory for the class must be specified! (e.g. /app or /src)
+❌ Error: The directory where the class will be created must be specified! (e.g. /app or /src)
 Example: /src/Service/PaymentService</code></pre>
     </section>
 
     <!-- version -->
     <section id="cli-version">
         <h2><code>version</code> <span class="tag b-cli">CLI Command</span></h2>
-        <p>Updates the version number in <code class="ic">config/app-version.php</code> according to Semantic Versioning (SemVer) rules. Version format: <strong>MAJOR.MINOR.PATCH</strong></p>
+        <p>Updates the version number in <code class="ic">config/app-version.php</code> according to semantic versioning (SemVer) rules. Version format: <strong>MAJOR.MINOR.PATCH</strong></p>
 
         <table class="sig-table">
             <thead>
@@ -588,48 +594,48 @@ Example: /src/Service/PaymentService</code></pre>
             </thead>
             <tbody>
                 <tr><td>version upgrade patch</td><td>Bug fix, minor improvement</td><td>1.2.3 → 1.2.4</td></tr>
-                <tr><td>version upgrade minor</td><td>Backward-compatible new feature</td><td>1.2.3 → 1.3.0</td></tr>
+                <tr><td>version upgrade minor</td><td>Backward compatible new feature</td><td>1.2.3 → 1.3.0</td></tr>
                 <tr><td>version upgrade major</td><td>Breaking change</td><td>1.2.3 → 2.0.0</td></tr>
-                <tr><td>version downgrade patch</td><td>Revert last patch</td><td>1.2.4 → 1.2.3</td></tr>
-                <tr><td>version downgrade minor</td><td>Revert last minor</td><td>1.3.0 → 1.2.0</td></tr>
-                <tr><td>version downgrade major</td><td>Revert last major</td><td>2.0.0 → 1.0.0</td></tr>
+                <tr><td>version downgrade patch</td><td>Revert the last patch</td><td>1.2.4 → 1.2.3</td></tr>
+                <tr><td>version downgrade minor</td><td>Revert the last minor</td><td>1.3.0 → 1.2.0</td></tr>
+                <tr><td>version downgrade major</td><td>Revert the last major</td><td>2.0.0 → 1.0.0</td></tr>
             </tbody>
         </table>
 
         <pre><code>artiframe&gt; <span class="fn">version</span> upgrade minor
-<span class="cm">✔  Version updated from 1.2.0 → 1.3.0.</span></code></pre>
+<span class="cm">✔  Version updated from 1.2.0 to 1.3.0.</span></code></pre>
     </section>
 
     <!-- ====== VIEW HELPERS ====== -->
     <section id="vh-display">
         <h2>View Helpers — <code>display()</code> <span class="tag b-view">ViewMethod</span></h2>
-        <p>Applies <strong>mandatory XSS protection</strong> when outputting data from database or user input to the DOM. Instead of throwing an error on null or empty values, it returns a default value.</p>
+        <p>Applies <strong>mandatory XSS protection</strong> when outputting data from the database or user input to the DOM. Returns a default value instead of throwing an error for null or empty values.</p>
         <span class="ret">string display(mixed $data, string $default = '')</span>
         <div class="alert a-info" style="margin-top: 10px; margin-bottom: 24px; padding: 12px 20px;">
             <strong>💡 Tip: Using <code>$default</code></strong><br>
-            The second parameter (<code>$default</code>) is the fallback text rendered when data from the database is empty (null, false, empty string). For instance, for a user without a name entered, if you use <code>display($name, 'Anonymous')</code>, your page presents meaningful content instead of awkward blanks.
+            The second parameter (<code>$default</code>) is a fallback text that will be printed to the screen if the data coming from the database is empty (null, false, empty string). For example, if you use <code>display($name, 'Anonymous')</code> for a user whose name data is not entered, your page will present meaningful content instead of ugly blanks.
         </div>
-        <pre><code><span class="cm">&lt;!-- ❌ Unsafe — creates XSS vulnerability --&gt;</span>
+        <pre><code><span class="cm">&lt;!-- ❌ Insecure — creates an XSS vulnerability --&gt;</span>
 &lt;h1&gt;&lt;?= <span class="var">$user</span>[<span class="st">'name'</span>] ?&gt;&lt;/h1&gt;
 
-<span class="cm">&lt;!-- ✅ ArtiFrame Safe Usage --&gt;</span>
+<span class="cm">&lt;!-- ✅ ArtiFrame Secure Usage --&gt;</span>
 &lt;h1&gt;&lt;?= <span class="fn">display</span>(<span class="var">$user</span>[<span class="st">'name'</span>], <span class="st">'Anonymous User'</span>) ?&gt;&lt;/h1&gt;</code></pre>
     </section>
 
     <section id="vh-escapeurl">
         <h2>View Helpers — <code>escapeUrl()</code> <span class="tag b-view">ViewMethod</span></h2>
-        <p>Used when rendering links received from users (e.g. profile websites) inside <code>&lt;a href="..."&gt;</code> or <code>&lt;img src="..."&gt;</code>. Prevents execution of code via links by neutralizing dangerous payloads like <code>javascript:alert(1)</code> (Stored XSS).</p>
+        <p>Used when printing links received from users (e.g. profile websites) into <code>&lt;a href="..."&gt;</code> or <code>&lt;img src="..."&gt;</code> tags. Neutralizes dangerous payloads like <code>javascript:alert(1)</code> (Stored XSS), preventing code execution via links.</p>
         <span class="ret">string escapeUrl(string $url)</span>
-        <pre><code><span class="cm">&lt;!-- ❌ Unsafe — JS code can be leaked via URL --&gt;</span>
+        <pre><code><span class="cm">&lt;!-- ❌ Insecure — JS code can be leaked via URL --&gt;</span>
 &lt;a href="&lt;?= <span class="var">$user</span>[<span class="st">'website'</span>] ?&gt;"&gt;Visit Site&lt;/a&gt;
 
-<span class="cm">&lt;!-- ✅ ArtiFrame Safe Usage --&gt;</span>
+<span class="cm">&lt;!-- ✅ ArtiFrame Secure Usage --&gt;</span>
 &lt;a href="&lt;?= <span class="fn">escapeUrl</span>(<span class="var">$user</span>[<span class="st">'website'</span>]) ?&gt;"&gt;Visit Site&lt;/a&gt;</code></pre>
     </section>
 
     <section id="vh-csrf">
         <h2>View Helpers — <code>csrfField()</code> <span class="tag b-view">ViewMethod</span></h2>
-        <p>Adds a hidden token field to HTML forms against CSRF attacks. <strong>Mandatory to use on every page containing a POST form.</strong></p>
+        <p>Adds a hidden token field to HTML forms to protect against CSRF attacks. <strong>Mandatory for every page containing a POST form.</strong></p>
         <span class="ret">string csrfField()</span>
         <pre><code>&lt;form action="/api/save.php" method="POST"&gt;
     &lt;?= <span class="fn">csrfField</span>() ?&gt;   <span class="cm">&lt;!-- Mandatory for security --&gt;</span>
@@ -640,13 +646,13 @@ Example: /src/Service/PaymentService</code></pre>
 
     <section id="vh-dates">
         <h2>View Helpers — Date Functions <span class="tag b-view">ViewMethod</span></h2>
-        <p>Processes date strings in <code class="ic">Y-m-d H:i:s</code> format or UNIX timestamp values from the database. All textual outputs are localized according to language (<code class="ic">tr</code>, <code class="ic">en</code>, <code class="ic">de</code>, <code class="ic">fr</code>, <code class="ic">es</code>).</p>
+        <p>Processes date strings in <code class="ic">Y-m-d H:i:s</code> format or UNIX timestamp values from the database. All textual outputs are localized according to the language (<code class="ic">en</code>, <code class="ic">tr</code>, <code class="ic">de</code>, <code class="ic">fr</code>, <code class="ic">es</code>).</p>
 
         <table class="sig-table">
-            <thead><tr><th>Function</th><th>Sample Output</th><th>Description</th></tr></thead>
+            <thead><tr><th>Function</th><th>Example Output</th><th>Description</th></tr></thead>
             <tbody>
                 <tr><td>day($date)</td><td>24</td><td>Day only</td></tr>
-                <tr><td>month($date)</td><td>07</td><td>Month only (numeric)</td></tr>
+                <tr><td>month($date)</td><td>07</td><td>Month only (digit)</td></tr>
                 <tr><td>year($date)</td><td>2026</td><td>Year</td></tr>
                 <tr><td>timeOnly($date)</td><td>14:30</td><td>Hour:Minute</td></tr>
                 <tr><td>fulldate($date)</td><td>24.07.2026</td><td>Full date</td></tr>
@@ -660,12 +666,12 @@ Example: /src/Service/PaymentService</code></pre>
         <div class="alert a-info" style="margin-top: 0; margin-bottom: 24px;">
             <strong>💡 Understanding Parameters: <code>$format</code> and <code>$lang</code></strong>
             <ul style="margin-top: 10px; margin-bottom: 0;">
-                <li style="margin-bottom: 8px;"><strong><code>$format</code> (Format):</strong> Used only with the <code>formatDate()</code> function. Accepts standard PHP date letters (e.g. <code>'d/m/Y'</code> ➔ 24/07/2026, or <code>'H:i'</code> ➔ 15:30). Allows building custom date formats when pre-built functions (day, year, etc.) are insufficient.</li>
-                <li style="margin-bottom: 0;"><strong><code>$lang</code> (Language):</strong> Used in functions containing text (month names, "ago" words) in their output. If left empty, the system defaults to <strong><code>'tr'</code> (Turkish)</strong>. For multi-language projects, simply pass the language code (<code>tr, en, de, fr, es</code>) as the second parameter. (e.g. <code>timeAgo($date, 'en')</code> ➔ 5 minutes ago)</li>
+                <li style="margin-bottom: 8px;"><strong><code>$format</code>:</strong> Used only with the <code>formatDate()</code> function. Accepts standard PHP date characters. (e.g. <code>'d/m/Y'</code> ➔ 24/07/2026, or <code>'H:i'</code> ➔ 15:30). Allows you to create your own date pattern when other preset functions (day, year, etc.) are insufficient.</li>
+                <li style="margin-bottom: 0;"><strong><code>$lang</code>:</strong> Used in functions that include text output (month name, "ago" word). If you leave this parameter empty, the system runs with <strong>default <code>'tr'</code> (Turkish)</strong>. If you are making a multilingual project, just enter the language code (<code>en, tr, de, fr, es</code>) as the second parameter. (e.g.: <code>timeAgo($date, 'en')</code> ➔ 5 minutes ago)</li>
             </ul>
         </div>
 
-        <pre><code><span class="cm">&lt;!-- Assuming a UNIX timestamp retrieved with time() function --&gt;</span>
+        <pre><code><span class="cm">&lt;!-- Assuming a UNIX timestamp obtained with the time() function --&gt;</span>
 <span class="kw">&lt;?php</span> <span class="var">$date</span> = <span class="fn">time</span>(); <span class="kw">?&gt;</span>
 
 <span class="cm">&lt;!-- Full date by language --&gt;</span>
@@ -686,29 +692,29 @@ Example: /src/Service/PaymentService</code></pre>
         <div class="card">
             <h3><code>truncate($text, $length, $append)</code></h3>
             <span class="ret">string truncate(string $text, int $length = 100, string $append = '...')</span>
-            <p>Truncates long texts (e.g. blog summaries) at the specified character limit without cutting off the last word, and appends the specified string to the end.</p>
+            <p>Truncates long texts (e.g. blog summaries) at the desired character limit without cutting the last word and appends the specified suffix.</p>
             <pre><code>&lt;p&gt;&lt;?= <span class="fn">truncate</span>(<span class="var">$post</span>[<span class="st">'content'</span>], <span class="nu">160</span>, <span class="st">'...'</span>) ?&gt;&lt;/p&gt;</code></pre>
         </div>
     </section>
 
     <section id="vh-money">
         <h2>View Helpers — <code>money()</code> <span class="tag b-view">ViewMethod</span></h2>
-        <p>Formats amount with currency symbol. Currency code (ISO) automatically determines symbol placement. Default currency is <code class="ic">usd</code>.</p>
+        <p>Formats the amount with the currency symbol. The currency code (ISO) automatically determines the symbol placement. Default currency is <code class="ic">usd</code>.</p>
         <span class="ret">string money(float $amount, string $currency = 'usd')</span>
 
         <table class="sig-table">
             <thead><tr><th>Code</th><th>Output</th><th>Currency</th></tr></thead>
             <tbody>
-                <tr><td>usd</td><td>$1.250,00</td><td>US Dollar</td></tr>
+                <tr><td>usd</td><td>$1,250.00</td><td>US Dollar</td></tr>
                 <tr><td>eur</td><td>1.250,00 €</td><td>Euro</td></tr>
                 <tr><td>try / tl</td><td>1.250,00 ₺</td><td>Turkish Lira</td></tr>
-                <tr><td>gbp</td><td>£1.250,00</td><td>British Pound</td></tr>
-                <tr><td>jpy</td><td>1.250,00 ¥</td><td>Japanese Yen</td></tr>
-                <tr><td>inr</td><td>1.250,00 ₹</td><td>Indian Rupee</td></tr>
-                <tr><td>rub</td><td>1.250,00 ₽</td><td>Russian Ruble</td></tr>
-                <tr><td>krw</td><td>1.250,00 ₩</td><td>South Korean Won</td></tr>
-                <tr><td>brl</td><td>R$1.250,00</td><td>Brazilian Real</td></tr>
-                <tr><td>aed</td><td>1.250,00 د.إ</td><td>UAE Dirham</td></tr>
+                <tr><td>gbp</td><td>£1,250.00</td><td>British Pound</td></tr>
+                <tr><td>jpy</td><td>1,250.00 ¥</td><td>Japanese Yen</td></tr>
+                <tr><td>inr</td><td>1,250.00 ₹</td><td>Indian Rupee</td></tr>
+                <tr><td>rub</td><td>1,250.00 ₽</td><td>Russian Ruble</td></tr>
+                <tr><td>krw</td><td>1,250.00 ₩</td><td>South Korean Won</td></tr>
+                <tr><td>brl</td><td>R$1,250.00</td><td>Brazilian Real</td></tr>
+                <tr><td>aed</td><td>1,250.00 د.إ</td><td>UAE Dirham</td></tr>
             </tbody>
         </table>
 
@@ -716,24 +722,82 @@ Example: /src/Service/PaymentService</code></pre>
 <span class="cm">&lt;!-- Output: 1.250,00 ₺ --&gt;</span>
 
 &lt;span&gt;&lt;?= <span class="fn">money</span>(<span class="var">$product</span>[<span class="st">'price'</span>], <span class="st">'usd'</span>) ?&gt;&lt;/span&gt;
-<span class="cm">&lt;!-- Output: $1.250,00 --&gt;</span></code></pre>
+<span class="cm">&lt;!-- Output: $1,250.00 --&gt;</span></code></pre>
+    </section>
+
+    <section id="vh-strings">
+        <h2>View Helpers — String Operations <span class="tag b-view">ViewMethod</span></h2>
+        
+        <div class="card">
+            <h3><code>slugify(...$texts)</code></h3>
+            <span class="ret">string slugify(string ...$texts)</span>
+            <p>Takes an unlimited number of texts or variables and converts them into an SEO-friendly URL format by putting hyphens (-) between them. <strong>Note:</strong> This function works universally in both <code>ViewMethod</code> (frontend) and <code>SystemMethod</code> (backend)!</p>
+            <pre><code><span class="cm">// Single text usage</span>
+&lt;a href="/blog/&lt;?= <span class="fn">slugify</span>(<span class="st">'New Product Released!'</span>) ?&gt;"&gt;...&lt;/a&gt;
+<span class="cm">&lt;!-- Output: /blog/new-product-released --&gt;</span>
+
+<span class="cm">// Multiple parameter usage (e.g. API / Backend)</span>
+<span class="var">$username</span> = <span class="fn">slugify</span>(<span class="var">$name</span>, <span class="var">$surname</span>); <span class="cm">// john-doe</span>
+<span class="var">$sku</span> = <span class="fn">slugify</span>(<span class="st">'Red'</span>, <span class="st">'Size M'</span>, <span class="st">'T-shirt'</span>); <span class="cm">// red-size-m-t-shirt</span></code></pre>
+        </div>
+
+        <div class="card">
+            <h3><code>activeClass($path, $className)</code></h3>
+            <span class="ret">string activeClass(string $path, string $className = 'active')</span>
+            <p>Returns the CSS class if the current URL matches the specified path. Ideal for setting active links in navigation menus.</p>
+            <pre><code>&lt;a href="/contact" class="&lt;?= <span class="fn">activeClass</span>(<span class="st">'/contact'</span>) ?&gt;"&gt;Contact&lt;/a&gt;</code></pre>
+        </div>
+        
+        <div class="card">
+            <h3><code>formatSize($bytes)</code></h3>
+            <span class="ret">string formatSize(int $bytes)</span>
+            <p>Converts file size in bytes to a readable format (KB, MB, GB).</p>
+            <pre><code>&lt;span&gt;&lt;?= <span class="fn">formatSize</span>(<span class="nu">1048576</span>) ?&gt;&lt;/span&gt; <span class="cm">&lt;!-- Output: 1 MB --&gt;</span></code></pre>
+        </div>
+        
+        <div class="card">
+            <h3>Data Masking</h3>
+            <p>Censors sensitive data with asterisks for GDPR compliance.</p>
+            <pre><code>&lt;span&gt;&lt;?= <span class="fn">maskEmail</span>(<span class="st">'john@example.com'</span>) ?&gt;&lt;/span&gt; <span class="cm">&lt;!-- Output: j***@example.com --&gt;</span>
+&lt;span&gt;&lt;?= <span class="fn">maskPhone</span>(<span class="st">'+12345678900'</span>) ?&gt;&lt;/span&gt; <span class="cm">&lt;!-- Output: +12***8900 --&gt;</span></code></pre>
+        </div>
     </section>
 
     <!-- ====== SYSTEM HELPERS ====== -->
+    <section id="sh-apiresponse">
+        <h2>System Helpers — <code>apiResponse()</code> <span class="tag b-api">SystemMethod</span></h2>
+        <p>ArtiFrame's <strong>standard and universal</strong> JSON output generator. It must be used when sending data from APIs to JavaScript. It standardizes the development process by always sending a consistent (<code>status</code>, <code>message</code>, <code>data</code>) object to the JS (Frontend) developer.</p>
+        <span class="ret">void apiResponse(string $status, string $message, array $data = [], \Throwable $exception = null)</span>
+        
+        <div class="alert a-info" style="margin-top: 10px; margin-bottom: 24px;">
+            <strong>💡 Smart Error Handling (APP_ENV Support)</strong><br>
+            If you pass an <code>$e</code> (Exception) to the 4th parameter; when in <code>APP_ENV = 1</code> (Debug) mode, the <strong>actual PHP error, line, and file path</strong> are printed instead of the user-written message. But when the server is set to <code>APP_ENV = 0</code> (Prod) mode, the system automatically hides Exception logs and only returns your clean "An error occurred" message.
+        </div>
+
+        <pre><code><span class="cm">// Successful response</span>
+<span class="fn">apiResponse</span>(<span class="st">'success'</span>, <span class="st">'User saved.'</span>, [<span class="st">'id'</span> =&gt; <span class="var">$newId</span>]);
+
+<span class="cm">// Smart error handling with Try-Catch</span>
+<span class="kw">try</span> {
+    <span class="cm">// Database operations...</span>
+} <span class="kw">catch</span> (\Exception <span class="var">$e</span>) {
+    <span class="cm">// In Prod mode: "A problem occurred during registration."</span>
+    <span class="cm">// In Debug mode: "SQL Error: duplicate key... (File: user.php Line: 45)"</span>
+    <span class="fn">apiResponse</span>(<span class="st">'error'</span>, <span class="st">'A problem occurred during registration.'</span>, [], <span class="var">$e</span>);
+}</code></pre>
+    </section>
+
     <section id="sh-json">
         <h2>System Helpers — <code>jsonResponse()</code> <span class="tag b-api">SystemMethod</span></h2>
-        <p>Sets JSON header, sets HTTP status code, outputs payload safely with json_encode, and terminates script execution. <strong>All API responses must be delivered through this function.</strong></p>
+        <p>Sets the JSON header, provides the HTTP status code, and prints the output with json_encode. (Usually not used directly, <code>apiResponse()</code> should be preferred instead.)</p>
         <span class="ret">void jsonResponse(array $data, int $statusCode = 200)</span>
-        <pre><code><span class="cm">// Successful response</span>
-<span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'success'</span>, <span class="st">'data'</span> =&gt; <span class="var">$user</span>], <span class="nu">200</span>);
-
-<span class="cm">// Error response</span>
-<span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'error'</span>, <span class="st">'message'</span> =&gt; <span class="st">'Unauthorized access.'</span>], <span class="nu">401</span>);</code></pre>
+        <pre><code><span class="cm">// Old style / Custom formatted response</span>
+<span class="fn">jsonResponse</span>([<span class="st">'operation_result'</span> =&gt; <span class="st">'ok'</span>], <span class="nu">200</span>);</code></pre>
     </section>
 
     <section id="sh-csrf">
         <h2>System Helpers — <code>verifyCsrf()</code> <span class="tag b-api">SystemMethod</span></h2>
-        <p>Verifies that incoming POST request originates from a legitimate form. Returns false if <code class="ic">csrfField()</code> is missing or token is invalid.</p>
+        <p>Verifies that the incoming POST request comes from a legitimate form. Returns false if <code class="ic">csrfField()</code> is not included in the form or if the token is invalid.</p>
         <span class="ret">bool verifyCsrf(string $token)</span>
         <pre><code><span class="kw">if</span> (!<span class="fn">verifyCsrf</span>(<span class="var">$_POST</span>[<span class="st">'csrf_token'</span>] ?? <span class="st">''</span>)) {
     <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'error'</span>, <span class="st">'message'</span> =&gt; <span class="st">'Invalid CSRF token.'</span>], <span class="nu">403</span>);
@@ -746,9 +810,9 @@ Example: /src/Service/PaymentService</code></pre>
         <table class="sig-table">
             <thead><tr><th>Function</th><th>Description</th></tr></thead>
             <tbody>
-                <tr><td>sanitizeInt($value)</td><td>Strips all letters, symbols, and commas, keeping <strong>integers only</strong>. Used for IDs or limits.</td></tr>
-                <tr><td>sanitizeFloat($value)</td><td>Cleans everything except fractional (decimal) numbers. Used for monetary amounts or metrics.</td></tr>
-                <tr><td>sanitizeString($value)</td><td><strong>Destroys all HTML and PHP tags (<code>&lt;script&gt;</code>, <code>&lt;iframe&gt;</code>, etc.)</strong> to prevent XSS and derived attacks. Leaves safe plain text.</td></tr>
+                <tr><td>sanitizeInt($value)</td><td>Removes all letters, symbols, and commas from within, leaving <strong>only integer</strong> numbers. Used for IDs or limits.</td></tr>
+                <tr><td>sanitizeFloat($value)</td><td>Clears everything except floating (decimal) numbers. Used for currency amounts or metrics.</td></tr>
+                <tr><td>sanitizeString($value)</td><td>To prevent XSS and derivative attacks, it <strong>destroys all HTML and PHP tags (like <code>&lt;script&gt;</code>, <code>&lt;iframe&gt;</code>, etc.)</strong>. Leaves safe plain text.</td></tr>
                 <tr><td>sanitizeEmail($email)</td><td>Filters all invalid and dangerous characters that do not conform to email format.</td></tr>
             </tbody>
         </table>
@@ -770,11 +834,11 @@ Example: /src/Service/PaymentService</code></pre>
                 <tr><td>isDelete()</td><td>Is request DELETE?</td></tr>
                 <tr><td>isAjax()</td><td>Is request via XHR/Fetch API?</td></tr>
                 <tr><td>getClientIp()</td><td>Real IP address (Cloudflare & Proxy supported)</td></tr>
-                <tr><td>redirect($url)</td><td>Redirects to given URL and terminates script</td></tr>
+                <tr><td>redirect($url)</td><td>Redirects to the given URL and terminates the script</td></tr>
             </tbody>
         </table>
 
-        <pre><code><span class="cm">// Block direct browser access</span>
+        <pre><code><span class="cm">// Prevent direct browser access</span>
 <span class="kw">if</span> (!<span class="fn">isAjax</span>()) {
     <span class="fn">jsonResponse</span>([<span class="st">'error'</span> =&gt; <span class="st">'Direct access restricted.'</span>], <span class="nu">403</span>);
 }
@@ -784,7 +848,7 @@ Example: /src/Service/PaymentService</code></pre>
     <span class="fn">redirect</span>(<span class="st">'/login.php'</span>);
 }
 
-<span class="var">$ip</span> = <span class="fn">getClientIp</span>(); <span class="cm">// Real IP behind Cloudflare as well</span></code></pre>
+<span class="var">$ip</span> = <span class="fn">getClientIp</span>(); <span class="cm">// Real IP even behind Cloudflare</span></code></pre>
     </section>
 
     <section id="sh-security">
@@ -793,7 +857,7 @@ Example: /src/Service/PaymentService</code></pre>
         <table class="sig-table">
             <thead><tr><th>Function</th><th>Description</th></tr></thead>
             <tbody>
-                <tr><td>generateCsrf()</td><td>Generates new CSRF token and saves to session</td></tr>
+                <tr><td>generateCsrf()</td><td>Generates a new CSRF token and saves it to session</td></tr>
                 <tr><td>generateToken($length)</td><td>Cryptographically secure random hex string (password reset, API key, etc.)</td></tr>
                 <tr><td>hashPassword($password)</td><td>Hashes password with bcrypt</td></tr>
                 <tr><td>verifyPassword($password, $hash)</td><td>Verifies password against hash</td></tr>
@@ -802,8 +866,8 @@ Example: /src/Service/PaymentService</code></pre>
 
         <pre><code><span class="cm">// Secure token generation (API key, email verification link, etc.)</span>
 <span class="var">$token</span> = <span class="fn">generateToken</span>(<span class="nu">32</span>); 
-<span class="cm">// ⚠️ Note: 32 bytes of data generated, but converted to hex format</span>
-<span class="cm">// resulting in a string exactly twice as long, i.e., 64 characters.</span>
+<span class="cm">// ⚠️ Note: 32 bytes of data are generated, but since it is converted to hex format (base 16)</span>
+<span class="cm">// the output is exactly twice as long, meaning a 64-character string.</span>
 
 <span class="cm">// Password registration</span>
 <span class="var">$hash</span> = <span class="fn">hashPassword</span>(<span class="var">$_POST</span>[<span class="st">'password'</span>]);
@@ -814,39 +878,57 @@ Example: /src/Service/PaymentService</code></pre>
 }</code></pre>
     </section>
 
+    <section id="sh-utils">
+        <h2>System Helpers — Practical Tools <span class="tag b-api">SystemMethod</span></h2>
+        
+        <div class="card">
+            <h3><code>arrayOnly($source, $keys)</code></h3>
+            <span class="ret">array arrayOnly(array $source, array $keys)</span>
+            <p>Filters only the allowed keys from an array (e.g. $_POST). Prevents mass-assignment vulnerabilities.</p>
+            <pre><code><span class="var">$data</span> = <span class="fn">arrayOnly</span>(<span class="var">$_POST</span>, [<span class="st">'name'</span>, <span class="st">'email'</span>, <span class="st">'phone'</span>]);</code></pre>
+        </div>
+        
+        <div class="card">
+            <h3><code>dd(...$vars)</code></h3>
+            <span class="ret">void dd(...$vars)</span>
+            <p>Quick debugging (Dump and Die). Prints given variables to the screen in a readable block and instantly stops application execution.</p>
+            <pre><code><span class="fn">dd</span>(<span class="var">$user</span>, <span class="var">$_POST</span>);</code></pre>
+        </div>
+    </section>
+
     <!-- ====== API SECURITY ====== -->
     <section id="api-methods">
-        <h2>API — HTTP Method Control <span class="tag b-sec">ApiControl</span></h2>
-        <p>The <code class="ic">$allowedMethods</code> array MUST be defined <strong>before</strong> ApiControl require. ApiControl reads this array and automatically rejects requests from non-allowed methods with <code class="ic">405 Method Not Allowed</code>.</p>
-        <pre><code><span class="cm">// Endpoint accepting only GET and POST</span>
+        <h2>API — HTTP Method Check <span class="tag b-sec">ApiControl</span></h2>
+        <p>The <code class="ic">$allowedMethods</code> array must be defined <strong>before</strong> requiring ApiControl. By reading this array, ApiControl automatically rejects requests from disallowed methods with <code class="ic">405 Method Not Allowed</code>.</p>
+        <pre><code><span class="cm">// An endpoint that only accepts GET and POST</span>
 <span class="var">$allowedMethods</span> = [<span class="st">'GET'</span>, <span class="st">'POST'</span>];
 <span class="fn">require_once</span> ... . <span class="st">'/../app/ApiControl.php'</span>;
 
-<span class="cm">// Endpoint accepting only DELETE</span>
+<span class="cm">// An endpoint that only accepts DELETE</span>
 <span class="var">$allowedMethods</span> = [<span class="st">'DELETE'</span>];
 <span class="fn">require_once</span> ... . <span class="st">'/../app/ApiControl.php'</span>;</code></pre>
-        <p>Preflight <code class="ic">OPTIONS</code> requests automatically return <code class="ic">200</code> for CORS and script terminates — no manual intervention needed.</p>
+        <p>Preflight <code class="ic">OPTIONS</code> requests automatically return <code class="ic">200</code> for CORS and the script terminates — no manual intervention needed.</p>
     </section>
 
     <section id="api-cors">
-        <h2>API — CORS <span class="tag b-api">ApiControl (Commented Out)</span></h2>
-        <p>If you want to allow API access from other domains or mobile apps, activate the CORS block inside <code class="ic">ApiControl.php</code>.</p>
-        <pre><code><span class="cm">// Inside ApiControl.php — activate by uncommenting</span>
+        <h2>API — CORS <span class="tag b-api">ApiControl (Commented)</span></h2>
+        <p>If you want to allow API access from other domains or mobile applications, activate the CORS block inside <code class="ic">ApiControl.php</code>.</p>
+        <pre><code><span class="cm">// Inside ApiControl.php — activated by removing comments</span>
 header(<span class="st">"Access-Control-Allow-Origin: https://your-domain.com"</span>);
 header(<span class="st">"Access-Control-Allow-Methods: GET, POST, OPTIONS"</span>);
 header(<span class="st">"Access-Control-Allow-Headers: Content-Type, Authorization"</span>);</code></pre>
         <div class="alert a-warn">
-            <strong>⚠️</strong> Do not use <code class="ic">*</code> (all domains) in Production environment. Specify domain address explicitly.
+            <strong>⚠️</strong> Do not use <code class="ic">*</code> (all domains) in Production environment. Explicitly specify the domain address.
         </div>
     </section>
 
     <section id="api-rate">
-        <h2>API — Rate Limiting <span class="tag b-api">ApiControl (Commented Out)</span></h2>
-        <p>To prevent malicious users or bots from flooding the API, you can activate the Rate Limiting block inside <code class="ic">ApiControl.php</code>. Default rule: <strong>60 requests / IP in 60 seconds</strong>.</p>
+        <h2>API — Rate Limiting <span class="tag b-api">ApiControl (Commented)</span></h2>
+        <p>To prevent malicious users or bots from flooding the API, you can activate the Rate Limiting block in <code class="ic">ApiControl.php</code>. Default rule: <strong>60 requests per 60 seconds / IP</strong>.</p>
         <div class="alert a-warn" style="margin-top: 10px; margin-bottom: 20px;">
-            <strong>⚠️ Redis Server Required:</strong> Rate Limiting feature works using Redis via <code>\Src\Service\RedisService::getInstance()</code> class. Before enabling this code block, make sure you have installed a Redis service in your project and created a connection class under <code>src/Service/</code>.
+            <strong>⚠️ Redis Server Required:</strong> The Rate Limiting feature works using Redis via the <code>\Src\Service\RedisService::getInstance()</code> class. Before opening this block of code, make sure you have installed a Redis service in your project and created a connection class under <code>src/Service/</code>.
         </div>
-        <pre><code><span class="cm">// If more than 60 requests arrive from the same IP in 60 seconds:</span>
+        <pre><code><span class="cm">// If more than 60 requests come from the same IP in 60 seconds:</span>
 http_response_code(<span class="nu">429</span>); <span class="cm">// Too Many Requests</span>
 echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too many requests. Please wait.'</span>]);</code></pre>
     </section>
@@ -854,7 +936,7 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
     <!-- ====== WORKFLOW ====== -->
     <section id="workflow">
         <h2>Full Workflow: Contact Form (End-to-End)</h2>
-        <p>Let's walk step-by-step through developing a <strong>Contact Form</strong> feature from scratch using ArtiFrame standards.</p>
+        <p>Let's examine step by step how to develop a <strong>Contact Form</strong> feature from scratch following ArtiFrame standards.</p>
 
         <ol class="steps">
             <li>
@@ -868,31 +950,31 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
             </li>
             <li>
                 <div>
-                    <strong>Create the API Endpoint</strong>
-                    <pre><code>artiframe&gt; <span class="fn">make:api</span> <span class="st">standart</span> <span class="st">api/contact/send.php</span></code></pre>
+                    <strong>Create API Endpoint</strong>
+                    <pre><code>artiframe&gt; <span class="fn">make:api</span> <span class="st">standart</span> <span class="st">api/contact/submit.php</span></code></pre>
                 </div>
             </li>
             <li>
                 <div>
                     <strong>Code the HTML Form</strong><br>
-                    Add the following form to <code class="ic">public/contact.php</code>:
-                    <pre><code>&lt;form action="/api/contact/send.php" method="POST"&gt;
+                    Add the following form to the <code class="ic">public/contact.php</code> file:
+                    <pre><code>&lt;form action="/api/contact/submit.php" method="POST"&gt;
     &lt;?= <span class="fn">csrfField</span>() ?&gt;
-    &lt;input type="text"  name="name"    placeholder="Your Name"&gt;
-    &lt;input type="email" name="email"   placeholder="Email"&gt;
+    &lt;input type="text"  name="name"      placeholder="Your Name"&gt;
+    &lt;input type="email" name="email"     placeholder="Email"&gt;
     &lt;textarea name="message" placeholder="Your Message"&gt;&lt;/textarea&gt;
-    &lt;button type="submit" data-js="<span class="st">contact-send</span>"&gt;Send&lt;/button&gt;
+    &lt;button type="submit" data-js="<span class="st">contact-submit</span>"&gt;Send&lt;/button&gt;
 &lt;/form&gt;</code></pre>
                 </div>
             </li>
             <li>
                 <div>
                     <strong>Connect Fetch API with JavaScript</strong><br>
-                    In <code class="ic">public/assets/js/contact.js</code> file:
-                    <pre><code>document.<span class="fn">querySelector</span>(<span class="st">'[data-js="contact-send"]'</span>).<span class="fn">addEventListener</span>(<span class="st">'click'</span>, async (e) =&gt; {
+                    In the <code class="ic">public/assets/js/contact.js</code> file:
+                    <pre><code>document.<span class="fn">querySelector</span>(<span class="st">'[data-js="contact-submit"]'</span>).<span class="fn">addEventListener</span>(<span class="st">'click'</span>, async (e) =&gt; {
     e.<span class="fn">preventDefault</span>();
     <span class="kw">const</span> formData = <span class="kw">new</span> <span class="fn">FormData</span>(e.target.<span class="fn">closest</span>(<span class="st">'form'</span>));
-    <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">'/api/contact/send.php'</span>, {
+    <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">'/api/contact/submit.php'</span>, {
         method: <span class="st">'POST'</span>,
         body: formData
     });
@@ -904,13 +986,13 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
             <li>
                 <div>
                     <strong>Complete Server Logic (Backend)</strong><br>
-                    In <code class="ic">public/api/contact/send.php</code> file:
+                    In the <code class="ic">public/api/contact/submit.php</code> file:
                     <pre><code><span class="kw">&lt;?php</span>
 <span class="var">$allowedMethods</span> = [<span class="st">'POST'</span>];
 <span class="fn">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/../app/ApiControl.php'</span>;
 <span class="kw">use</span> Bin\SystemMethod;
 
-<span class="cm">// 1. CSRF Verification</span>
+<span class="cm">// 1. CSRF Validation</span>
 <span class="kw">if</span> (!<span class="fn">verifyCsrf</span>(<span class="var">$_POST</span>[<span class="st">'csrf_token'</span>] ?? <span class="st">''</span>)) {
     <span class="fn">jsonResponse</span>([<span class="st">'error'</span> =&gt; <span class="st">'Invalid token.'</span>], <span class="nu">403</span>);
 }
@@ -920,17 +1002,17 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
 <span class="var">$email</span>   = <span class="fn">sanitizeEmail</span>(<span class="var">$_POST</span>[<span class="st">'email'</span>] ?? <span class="st">''</span>);
 <span class="var">$message</span> = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'message'</span>] ?? <span class="st">''</span>);
 
-<span class="cm">// 3. Business Logic (Send mail, save to DB, etc.)</span>
+<span class="cm">// 3. Business Logic (Send email, save to DB, etc.)</span>
 <span class="cm">// ...</span>
 
-<span class="cm">// 4. Send Response</span>
+<span class="cm">// 4. Respond</span>
 <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'success'</span>, <span class="st">'message'</span> =&gt; <span class="st">'Your message has been received.'</span>], <span class="nu">200</span>);</code></pre>
                 </div>
             </li>
         </ol>
 
         <div class="alert a-success">
-            <strong>✅ Completed!</strong> You created a fully secure and standard-compliant form workflow with XSS protection, CSRF verification, HTTP method restriction, and data-js architecture.
+            <strong>✅ Completed!</strong> You have created a fully secure and standard-compliant form flow with XSS protection, CSRF validation, HTTP method restriction, and data-js architecture.
         </div>
     </section>
 

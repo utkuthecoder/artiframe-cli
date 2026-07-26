@@ -1,0 +1,312 @@
+<?php
+
+namespace Auth;
+
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+use Firebase\JWT\ExpiredException;
+use Firebase\JWT\SignatureInvalidException;
+use Firebase\JWT\BeforeValidException;
+
+/**
+ * JWT Authentication Service
+ *
+ * Provides a clean wrapper around firebase/php-jwt for token generation,
+ * verification, refresh, and HTTP middleware integration.
+ *
+ * Required environment variables:
+ *   JWT_SECRET_KEY — Secret key used for signing and verifying tokens
+ *   JWT_ALGORITHM  — Signing algorithm (e.g. HS256, HS384, HS512)
+ *   JWT_EXPIRY     — Default token lifetime in seconds (e.g. 3600)
+ *
+ * @package Auth
+ */
+class JwtAuth
+{
+    /**
+     * Secret key for signing tokens.
+     *
+     * @var string
+     */
+    private string $secretKey;
+
+    /**
+     * Signing algorithm (HS256, HS384, HS512, etc.).
+     *
+     * @var string
+     */
+    private string $algorithm;
+
+    /**
+     * Default token expiry in seconds.
+     *
+     * @var int
+     */
+    private int $expiry;
+
+    /**
+     * Create a new JwtAuth instance.
+     *
+     * Loads the secret key, algorithm, and default expiry from $_ENV.
+     */
+    public function __construct()
+    {
+        $this->secretKey = $_ENV['JWT_SECRET_KEY'];
+        $this->algorithm = $_ENV['JWT_ALGORITHM'] ?? 'HS256';
+        $this->expiry    = (int) ($_ENV['JWT_EXPIRY'] ?? 3600);
+    }
+
+    /**
+     * Generate a signed JWT token.
+     *
+     * Merges the given payload with standard claims (iat, exp) and encodes it.
+     *
+     * @param array    $payload Custom claims to include in the token
+     * @param int|null $expiry  Token lifetime in seconds (null = use default from $_ENV)
+     * @return string Encoded JWT token string
+     */
+    public function generate(array $payload, int $expiry = null): string
+    {
+        $now       = time();
+        $expiresIn = $expiry ?? $this->expiry;
+
+        $tokenPayload = array_merge($payload, [
+            'iat' => $now,
+            'exp' => $now + $expiresIn,
+        ]);
+
+        return JWT::encode($tokenPayload, $this->secretKey, $this->algorithm);
+    }
+
+    /**
+     * Verify and decode a JWT token.
+     *
+     * Returns a standardised response array with the decoded payload on success
+     * or an error message on failure.
+     *
+     * @param string $token The JWT token to verify
+     * @return array {
+     *     @type string $status  'success' or 'error'
+     *     @type string $message Human-readable result description
+     *     @type array  $data    Decoded payload (on success only)
+     * }
+     */
+    public function verify(string $token): array
+    {
+        try {
+            $decoded = JWT::decode($token, new Key($this->secretKey, $this->algorithm));
+            $payload = (array) $decoded;
+
+            return [
+                'status'  => 'success',
+                'message' => 'Token is valid.',
+                'data'    => $payload,
+            ];
+        } catch (ExpiredException $e) {
+            return [
+                'status'  => 'error',
+                'message' => 'Token has expired.',
+                'data'    => [],
+            ];
+        } catch (SignatureInvalidException $e) {
+            return [
+                'status'  => 'error',
+                'message' => 'Invalid token signature.',
+                'data'    => [],
+            ];
+        } catch (BeforeValidException $e) {
+            return [
+                'status'  => 'error',
+                'message' => 'Token is not yet valid.',
+                'data'    => [],
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => 'Token verification failed: ' . $e->getMessage(),
+                'data'    => [],
+            ];
+        }
+    }
+
+    /**
+     * Extract the payload from a token without throwing exceptions.
+     *
+     * Useful when you need to inspect claims even if the token might be invalid.
+     * Returns null on any failure instead of throwing.
+     *
+     * @param string $token The JWT token to decode
+     * @return array|null Decoded payload or null on failure
+     */
+    public function payload(string $token): ?array
+    {
+        try {
+            $decoded = JWT::decode($token, new Key($this->secretKey, $this->algorithm));
+            return (array) $decoded;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Refresh a token by generating a new one with the same payload.
+     *
+     * Strips the old iat/exp claims and re-signs with a fresh expiry.
+     * Returns null if the original token cannot be decoded.
+     *
+     * @param string   $token  The current JWT token to refresh
+     * @param int|null $expiry New expiry duration in seconds (null = use default)
+     * @return string|null New JWT token or null on failure
+     */
+    public function refresh(string $token, int $expiry = null): ?string
+    {
+        try {
+            $decoded = JWT::decode($token, new Key($this->secretKey, $this->algorithm));
+            $payload = (array) $decoded;
+
+            // Remove old timing claims so generate() sets fresh ones
+            unset($payload['iat'], $payload['exp'], $payload['nbf']);
+
+            return $this->generate($payload, $expiry);
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Check whether a token has expired.
+     *
+     * Attempts to decode the token and catches ExpiredException specifically.
+     * Returns true if expired, false if still valid or on other errors.
+     *
+     * @param string $token The JWT token to check
+     * @return bool True if the token is expired
+     */
+    public function isExpired(string $token): bool
+    {
+        try {
+            JWT::decode($token, new Key($this->secretKey, $this->algorithm));
+            return false;
+        } catch (ExpiredException $e) {
+            return true;
+        } catch (\Exception $e) {
+            // Token is invalid for another reason, not strictly "expired"
+            return false;
+        }
+    }
+
+    /**
+     * Extract the user_id claim from a token.
+     *
+     * A convenience shortcut for the most common payload lookup.
+     *
+     * @param string $token The JWT token
+     * @return mixed The user_id value or null if not present / token invalid
+     */
+    public function getUserId(string $token): mixed
+    {
+        $payload = $this->payload($token);
+
+        if ($payload === null) {
+            return null;
+        }
+
+        return $payload['user_id'] ?? null;
+    }
+
+    /**
+     * Generate a long-lived refresh token.
+     *
+     * Identical to generate() but with a longer default expiry (7 days).
+     * Adds a 'token_type' => 'refresh' claim to distinguish from access tokens.
+     *
+     * @param array $payload Custom claims to include
+     * @param int   $expiry  Lifetime in seconds (default: 604800 = 7 days)
+     * @return string Encoded refresh token
+     */
+    public function generateRefreshToken(array $payload, int $expiry = 604800): string
+    {
+        $payload['token_type'] = 'refresh';
+
+        return $this->generate($payload, $expiry);
+    }
+
+    /**
+     * HTTP middleware that validates the Authorization header.
+     *
+     * Reads the Bearer token from the Authorization header, verifies it, and
+     * sets $_REQUEST['jwt_user'] with the decoded payload on success.
+     * On failure, sends a 401 JSON response via apiResponse() and exits.
+     *
+     * Usage:
+     *   JwtAuth::middleware();
+     *   // If execution reaches here, $_REQUEST['jwt_user'] is available
+     *
+     * @return void
+     */
+    public static function middleware(): void
+    {
+        $instance = new self();
+
+        // Extract Bearer token from Authorization header
+        $authHeader = $_SERVER['HTTP_AUTHORIZATION']
+            ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION']
+            ?? '';
+
+        if (empty($authHeader)) {
+            if (function_exists('apiResponse')) {
+                apiResponse(401, 'Authorization header is missing.');
+            } else {
+                http_response_code(401);
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'status'  => 'error',
+                    'code'    => 401,
+                    'message' => 'Authorization header is missing.',
+                ]);
+            }
+            exit;
+        }
+
+        // Strip "Bearer " prefix
+        $token = '';
+        if (preg_match('/^Bearer\s+(.+)$/i', $authHeader, $matches)) {
+            $token = $matches[1];
+        }
+
+        if (empty($token)) {
+            if (function_exists('apiResponse')) {
+                apiResponse(401, 'Bearer token is missing.');
+            } else {
+                http_response_code(401);
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'status'  => 'error',
+                    'code'    => 401,
+                    'message' => 'Bearer token is missing.',
+                ]);
+            }
+            exit;
+        }
+
+        $result = $instance->verify($token);
+
+        if ($result['status'] !== 'success') {
+            if (function_exists('apiResponse')) {
+                apiResponse(401, $result['message']);
+            } else {
+                http_response_code(401);
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'status'  => 'error',
+                    'code'    => 401,
+                    'message' => $result['message'],
+                ]);
+            }
+            exit;
+        }
+
+        // Attach decoded user payload to the request superglobal
+        $_REQUEST['jwt_user'] = $result['data'];
+    }
+}
