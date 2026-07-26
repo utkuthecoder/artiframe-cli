@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/artilingo/artiframe/main/assets/logo.png" alt="ArtiFrame Logo" width="180" />
+<img src="https://raw.githubusercontent.com/utkuthecoder/artiframe-cli/refs/heads/main/assets/logo.svg" alt="ArtiFrame Logo" width="180" />
 
 # ArtiFrame
 
