@@ -240,7 +240,7 @@ class NewProjectCommand
             $pct,
             $this->currentStep,
             $this->totalSteps,
-            mb_substr($label, 0, 25)
+            function_exists('mb_substr') ? mb_substr($label, 0, 25) : substr($label, 0, 25)
         );
 
         // Aynı satırı güncelle (\r ile başa dön, yeni satır yok)
