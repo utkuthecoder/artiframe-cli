@@ -220,8 +220,9 @@ async function handleVersion() {
 
 // ── PHP availability check ──────────────────────────────────────
 function findPhp() {
-    for (const bin of ['php', 'php8', 'php81', 'php82', 'php83', 'php84']) {
-        const r = spawnSync(bin, ['--version'], { encoding: 'utf8', shell: true });
+    const bins = ['php', 'php8', 'php8.1', 'php8.2', 'php8.3', 'php8.4', 'php81', 'php82', 'php83', 'php84'];
+    for (const bin of bins) {
+        const r = spawnSync(bin, ['--version'], { encoding: 'utf8', shell: false });
         if (r.status === 0) return bin;
     }
     return null;
