@@ -159,4 +159,11 @@ return [
     'HELP_SERVE_DESC'   => 'Startet den lokalen Entwicklungsserver.',
 
     'INVALID_PACKAGE_NAME' => 'Ungültiger Paketname. Das Format sollte wie folgt aussehen: vendor/project',
+
+    'MODE_ALREADY_DEBUG'       => 'Debug-Modus ist bereits aktiv.',
+    'MODE_ALREADY_PROD'        => 'Prod-Modus ist bereits aktiv.',
+    'MODE_CHANGED'             => 'Vom :old- in den :new-Modus gewechselt.',
+    'MODE_INVALID'             => 'Ungültiger Modus. Verwenden Sie 1 für Debug, 0 für Prod.',
+    'MODE_NOT_PROJECT'         => 'ArtiFrame-Projekt nicht gefunden (config/app-version.php fehlt).',
+    'HELP_MODE_DESC'           => 'Ändert den Anwendungsmodus (0=Prod, 1=Debug)',
 ];

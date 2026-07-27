@@ -159,4 +159,11 @@ return [
     'HELP_SERVE_DESC'   => 'Inicia el servidor de desarrollo local.',
 
     'INVALID_PACKAGE_NAME' => 'Nombre de paquete no válido. El formato debería ser: vendor/project',
+
+    'MODE_ALREADY_DEBUG'       => 'El modo de depuración ya está activo.',
+    'MODE_ALREADY_PROD'        => 'El modo de producción ya está activo.',
+    'MODE_CHANGED'             => 'Cambiado del modo :old al modo :new.',
+    'MODE_INVALID'             => 'Modo no válido. Use 1 para Depuración, 0 para Producción.',
+    'MODE_NOT_PROJECT'         => 'Proyecto ArtiFrame no encontrado (falta config/app-version.php).',
+    'HELP_MODE_DESC'           => 'Cambia el modo de la aplicación (0=Prod, 1=Debug)',
 ];

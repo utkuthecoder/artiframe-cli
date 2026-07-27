@@ -204,7 +204,7 @@ async function handleVersion() {
 
         const result = spawnSync('npm', ['install', '-g', PACKAGE_NAME + '@latest', '--prefer-online'], {
             stdio: 'inherit',
-            shell: true,
+            shell: process.platform === 'win32',
         });
 
         console.log();

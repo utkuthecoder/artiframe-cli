@@ -283,9 +283,12 @@
         <a href="#cli-go">go</a>
         <a href="#cli-remove">remove</a>
         <a href="#cli-version">version</a>
+        <a href="#cli-mode">mode</a>
         <a href="#cli-serve">serve</a>
         <a href="#cli-add">add</a>
         <div class="sb-cat">Entegre Servisler</div>
+                        <a href="#svc-qrcode">QR Code</a>
+        <a href="#svc-phpmailer">PHPMailer (Mail)</a>
         <a href="#svc-iyzico">Iyzico <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Ücretli/Lisanslı Servis">$</span></a>
         <a href="#svc-stripe">Stripe <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Ücretli/Lisanslı Servis">$</span></a>
         <a href="#svc-jwt">JWT</a>
@@ -920,6 +923,15 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
     </section>
 
     
+        <!-- mode -->
+    <section id="cli-mode">
+        <h2><code>mode</code> <span class="tag b-cli">CLI Komutu</span></h2>
+        <p>Projenin çalışma modunu (Geliştirme veya Canlı) tek komutla değiştirmenizi sağlar. Bu komut, manuel olarak <code>config/app-version.php</code> dosyasını açıp düzenleme zahmetinden kurtarır.</p>
+        <pre><code>artiframe&gt; <span class="fn">mode</span> <span class="st">1</span>
+  ✅ Prod modundan Debug moduna geçiş yapıldı.</code></pre>
+        <p>Canlı sürüme geçmek için <code>0</code> parametresini kullanabilirsiniz:</p>
+        <pre><code>artiframe&gt; <span class="fn">mode</span> <span class="st">0</span></code></pre>
+    </section>
     <!-- serve -->
     <section id="cli-serve">
         <h2><code>serve</code> <span class="tag b-cli">CLI Komutu</span></h2>
@@ -947,8 +959,10 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
                     <tr><th>Komut</th><th>Composer Paketi</th><th>Üretilen Sınıf Dosyası</th></tr>
                 </thead>
                 <tbody>
+                                        <tr><td><code>add phpmailer</code></td><td>phpmailer/phpmailer</td><td><span class="tag b-core">src/Service/Mailer.php</span></td></tr>
                     <tr><td><code>add iyzico</code></td><td>iyzipay/iyzipay-php</td><td><span class="tag b-core">src/Service/Iyzico.php</span></td></tr>
                     <tr><td><code>add stripe</code></td><td>stripe/stripe-php</td><td><span class="tag b-core">src/Service/Stripe.php</span></td></tr>
+                                        <tr><td><code>add qrcode</code></td><td>endroid/qr-code</td><td><span class="tag b-core">src/Service/QrCode.php</span></td></tr>
                     <tr><td><code>add jwt</code></td><td>firebase/php-jwt</td><td><span class="tag b-core">src/Auth/JwtAuth.php</span></td></tr>
                     <tr><td><code>add image</code></td><td>intervention/image</td><td><span class="tag b-core">src/Service/ImageProcessor.php</span></td></tr>
                     <tr><td><code>add s3</code></td><td>aws/aws-sdk-php</td><td><span class="tag b-core">src/Service/S3Storage.php</span></td></tr>
@@ -969,11 +983,11 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
                     <tr><th>Komut</th><th>Composer Paketi</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><code>add phpmailer</code></td><td>phpmailer/phpmailer</td></tr>
+
                     <tr><td><code>add mpdf</code></td><td>mpdf/mpdf</td></tr>
                     <tr><td><code>add dompdf</code></td><td>dompdf/dompdf</td></tr>
                     <tr><td><code>add spreadsheet</code></td><td>phpoffice/phpspreadsheet</td></tr>
-                    <tr><td><code>add qrcode</code></td><td>endroid/qr-code</td></tr>
+                    
                     <tr><td><code>add guzzle</code></td><td>guzzlehttp/guzzle</td></tr>
                     <tr><td><code>add uuid</code></td><td>ramsey/uuid</td></tr>
                     <tr><td><code>add carbon</code></td><td>nesbot/carbon</td></tr>
@@ -995,6 +1009,85 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
         <h2>Entegre Servisler (Wrapper) <span class="tag b-core">Stubs</span></h2>
         <p>ArtiFrame, popüler paketleri doğrudan kullanmak yerine <strong>önceden yapılandırılmış Sarmalayıcı (Wrapper)</strong> sınıflarla kullanımınıza sunar.</p>
 
+
+                                        <div class="card" id="svc-qrcode">
+            <h2>QR Code</h2>
+            <div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Sarmalayıcı Sınıf:</strong> <code>add qrcode</code> komutunu çalıştırdığınızda <code>endroid/qr-code</code> kütüphanesi yüklenir ve <code>src/Service/QrCode.php</code> sarmalayıcı sınıfı oluşturulur.</div>
+            <p>Endroid QR Code kütüphanesinin zorlu nesne üretim (Builder/Writer) süreçlerini gizleyen, tek satırda QR kod oluşturup içine logo gömebileceğiniz modern ve akıcı (fluent) bir sınıftır.</p>
+            
+            <h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Metodlar ve Kullanımları</h3>
+            <ul style="line-height: 1.6; margin-bottom: 20px;">
+                <li><code>->generate('Metin')</code> : QR koda dönüştürülecek metni veya URL'i belirleyip zinciri başlatır.</li>
+                <li><code>->size(300)</code> : QR kodun piksel cinsinden genişliğini/yüksekliğini belirler (örn: 300).</li>
+                <li><code>->margin(10)</code> : QR kodun etrafındaki beyaz boşluğu belirler.</li>
+                <li><code>->color('#000000', '#ffffff')</code> : Ön plan (çizgiler) ve Arka plan renklerini HEX kodu olarak belirler. (örn: <code>#000000, #ffffff</code>).</li>
+                <li><code>->logo('/path/logo.png', 50, true)</code> : QR kodun tam ortasına bir resim (logo) gömer. Logoya giden fiziksel yolu, boyutunu ve arka planının delinip delinmeyeceğini (punchout) alır.</li>
+                <li><code>->format('png')</code> : Çıktı formatını belirler. <code>png</code> veya <code>svg</code> desteklenir. Varsayılan: png.</li>
+                <li><code>->save('/path/save.png')</code> : Oluşturulan QR kodu sunucuda fiziksel bir dosyaya kaydeder.</li>
+                <li><code>->base64()</code> : QR kodu HTML <code>&lt;img src="..."&gt;</code> etiketi içinde doğrudan kullanabilmeniz için base64 string olarak döndürür.</li>
+                <li><code>->output()</code> : QR kodu uygun HTTP başlıklarıyla (header) doğrudan tarayıcıya basar.</li>
+            </ul>
+
+            <h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Kullanım Örnekleri</h3>
+            <pre><code><span class="kw">use</span> <span class="var">App\Service\QrCode</span>;
+
+<span class="cm">// Örnek 1: Ekrana HTML Img olarak basma</span>
+<span class="var">$base64</span> = <span class="var">QrCode</span>::generate(<span class="st">'https://artiframe.dev'</span>)
+    -&gt;<span class="fn">size</span>(400)
+    -&gt;<span class="fn">logo</span>(<span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/assets/logo.png'</span>)
+    -&gt;<span class="fn">base64</span>();
+
+<span class="kw">echo</span> <span class="st">'&lt;img src="'</span> . <span class="var">$base64</span> . <span class="st">'" alt="QR"&gt;'</span>;
+
+<span class="cm">// Örnek 2: Fiziksel PNG Olarak Kaydetme</span>
+<span class="var">QrCode</span>::generate(<span class="st">'VCARD Bilgileri'</span>)
+    -&gt;<span class="fn">color</span>(<span class="st">'#ff0000'</span>, <span class="st">'#ffffff'</span>)
+    -&gt;<span class="fn">save</span>(<span class="st">'/temp/kullanici_karti.png'</span>);
+
+<span class="cm">// Örnek 3: API Endpoint olarak resmi tarayıcıya basma</span>
+<span class="var">QrCode</span>::generate(<span class="st">'https://artilingo.com'</span>)-&gt;<span class="fn">output</span>();</code></pre>
+        </div>
+
+        <div class="card" id="svc-phpmailer">
+            <h2>PHPMailer (Mail)</h2>
+            <div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Otomatik .env Kurulumu:</strong> <code>add phpmailer</code> komutunu çalıştırdığınızda SMTP ayarları <code>.env</code> dosyanıza otomatik eklenir ve <code>src/Service/Mailer.php</code> sınıfı oluşturulur.</div>
+            <p>PHPMailer kütüphanesi üzerinde çalışan, çok daha modern, akıcı (fluent) ve güvenli (CRLF korumalı) bir Sarmalayıcı (Wrapper) sınıfıdır. Sınıfın sunduğu tüm metodlar zincirlenebilir (chainable) yapıdadır.</p>
+            
+            <h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Metodlar ve Kullanımları</h3>
+            <ul style="line-height: 1.6; margin-bottom: 20px;">
+                <li><code>->to('mail@adres.com', 'İsim')</code> : E-postanın kime gönderileceğini belirler.</li>
+                <li><code>->cc('mail@adres.com')</code> : Bilgi (Carbon Copy) alıcılarını ekler.</li>
+                <li><code>->bcc('mail@adres.com')</code> : Gizli (Blind Carbon Copy) alıcılarını ekler. Birincil alıcılar bu adresleri göremez.</li>
+                <li><code>->subject('Konu')</code> : E-postanın başlığını (konusunu) belirler.</li>
+                <li><code>->attach('/path/fatura.pdf', 'Isim.pdf')</code> : Sunucudaki (veya temp) fiziksel bir dosyayı mailin içine ek (attachment) olarak koyar.</li>
+                <li><code>->embedImage('/path/logo.png', 'logo_cid')</code> : E-posta içine HTML'de kullanılmak üzere (<code>&lt;img src="cid:logo_cid"&gt;</code>) resim gömer.</li>
+                <li><code>->html('HTML Kodu')</code> : E-postanın HTML içeriğini ayarlar. Güvenlik için düz metin (AltBody) versiyonunu otomatik oluşturur.</li>
+                <li><code>->text('Düz Metin')</code> : E-postayı sadece düz metin (Plain Text) olarak göndermek isterseniz kullanılır.</li>
+                <li><code>->send()</code> : Zincirdeki tüm işlemleri tamamlayıp SMTP üzerinden maili yollar. Hata varsa Exception fırlatır.</li>
+            </ul>
+
+            <h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Gelişmiş Örnek: PHP Şablonu (View) ve Dinamik Dosya Gönderme</h3>
+            <p>Eğer mailin HTML içeriğini spagetti kod gibi string içine yazmak istemiyorsanız, <code>ob_start()</code> kullanarak harici bir PHP şablon dosyasını (içinde değişkenler olan) içeri aktarabilir ve sistemde üretilen bir PDF'i direkt maile gömebilirsiniz:</p>
+            <pre><code><span class="kw">use</span> <span class="var">App\Service\Mailer</span>;
+
+<span class="cm">// 1. Dinamik verileriniz</span>
+<span class="var">$siparisNo</span> = <span class="st">'#90210'</span>;
+<span class="var">$pdfDosyasi</span> = <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/temp/fatura_90210.pdf'</span>;
+
+<span class="cm">// 2. HTML Şablonunu dışarıdan yükleme (Output Buffering)</span>
+<span class="fn">ob_start</span>();
+<span class="kw">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/views/email/siparis.php'</span>;
+<span class="var">$htmlIcerik</span> = <span class="fn">ob_get_clean</span>();
+
+<span class="cm">// 3. Maili Gönderme</span>
+<span class="var">Mailer</span>::create()
+    -&gt;<span class="fn">to</span>(<span class="st">'musteri@mail.com'</span>, <span class="st">'Ahmet Yılmaz'</span>)
+    -&gt;<span class="fn">bcc</span>(<span class="st">'arsiv@sirket.com'</span>) <span class="cm">// Müşteri bunu göremez</span>
+    -&gt;<span class="fn">subject</span>(<span class="st">'Siparişiniz Onaylandı: '</span> . <span class="var">$siparisNo</span>)
+    -&gt;<span class="fn">html</span>(<span class="var">$htmlIcerik</span>)
+    -&gt;<span class="fn">attach</span>(<span class="var">$pdfDosyasi</span>, <span class="st">'Siparis_Faturasi.pdf'</span>)
+    -&gt;<span class="fn">send</span>();</code></pre>
+        </div>
 
         <div class="card" id="svc-iyzico">
             <h2>Iyzico <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Ücretli/Lisanslı Servis">$</span></h2>

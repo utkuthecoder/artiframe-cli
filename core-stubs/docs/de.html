@@ -282,10 +282,13 @@
 <a href="#cli-go">go</a>
 <a href="#cli-remove">remove</a>
 <a href="#cli-version">version</a>
-<a href="#cli-serve">serve</a>
+<a href="#cli-mode">mode</a>
+        <a href="#cli-serve">serve</a>
 <a href="#cli-add">add</a>
 <div class="sb-cat">Integrierte Dienste</div>
-<a href="#svc-iyzico">Iyzico <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Ücretli/Lisanslı Servis">$</span></a>
+                <a href="#svc-qrcode">QR Code</a>
+        <a href="#svc-phpmailer">PHPMailer (Mail)</a>
+        <a href="#svc-iyzico">Iyzico <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Ücretli/Lisanslı Servis">$</span></a>
 <a href="#svc-stripe">Stripe <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Ücretli/Lisanslı Servis">$</span></a>
 <a href="#svc-jwt">JWT</a>
 <a href="#svc-image">Image Processing</a>
@@ -843,7 +846,16 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
 <pre><code>artiframe&gt; <span class="fn">version</span> upgrade minor
 <span class="cm">✔  Sürüm 1.2.0 → 1.3.0 olarak güncellendi.</span></code></pre>
 </section>
-<!-- serve -->
+    <!-- mode -->
+    <section id="cli-mode">
+        <h2><code>mode</code> <span class="tag b-cli">CLI-Befehl</span></h2>
+        <p>Ermöglicht es Ihnen, den Betriebsmodus des Projekts (Entwicklung oder Produktion) mit einem einzigen Befehl zu ändern. Dies erspart Ihnen das mühsame manuelle Öffnen und Bearbeiten der Datei <code>config/app-version.php</code>.</p>
+        <pre><code>artiframe&gt; <span class="fn">mode</span> <span class="st">1</span>
+  ✅ Vom Prod- in den Debug-Modus gewechselt.</code></pre>
+        <p>Sie können den Parameter <code>0</code> verwenden, um zur Produktionsfreigabe zu wechseln:</p>
+        <pre><code>artiframe&gt; <span class="fn">mode</span> <span class="st">0</span></code></pre>
+    </section>
+    <!-- serve -->
 <section id="cli-serve">
 <h2><code>serve</code> <span class="tag b-cli">CLI Komutu</span></h2>
 <p>Startet einen lokalen Entwicklungsserver (localhost), um das Projekt zu testen. Es startet Ihr Projekt in Sekundenschnelle und öffnet es automatisch in Ihrem Browser, ohne dass ein zusätzlicher Webserver (XAMPP, Nginx usw.) installiert werden muss.</p>
@@ -866,9 +878,11 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
 <tr><th>Befehl</th><th>Komponistenpaket</th><th>Generierte Klassendatei</th></tr>
 </thead>
 <tbody>
-<tr><td><code>add iyzico</code></td><td>iyzipay/iyzipay-php</td><td><span class="tag b-core">src/Service/Iyzico.php</span></td></tr>
+                    <tr><td><code>add phpmailer</code></td><td>phpmailer/phpmailer</td><td><span class="tag b-core">src/Service/Mailer.php</span></td></tr>
+                    <tr><td><code>add iyzico</code></td><td>iyzipay/iyzipay-php</td><td><span class="tag b-core">src/Service/Iyzico.php</span></td></tr>
 <tr><td><code>add stripe</code></td><td>Stripe/Stripe-php</td><td><span class="tag b-core">src/Service/Stripe.php</span></td></tr>
-<tr><td><code>add jwt</code></td><td>firebase/php-jwt</td><td><span class="tag b-core">src/Auth/JwtAuth.php</span></td></tr>
+                    <tr><td><code>add qrcode</code></td><td>endroid/qr-code</td><td><span class="tag b-core">src/Service/QrCode.php</span></td></tr>
+                    <tr><td><code>add jwt</code></td><td>firebase/php-jwt</td><td><span class="tag b-core">src/Auth/JwtAuth.php</span></td></tr>
 <tr><td><code>add image</code></td><td>Intervention/Bild</td><td><span class="tag b-core">src/Service/ImageProcessor.php</span></td></tr>
 <tr><td><code>add s3</code></td><td>aws/aws-sdk-php</td><td><span class="tag b-core">src/Service/S3Storage.php</span></td></tr>
 <tr><td><code>add sentry</code></td><td>Wache/Wächter</td><td><span class="tag b-core">config/sentry.php</span></td></tr>
@@ -906,7 +920,86 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
 <section id="entegre-servisler">
 <h2>Integrierte Dienste (Wrapper) <span class="tag b-core">Stubs</span></h2>
 <p>Anstatt gängige Pakete direkt zu verwenden, bietet ArtiFrame <strong>vorkonfigurierter Wrapper</strong> Es bietet Kurse für Sie an.</p>
-<div class="card" id="svc-iyzico">
+                                <div class="card" id="svc-qrcode">
+            <h2>QR Code</h2>
+            <div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Wrapper-Klasse:</strong> Wenn Sie <code>add qrcode</code> ausführen, wird die Klasse <code>src/Service/QrCode.php</code> erstellt.</div>
+            <p>Eine fließende (fluent) Klasse, die den komplexen Instanziierungsprozess der Endroid QR Code-Bibliothek verbirgt.</p>
+            
+            <h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Methoden</h3>
+            <ul style="line-height: 1.6; margin-bottom: 20px;">
+                <li><code>->generate('Metin')</code> : Startet die Kette.</li>
+                <li><code>->size(300)</code> : Größe in Pixeln.</li>
+                <li><code>->margin(10)</code> : Weißer Rand.</li>
+                <li><code>->color('#000000', '#ffffff')</code> : Vordergrund- und Hintergrundfarbe als HEX.</li>
+                <li><code>->logo('/path/logo.png', 50, true)</code> : Bettet ein Logo ein.</li>
+                <li><code>->format('png')</code> : png oder svg.</li>
+                <li><code>->save('/path/save.png')</code> : Speichert die Datei.</li>
+                <li><code>->base64()</code> : Gibt als base64 zurück.</li>
+                <li><code>->output()</code> : Gibt direkt an den Browser aus.</li>
+            </ul>
+
+            <h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Beispiele</h3>
+            <pre><code><span class="kw">use</span> <span class="var">App\Service\QrCode</span>;
+
+<span class="cm">// Örnek 1: Ekrana HTML Img olarak basma</span>
+<span class="var">$base64</span> = <span class="var">QrCode</span>::generate(<span class="st">'https://artiframe.dev'</span>)
+    -&gt;<span class="fn">size</span>(400)
+    -&gt;<span class="fn">logo</span>(<span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/assets/logo.png'</span>)
+    -&gt;<span class="fn">base64</span>();
+
+<span class="kw">echo</span> <span class="st">'&lt;img src="'</span> . <span class="var">$base64</span> . <span class="st">'" alt="QR"&gt;'</span>;
+
+<span class="cm">// Örnek 2: Fiziksel PNG Olarak Kaydetme</span>
+<span class="var">QrCode</span>::generate(<span class="st">'VCARD Bilgileri'</span>)
+    -&gt;<span class="fn">color</span>(<span class="st">'#ff0000'</span>, <span class="st">'#ffffff'</span>)
+    -&gt;<span class="fn">save</span>(<span class="st">'/temp/kullanici_karti.png'</span>);
+
+<span class="cm">// Örnek 3: API Endpoint olarak resmi tarayıcıya basma</span>
+<span class="var">QrCode</span>::generate(<span class="st">'https://artilingo.com'</span>)-&gt;<span class="fn">output</span>();</code></pre>
+        </div>
+
+        <div class="card" id="svc-phpmailer">
+            <h2>PHPMailer (Mail)</h2>
+            <div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Automatische .env-Einrichtung:</strong> Wenn Sie den Befehl <code>add phpmailer</code> ausführen, werden die SMTP-Einstellungen automatisch zu Ihrer <code>.env</code>-Datei hinzugefügt und die Klasse <code>src/Service/Mailer.php</code> erstellt.</div>
+            <p>Eine viel modernere, fließende und sichere (CRLF-geschützte) Wrapper-Klasse, die auf der PHPMailer-Bibliothek aufbaut. Alle Methoden der Klasse sind verkettbar (chainable).</p>
+            
+            <h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Methoden und Verwendung</h3>
+            <ul style="line-height: 1.6; margin-bottom: 20px;">
+                <li><code>->to('mail@adres.com', 'İsim')</code> : Legt fest, an wen die E-Mail gesendet wird.</li>
+                <li><code>->cc('mail@adres.com')</code> : Fügt CC-Empfänger (Carbon Copy) hinzu.</li>
+                <li><code>->bcc('mail@adres.com')</code> : Fügt BCC-Empfänger (Blind Carbon Copy) hinzu. Primäre Empfänger können diese nicht sehen.</li>
+                <li><code>->subject('Konu')</code> : Legt den Betreff (Titel) der E-Mail fest.</li>
+                <li><code>->attach('/path/fatura.pdf', 'Isim.pdf')</code> : Fügt eine physische Datei vom Server (oder Temp) als Anhang zur E-Mail hinzu.</li>
+                <li><code>->embedImage('/path/logo.png', 'logo_cid')</code> : Bettet ein Bild in die E-Mail ein, das im HTML verwendet wird (<code>&lt;img src="cid:logo_cid"&gt;</code>).</li>
+                <li><code>->html('HTML Kodu')</code> : Legt den HTML-Inhalt der E-Mail fest. Erstellt automatisch eine reine Textversion (AltBody).</li>
+                <li><code>->text('Düz Metin')</code> : Wird verwendet, wenn die E-Mail ausschließlich als reiner Text gesendet werden soll.</li>
+                <li><code>->send()</code> : Schließt alle Operationen ab und sendet die E-Mail über SMTP. Wirft bei Fehler eine Exception.</li>
+            </ul>
+
+            <h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Erweitertes Beispiel: PHP-Vorlage (View) und dynamischer Dateianhang</h3>
+            <p>Wenn Sie den HTML-Inhalt nicht direkt in Strings schreiben möchten, können Sie <code>ob_start()</code> verwenden, um eine externe PHP-Vorlagendatei (mit Variablen) einzubinden und ein dynamisch generiertes PDF anzuhängen:</p>
+            <pre><code><span class="kw">use</span> <span class="var">App\Service\Mailer</span>;
+
+<span class="cm">// 1. Ihre dynamischen Daten</span>
+<span class="var">$siparisNo</span> = <span class="st">'#90210'</span>;
+<span class="var">$pdfDosyasi</span> = <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/temp/fatura_90210.pdf'</span>;
+
+<span class="cm">// 2. HTML-Vorlage extern laden (Output Buffering)</span>
+<span class="fn">ob_start</span>();
+<span class="kw">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/views/email/siparis.php'</span>;
+<span class="var">$htmlIcerik</span> = <span class="fn">ob_get_clean</span>();
+
+<span class="cm">// 3. E-Mail senden</span>
+<span class="var">Mailer</span>::create()
+    -&gt;<span class="fn">to</span>(<span class="st">'musteri@mail.com'</span>, <span class="st">'Ahmet Yılmaz'</span>)
+    -&gt;<span class="fn">bcc</span>(<span class="st">'arsiv@sirket.com'</span>) <span class="cm">// Der Kunde kann dies nicht sehen</span>
+    -&gt;<span class="fn">subject</span>(<span class="st">'Siparişiniz Onaylandı: '</span> . <span class="var">$siparisNo</span>)
+    -&gt;<span class="fn">html</span>(<span class="var">$htmlIcerik</span>)
+    -&gt;<span class="fn">attach</span>(<span class="var">$pdfDosyasi</span>, <span class="st">'Siparis_Faturasi.pdf'</span>)
+    -&gt;<span class="fn">send</span>();</code></pre>
+        </div>
+
+        <div class="card" id="svc-iyzico">
 <h2>Iyzico <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Ücretli/Lisanslı Servis">$</span></h2>
 <div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Mitgliedschaft und API-Schlüssel:</strong> Zur Nutzung der Iyzico-Zahlungsinfrastruktur <a href="https://www.iyzico.com" style="color: var(--green); font-weight: bold;" target="_blank">iyzico.com</a> (live) oder <a href="https://sandbox-merchants.iyzipay.com/" style="color: var(--green); font-weight: bold;" target="_blank">sandbox.iyzipay.com</a> Sie müssen über (Test) ein Verkäuferkonto erstellen und Ihre API/Geheimschlüssel erhalten.</div>
 <div class="code-badge" style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; font-family: monospace;">

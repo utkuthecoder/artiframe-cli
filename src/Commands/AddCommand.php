@@ -131,7 +131,19 @@ class AddCommand
         // ── Direkt Kullanılabilir Paketler (Sadece Composer) ───────────
         'phpmailer' => [
             'composer' => 'phpmailer/phpmailer',
-            'type'     => 'direct',
+            'type'     => 'integrated',
+            'service'  => 'src/Service/Mailer.php',
+            'stub'     => 'phpmailer.stub',
+            'env'      => [
+                '# ── mail (phpmailer) ──────────────────────',
+                'MAIL_HOST=smtp.mailtrap.io',
+                'MAIL_PORT=2525',
+                'MAIL_USERNAME=',
+                'MAIL_PASSWORD=',
+                'MAIL_ENCRYPTION=tls',
+                'MAIL_FROM_ADDRESS=hello@example.com',
+                'MAIL_FROM_NAME=ArtiFrame',
+            ],
         ],
         'mpdf' => [
             'composer' => 'mpdf/mpdf',
@@ -147,7 +159,9 @@ class AddCommand
         ],
         'qrcode' => [
             'composer' => 'endroid/qr-code',
-            'type'     => 'direct',
+            'type'     => 'integrated',
+            'service'  => 'src/Service/QrCode.php',
+            'stub'     => 'qrcode.stub',
         ],
         'guzzle' => [
             'composer' => 'guzzlehttp/guzzle',

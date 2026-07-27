@@ -159,4 +159,11 @@ return [
     'HELP_SERVE_DESC'   => 'Lokal geliştirme sunucusunu başlatır.',
 
     'INVALID_PACKAGE_NAME' => 'Geçersiz paket adı. Format şuna benzemeli: vendor/project',
+
+    'MODE_ALREADY_DEBUG'       => 'Zaten debug mode aktif.',
+    'MODE_ALREADY_PROD'        => 'Zaten prod mod aktif.',
+    'MODE_CHANGED'             => ':old modundan :new moduna geçiş yapıldı.',
+    'MODE_INVALID'             => 'Hatalı mod. Debug için 1, Prod için 0 kullanın.',
+    'MODE_NOT_PROJECT'         => 'ArtiFrame projesi bulunamadı (config/app-version.php eksik).',
+    'HELP_MODE_DESC'           => 'Uygulama çalışma modunu değiştirir (0=Prod, 1=Debug)',
 ];

@@ -159,4 +159,11 @@ return [
     'HELP_SERVE_DESC'   => 'Démarre le serveur de développement local.',
 
     'INVALID_PACKAGE_NAME' => 'Nom de package invalide. Le format doit ressembler à : vendor/project',
+
+    'MODE_ALREADY_DEBUG'       => 'Le mode de débogage est déjà actif.',
+    'MODE_ALREADY_PROD'        => 'Le mode de production est déjà actif.',
+    'MODE_CHANGED'             => 'Passé du mode :old au mode :new.',
+    'MODE_INVALID'             => 'Mode invalide. Utilisez 1 pour Débogage, 0 pour Production.',
+    'MODE_NOT_PROJECT'         => 'Projet ArtiFrame introuvable (config/app-version.php manquant).',
+    'HELP_MODE_DESC'           => 'Modifie le mode de l\'application (0=Prod, 1=Debug)',
 ];

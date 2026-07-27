@@ -15,6 +15,7 @@
     "bin/artiframe.php",
     "src/",
     "core-stubs/",
+    "stubs/",
     "assets/",
     "scripts/",
     "LICENSE"

@@ -159,4 +159,11 @@ return [
     'HELP_SERVE_DESC'   => 'Starts the local development server.',
 
     'INVALID_PACKAGE_NAME' => 'Invalid package name. Format should look like: vendor/project',
+
+    'MODE_ALREADY_DEBUG'       => 'Debug mode is already active.',
+    'MODE_ALREADY_PROD'        => 'Prod mode is already active.',
+    'MODE_CHANGED'             => 'Switched from :old to :new mode.',
+    'MODE_INVALID'             => 'Invalid mode. Use 1 for Debug, 0 for Prod.',
+    'MODE_NOT_PROJECT'         => 'ArtiFrame project not found (config/app-version.php missing).',
+    'HELP_MODE_DESC'           => 'Changes the application mode (0=Prod, 1=Debug)',
 ];

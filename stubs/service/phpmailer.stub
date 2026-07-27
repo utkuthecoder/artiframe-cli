@@ -1,0 +1,143 @@
+<?php
+namespace App\Service;
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+/**
+ * ArtiFrame Mailer Wrapper for PHPMailer
+ * 
+ * Provides a clean, fluent API on top of the battle-tested PHPMailer library.
+ * Handles complex RFC standards, TLS handshakes, and CRLF injections automatically.
+ */
+class Mailer
+{
+    private PHPMailer $mail;
+
+    public function __construct()
+    {
+        $this->mail = new PHPMailer(true);
+        
+        // SMTP Configuration from .env
+        $this->mail->isSMTP();
+        $this->mail->Host       = $_ENV['MAIL_HOST'] ?? 'localhost';
+        $this->mail->SMTPAuth   = !empty($_ENV['MAIL_USERNAME']);
+        $this->mail->Username   = $_ENV['MAIL_USERNAME'] ?? '';
+        $this->mail->Password   = $_ENV['MAIL_PASSWORD'] ?? '';
+        
+        $encryption = strtolower($_ENV['MAIL_ENCRYPTION'] ?? '');
+        if ($encryption === 'tls') {
+            $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        } elseif ($encryption === 'ssl') {
+            $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        }
+
+        $this->mail->Port       = $_ENV['MAIL_PORT'] ?? 25;
+        
+        // Security & Formatting Defaults
+        $this->mail->CharSet    = 'UTF-8';
+        $this->mail->Encoding   = 'base64';
+
+        $this->mail->setFrom(
+            $_ENV['MAIL_FROM_ADDRESS'] ?? 'hello@example.com',
+            $_ENV['MAIL_FROM_NAME'] ?? 'ArtiFrame'
+        );
+    }
+
+    /**
+     * Instantiates a new Mailer instance for fluent chaining.
+     */
+    public static function create(): self
+    {
+        return new self();
+    }
+
+    /**
+     * Add a primary recipient.
+     */
+    public function to(string $email, string $name = ''): self
+    {
+        $this->mail->addAddress($email, $name);
+        return $this;
+    }
+
+    /**
+     * Add a Carbon Copy (CC) recipient.
+     */
+    public function cc(string $email, string $name = ''): self
+    {
+        $this->mail->addCC($email, $name);
+        return $this;
+    }
+
+    /**
+     * Add a Blind Carbon Copy (BCC) recipient.
+     */
+    public function bcc(string $email, string $name = ''): self
+    {
+        $this->mail->addBCC($email, $name);
+        return $this;
+    }
+
+    /**
+     * Set the email subject.
+     */
+    public function subject(string $subject): self
+    {
+        $this->mail->Subject = $subject;
+        return $this;
+    }
+
+    /**
+     * Set the body format to HTML. Automatically generates an AltBody (Plain Text) version.
+     */
+    public function html(string $html, ?string $altText = null): self
+    {
+        $this->mail->isHTML(true);
+        $this->mail->Body = $html;
+        $this->mail->AltBody = $altText ?? strip_tags(str_replace(['<br>', '<br/>'], "\n", $html));
+        return $this;
+    }
+
+    /**
+     * Set the body format to strict Plain Text.
+     */
+    public function text(string $text): self
+    {
+        $this->mail->isHTML(false);
+        $this->mail->Body = $text;
+        return $this;
+    }
+
+    /**
+     * Attach a file (PDF, DOCX, ZIP, etc.)
+     */
+    public function attach(string $path, string $name = ''): self
+    {
+        $this->mail->addAttachment($path, $name);
+        return $this;
+    }
+
+    /**
+     * Embed an inline image for HTML rendering (e.g., logo).
+     * Usage in HTML: <img src="cid:YOUR_CID">
+     */
+    public function embedImage(string $path, string $cid, string $name = ''): self
+    {
+        $this->mail->addEmbeddedImage($path, $cid, $name);
+        return $this;
+    }
+
+    /**
+     * Execute the SMTP transmission.
+     * @throws \Exception
+     */
+    public function send(): bool
+    {
+        try {
+            return $this->mail->send();
+        } catch (Exception $e) {
+            throw new \Exception("SMTP Mailer Error: " . $this->mail->ErrorInfo);
+        }
+    }
+}

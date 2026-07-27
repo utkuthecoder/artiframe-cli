@@ -206,6 +206,10 @@ class App
                 break;
 
 
+            case 'mode':
+                (new \ArtiFrame\Cli\Commands\ModeCommand($this->translator))->execute($commandArgs);
+                break;
+
             case 'remove':
                 (new \ArtiFrame\Cli\Commands\RemoveCommand($this->translator))->execute($commandArgs);
                 break;
@@ -339,6 +343,13 @@ class App
         echo "  " . $d . "│" . $r . "   " . $t->get('HELP_REMOVE_DESC') . PHP_EOL;
         echo "  " . $d . "├── " . $r . "Example: " . $lg . "remove public/pages/about.php" . $r . PHP_EOL;
         echo "  " . $d . "└── " . $r . "Example: " . $lg . "remove src/Auth/UserManager.php" . $r . PHP_EOL;
+        echo PHP_EOL;
+
+        // mode
+        echo "  " . $g . "mode" . $r . " " . $y . "<0|1>" . $r . PHP_EOL;
+        echo "  " . $d . "│" . $r . "   " . $t->get('HELP_MODE_DESC') . PHP_EOL;
+        echo "  " . $d . "├── " . $r . "Example: " . $lg . "mode 1" . $r . $d . "      (Debug)" . $r . PHP_EOL;
+        echo "  " . $d . "└── " . $r . "Example: " . $lg . "mode 0" . $r . $d . "      (Prod)" . $r . PHP_EOL;
         echo PHP_EOL;
 
         // serve

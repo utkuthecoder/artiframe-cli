@@ -1,0 +1,169 @@
+<?php
+namespace App\Service;
+
+use Endroid\QrCode\QrCode as EndroidQrCode;
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Logo\Logo;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
+use Endroid\QrCode\Writer\Result\ResultInterface;
+
+/**
+ * ArtiFrame QR Code Wrapper for endroid/qr-code
+ * 
+ * Provides a clean, fluent API to generate QR Codes easily without dealing 
+ * with Builder/Writer instantiations and deep namespace imports.
+ */
+class QrCode
+{
+    private EndroidQrCode $qrCode;
+    private ?Logo $logo = null;
+    private $writer;
+    private Color $foregroundColor;
+    private Color $backgroundColor;
+
+    /**
+     * Initializes a new QR Code with the given string data.
+     */
+    public function __construct(string $data)
+    {
+        $this->qrCode = EndroidQrCode::create($data)
+            ->setEncoding(new Encoding('UTF-8'))
+            ->setErrorCorrectionLevel(ErrorCorrectionLevel::High)
+            ->setSize(300)
+            ->setMargin(10);
+            
+        $this->foregroundColor = new Color(0, 0, 0);
+        $this->backgroundColor = new Color(255, 255, 255);
+        $this->writer = new PngWriter();
+    }
+
+    /**
+     * Instantiates a new QrCode instance for fluent chaining.
+     */
+    public static function generate(string $data): self
+    {
+        return new self($data);
+    }
+
+    /**
+     * Set the width/height of the QR Code in pixels.
+     */
+    public function size(int $size): self
+    {
+        $this->qrCode->setSize($size);
+        return $this;
+    }
+
+    /**
+     * Set the white margin around the QR Code in pixels.
+     */
+    public function margin(int $margin): self
+    {
+        $this->qrCode->setMargin($margin);
+        return $this;
+    }
+
+    /**
+     * Set the foreground (module) and background colors.
+     * Expects hex values like '#000000' and '#ffffff'.
+     */
+    public function color(string $hexForeground, string $hexBackground = '#ffffff'): self
+    {
+        $this->foregroundColor = $this->hexToColor($hexForeground);
+        $this->backgroundColor = $this->hexToColor($hexBackground);
+        
+        $this->qrCode->setForegroundColor($this->foregroundColor);
+        $this->qrCode->setBackgroundColor($this->backgroundColor);
+        return $this;
+    }
+
+    /**
+     * Embed a logo image in the center of the QR Code.
+     * 
+     * @param string $path Absolute path to the logo file.
+     * @param int $width Width of the logo in pixels.
+     * @param bool $punchoutBackground Cut a white hole for the logo.
+     */
+    public function logo(string $path, int $width = 50, bool $punchoutBackground = false): self
+    {
+        if (file_exists($path)) {
+            $this->logo = Logo::create($path)
+                ->setResizeToWidth($width)
+                ->setPunchoutBackground($punchoutBackground);
+        }
+        return $this;
+    }
+    
+    /**
+     * Set output format (png or svg). Defaults to png.
+     */
+    public function format(string $format): self
+    {
+        $format = strtolower($format);
+        if ($format === 'svg') {
+            $this->writer = new SvgWriter();
+        } else {
+            $this->writer = new PngWriter();
+        }
+        return $this;
+    }
+
+    /**
+     * Generate the ResultInterface holding the rendered image.
+     */
+    private function getResult(): ResultInterface
+    {
+        // Colors might have been updated
+        $this->qrCode->setForegroundColor($this->foregroundColor);
+        $this->qrCode->setBackgroundColor($this->backgroundColor);
+        
+        return $this->writer->write(
+            $this->qrCode,
+            $this->logo
+        );
+    }
+
+    /**
+     * Save the QR Code to a physical file.
+     */
+    public function save(string $path): void
+    {
+        $this->getResult()->saveToFile($path);
+    }
+
+    /**
+     * Return the QR Code as a base64 Data URI string.
+     * Ready to be used in HTML: <img src="<?= QrCode::generate('x')->base64() ?>">
+     */
+    public function base64(): string
+    {
+        return $this->getResult()->getDataUri();
+    }
+    
+    /**
+     * Output the image directly to the browser with proper HTTP Headers.
+     */
+    public function output(): void
+    {
+        $result = $this->getResult();
+        header('Content-Type: ' . $result->getMimeType());
+        echo $result->getString();
+        exit;
+    }
+
+    /**
+     * Convert HEX color (#FFFFFF) to Endroid Color object.
+     */
+    private function hexToColor(string $hex): Color
+    {
+        $hex = ltrim($hex, '#');
+        if (strlen($hex) === 3) {
+            $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
+        }
+        list($r, $g, $b) = sscanf($hex, "%02x%02x%02x");
+        return new Color((int)$r, (int)$g, (int)$b);
+    }
+}
