@@ -249,7 +249,7 @@ if (args.includes('--version') || args.includes('-v')) {
     }
 
     const vr = spawnSync(php, ['-r', 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;'], {
-        encoding: 'utf8', shell: true,
+        encoding: 'utf8', shell: false,
     });
     const [major, minor] = (vr.stdout || '0.0').split('.').map(Number);
     if (major < 8 || (major === 8 && minor < 1)) {
