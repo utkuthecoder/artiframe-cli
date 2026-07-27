@@ -19,7 +19,7 @@ class AddCommand
     private array $registry = [
         // ── Entegrasyonlu Paketler (Composer + Servis Sınıfı + .env) ───
         'iyzico' => [
-            'composer' => 'iyzipay/iyzipay-php',
+            'composer' => 'iyzico/iyzipay-php',
             'type'     => 'integrated',
             'service'  => 'src/Service/Iyzico.php',
             'stub'     => 'iyzico.stub',
@@ -269,7 +269,7 @@ class AddCommand
      */
     private function copyServiceStub(string $projectRoot, array $package, string $alias): void
     {
-        $stubPath = \ARTIFRAME_CLI_ROOT . '/core-stubs/stubs/service/' . $package['stub'];
+        $stubPath = \ARTIFRAME_CLI_ROOT . '/stubs/service/' . $package['stub'];
         $targetPath = $projectRoot . '/' . $package['service'];
 
         if (!file_exists($stubPath)) {

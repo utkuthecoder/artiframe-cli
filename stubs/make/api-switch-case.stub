@@ -1,0 +1,38 @@
+<?php
+/**
+ * ArtiFrame Core Engine
+ *
+ * @package     ArtiFrame
+ * @author      Artilingo
+ * @license     AGPLv3 (Attribution-ShareAlike Required)
+ */
+
+// İzin verilen HTTP metodları (Örn: GET, POST, PUT, DELETE)
+$allowedMethods = ['POST'];
+
+require_once $_SERVER['DOCUMENT_ROOT'] . '/../app/ApiControl.php';
+
+use Bin\SystemMethod;
+
+$action = sanitizeString($_POST['action'] ?? '');
+
+switch ($action) {
+    case 'create':
+        // TODO: Oluşturma işlemleri
+        jsonResponse(['status' => 'success', 'message' => 'Başarıyla oluşturuldu.'], 200);
+        break;
+
+    case 'update':
+        // TODO: Güncelleme işlemleri
+        jsonResponse(['status' => 'success', 'message' => 'Başarıyla güncellendi.'], 200);
+        break;
+
+    case 'delete':
+        // TODO: Silme işlemleri
+        jsonResponse(['status' => 'success', 'message' => 'Başarıyla silindi.'], 200);
+        break;
+
+    default:
+        jsonResponse(['status' => 'error', 'message' => 'Geçersiz veya eksik action parametresi.'], 400);
+        break;
+}

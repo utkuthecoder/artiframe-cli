@@ -1,0 +1,30 @@
+<?php
+// Tek giriş noktası: DotEnv → APP_ENV/APP_VERSION → ViewMethod
+require_once $_SERVER['DOCUMENT_ROOT'] . '/../app/ViewControl.php';
+use Bin\ViewMethod;
+?>
+<!DOCTYPE html>
+<html lang="{{LANG}}" data-theme="default" data-mode="light">
+<head>
+    <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/head.php'; ?>
+
+    <title>{{VIEW_TITLE}}</title>
+
+    <!-- View-Specific Assets with Cache-Busting -->
+    <link rel="stylesheet" href="{{CSS_PATH}}?v=<?= APP_VERSION ?>">
+    <script src="{{JS_PATH}}?v=<?= APP_VERSION ?>" defer></script>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
+
+    <main class="main-content">
+        <h1>{{VIEW_TITLE}}</h1>
+        <!-- View content starts here -->
+
+    </main>
+
+    <!-- Footer -->
+    <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<?php
+/**
+ * ArtiFrame Core Engine
+ *
+ * @package     ArtiFrame
+ * @author      Artilingo
+ * @license     AGPLv3 (Attribution-ShareAlike Required)
+ * @link        https://artiframe.artilingo.com
+ *
+ * NOTICE: This file is part of the ArtiFrame ecosystem.
+ * Any derivative works or patches MUST retain this original copyright notice
+ * and remain open-source under the AGPLv3 license.
+ */
+
+namespace {{NAMESPACE}};
+
+use Bin\SystemMethod;
+
+class {{CLASS_NAME}}
+{
+    public function __construct()
+    {
+        // Constructor logic
+    }
+}

@@ -53,7 +53,7 @@ class MakeViewCommand
         $jsPath  = $projectRoot . '/public' . $jsRelative;
 
         // Stub path
-        $stubPath = $projectRoot . '/bin/stubs/view.stub';
+        $stubPath = \ARTIFRAME_CLI_ROOT . '/stubs/make/view.stub';
         if (!file_exists($stubPath)) {
             echo "❌ " . $this->translator->get('ERROR_STUB_NOT_FOUND', ['path' => $stubPath]) . PHP_EOL;
             echo $this->translator->get('ERROR_RUN_FROM_ROOT') . PHP_EOL;

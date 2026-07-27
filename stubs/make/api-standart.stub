@@ -1,0 +1,20 @@
+<?php
+/**
+ * ArtiFrame Core Engine
+ *
+ * @package     ArtiFrame
+ * @author      Artilingo
+ * @license     AGPLv3 (Attribution-ShareAlike Required)
+ */
+
+// İzin verilen HTTP metodları (Örn: GET, POST, PUT, DELETE)
+$allowedMethods = ['POST'];
+
+require_once $_SERVER['DOCUMENT_ROOT'] . '/../app/ApiControl.php';
+
+use Bin\SystemMethod;
+
+// API İş Mantığı (Business Logic) Başlangıcı
+// ...
+
+jsonResponse(['status' => 'success', 'message' => 'İşlem başarılı.'], 200);

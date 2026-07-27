@@ -46,7 +46,7 @@ class MakeApiCommand
         }
 
         $stubName = 'api-' . $type . '.stub';
-        $stubPath = $projectRoot . '/bin/stubs/' . $stubName;
+        $stubPath = \ARTIFRAME_CLI_ROOT . '/stubs/make/' . $stubName;
 
         if (!file_exists($stubPath)) {
             echo "❌ " . $this->translator->get('ERROR_STUB_NOT_FOUND', ['path' => $stubPath]) . PHP_EOL;

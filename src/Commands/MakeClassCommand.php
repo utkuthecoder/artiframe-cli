@@ -42,7 +42,7 @@ class MakeClassCommand
             return;
         }
 
-        $stubPath = $projectRoot . '/bin/stubs/class.stub';
+        $stubPath = \ARTIFRAME_CLI_ROOT . '/stubs/make/class.stub';
         if (!file_exists($stubPath)) {
             echo "❌ " . $this->translator->get('ERROR_STUB_NOT_FOUND', ['path' => $stubPath]) . PHP_EOL;
             return;
