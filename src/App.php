@@ -170,6 +170,17 @@ class App
 
     private function routeCommand(string $commandName, array $commandArgs): void
     {
+        if (strpos($commandName, 'table:') === 0) {
+            $tableName = substr($commandName, 6);
+            (new \ArtiFrame\Cli\Commands\TableCommand($this->translator))->execute(array_merge([$tableName], $commandArgs));
+            return;
+        }
+
+        if ($commandName === 'table' && !empty($commandArgs) && $commandArgs[0] === 'list') {
+            (new \ArtiFrame\Cli\Commands\TableCommand($this->translator))->execute(['list']);
+            return;
+        }
+
         switch ($commandName) {
 
 
@@ -302,7 +313,13 @@ class App
         // make:class
         echo "  " . $g . "make:class" . $r . " " . $y . "<path>" . $r . PHP_EOL;
         echo "  " . $d . "│" . $r . "   " . $t->get('HELP_MAKECLASS_DESC') . PHP_EOL;
-        echo "  " . $d . "└── " . $r . "Example: " . $lg . "make:class app/Services/UserManager.php" . $r . PHP_EOL;
+        echo "  " . $d . "└─ " . $r . "Example: " . $lg . "make:class app/Services/UserManager.php" . $r . PHP_EOL;
+        echo PHP_EOL;
+
+        // table
+        echo "  " . $g . "table:<table>" . $r . PHP_EOL;
+        echo "  " . $d . "│" . $r . "   " . $t->get('HELP_TABLE_DESC') . PHP_EOL;
+        echo "  " . $d . "└─ " . $r . "Example: " . $lg . "table:users" . $r . PHP_EOL;
         echo PHP_EOL;
 
         // cli v / cli version — CLI self-version

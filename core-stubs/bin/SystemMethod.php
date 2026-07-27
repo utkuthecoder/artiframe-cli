@@ -312,19 +312,31 @@ class SystemMethod
     }
 
     /**
-     * Converts a raw 16-byte binary UUID into its standard string representation.
-     * (e.g. 0190ed84-3f12-7a91-8bc4-91823741abcd)
-     *
-     * @param string $binaryUuid 16-byte binary string
-     * @return string 36-character hyphenated UUID string
+     * Bi-directional UUID formatter (String <-> Binary)
+     * 
+     * @param string $value 16-byte binary string OR 36-character UUID string
+     * @param string $to 'auto', 'binary', or 'string'
+     * @return string
      */
-    public static function formatId(string $binaryUuid): string
+    public static function formatId(string $value, string $to = 'auto'): string
     {
-        if (strlen($binaryUuid) !== 16) {
+        // Target: Binary conversion (String -> Binary)
+        if ($to === 'binary' || ($to === 'auto' && strlen($value) !== 16)) {
+            $cleanHex = str_replace('-', '', $value);
+            
+            if (strlen($cleanHex) !== 32) {
+                throw new \InvalidArgumentException("Invalid UUID string format.");
+            }
+            
+            return hex2bin($cleanHex);
+        }
+
+        // Target: String conversion (Binary -> String)
+        if (strlen($value) !== 16) {
             throw new \InvalidArgumentException("Invalid binary UUID length. Expected 16 bytes.");
         }
         
-        $hex = bin2hex($binaryUuid);
+        $hex = bin2hex($value);
         
         return sprintf(
             '%s-%s-%s-%s-%s',
@@ -376,6 +388,72 @@ class SystemMethod
         $result = random_int((int)$min, (int)$max);
 
         return $asString ? (string) $result : $result;
+    }
+
+    /**
+     * Sadece sayılardan oluşan rastgele bir OTP (One-Time Password) kodu üretir.
+     * @param int $length Hanelerin sayısı (Varsayılan 6)
+     */
+    public static function otpInt(int $length = 6): int
+    {
+        if ($length < 1) $length = 1;
+        if ($length > 18) $length = 18; // PHP 64-bit safe max length
+        
+        $min = (int) str_pad('1', $length, '0');
+        $max = (int) str_pad('9', $length, '9');
+        
+        return random_int($min, $max);
+    }
+
+    /**
+     * Sadece harflerden oluşan rastgele bir OTP kodu üretir.
+     * @param int $length Hanelerin sayısı (Varsayılan 6)
+     * @param string $case 'c': Sadece küçük, 'C': Sadece büyük, 'cC'/'Cc': Karışık
+     */
+    public static function otpStr(int $length = 6, string $case = 'C'): string
+    {
+        $lower = 'abcdefghijklmnopqrstuvwxyz';
+        $upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        $chars = match (strtolower($case)) {
+            'c'  => $lower,
+            'cc' => $lower . $upper,
+            default => $upper,
+        };
+        
+        $otp = '';
+        $maxIndex = strlen($chars) - 1;
+        for ($i = 0; $i < $length; $i++) {
+            $otp .= $chars[random_int(0, $maxIndex)];
+        }
+        
+        return $otp;
+    }
+
+    /**
+     * Harf ve sayılardan (Alphanumeric) oluşan rastgele bir OTP kodu üretir.
+     * @param int $length Hanelerin sayısı (Varsayılan 6)
+     * @param string $case 'c': Küçük+Sayı, 'C': Büyük+Sayı, 'cC'/'Cc': Karışık+Sayı
+     */
+    public static function otpMix(int $length = 6, string $case = 'C'): string
+    {
+        $numbers = '0123456789';
+        $lower   = 'abcdefghijklmnopqrstuvwxyz';
+        $upper   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        $chars = match (strtolower($case)) {
+            'c'  => $numbers . $lower,
+            'cc' => $numbers . $lower . $upper,
+            default => $numbers . $upper,
+        };
+        
+        $otp = '';
+        $maxIndex = strlen($chars) - 1;
+        for ($i = 0; $i < $length; $i++) {
+            $otp .= $chars[random_int(0, $maxIndex)];
+        }
+        
+        return $otp;
     }
 
     /**
@@ -517,8 +595,8 @@ if (!function_exists(__NAMESPACE__ . '\\byteId')) {
 }
 
 if (!function_exists(__NAMESPACE__ . '\\formatId')) {
-    function formatId(string $binaryUuid): string {
-        return \Bin\SystemMethod::formatId($binaryUuid);
+    function formatId(string $value, string $to = 'auto'): string {
+        return \Bin\SystemMethod::formatId($value, $to);
     }
 }
 
@@ -543,5 +621,23 @@ if (!function_exists(__NAMESPACE__ . '\\bigintId')) {
 if (!function_exists(__NAMESPACE__ . '\\stringer')) {
     function stringer($value): string {
         return \Bin\SystemMethod::stringer($value);
+    }
+}
+
+if (!function_exists(__NAMESPACE__ . '\\otpInt')) {
+    function otpInt(int $length = 6): int {
+        return \Bin\SystemMethod::otpInt($length);
+    }
+}
+
+if (!function_exists(__NAMESPACE__ . '\\otpStr')) {
+    function otpStr(int $length = 6, string $case = 'C'): string {
+        return \Bin\SystemMethod::otpStr($length, $case);
+    }
+}
+
+if (!function_exists(__NAMESPACE__ . '\\otpMix')) {
+    function otpMix(int $length = 6, string $case = 'C'): string {
+        return \Bin\SystemMethod::otpMix($length, $case);
     }
 }

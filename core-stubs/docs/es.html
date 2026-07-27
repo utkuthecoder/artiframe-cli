@@ -276,6 +276,7 @@
 <a href="#cli-view">make:view</a>
 <a href="#cli-api">make:api</a>
 <a href="#cli-class">make:class</a>
+        <a href="#cli-table">table:</a>
 <a href="#cli-cliv">cli v</a>
 <a href="#cli-show">show</a>
 <a href="#cli-list">list</a>
@@ -309,6 +310,7 @@
 <a href="#vh-maskphone">maskPhone()</a>
 <a href="#vh-slugify">slugify()</a>
 <a href="#vh-money">money()</a>
+        <a href="#vh-uuid">uuid()</a>
 <div class="sb-cat">Ayudantes del sistema</div>
 <div class="sb-subcat">Respuesta y depuración</div>
 <a href="#sh-apiresponse">apiResponse()</a>
@@ -345,6 +347,7 @@
 <a href="#sh-intid">intId()</a>
 <a href="#sh-bigintid">bigintId()</a>
 <a href="#sh-stringer">stringer()</a>
+        <a href="#sh-otpcoder">OTP Coder</a>
 <div class="sb-cat">Seguridad API</div>
 <a href="#api-methods">Control del método HTTP</a>
 <a href="#api-cors">CORS</a>
@@ -454,7 +457,15 @@
                 btn.style.border = 'none';
             }
         </script>
-</section>
+
+        <h3 style="margin-top: 30px;">Comandos Adicionales</h3>
+        <p><strong>Listar Tablas:</strong> Para ver todas las plantillas de tablas disponibles y sus descripciones:</p>
+        <pre><code>artiframe&gt; <span class="fn">table</span> <span class="st">list</span></code></pre>
+        
+        <p><strong>Vista previa del contenido de la tabla:</strong> Para inspeccionar el contenido SQL en la terminal antes de agregarlo al archivo <code>schema.sql</code>, puede agregar el parámetro <code>check</code>:</p>
+        <pre><code>artiframe&gt; <span class="fn">table:</span><span class="st">users</span> <span class="st">check</span></code></pre>
+
+    </section>
 <!-- ====== KURULUM ====== -->
 <section id="kurulum">
 <h2>Configuración</h2>
@@ -762,7 +773,100 @@ nombre-proyecto/
 ❌ Hata: Sınıfın oluşturulacağı dizin belirtilmeli! (örn: /app veya /src)
 Example: /src/Service/PaymentService</code></pre>
 </section>
-<!-- cli v -->
+
+    <!-- table: -->
+    <section id="cli-table">
+        <h2><code>table:</code> <span class="tag b-cli">Comando CLI</span></h2>
+        <p>Le permite agregar rápidamente tablas de base de datos estándar y relacionales al archivo <code>schema.sql</code> de su proyecto. Las plantillas se leen desde el archivo global <code>stubs/sql.stub</code>.</p>
+        <pre><code>artiframe&gt; <span class="fn">table:</span><span class="st">users</span></code></pre>
+        <p>Tablas estándar actualmente compatibles:</p>
+                <div class="table-tabs-container" style="margin-top: 20px;">
+            <div class="tabs-header" style="display: flex; gap: 10px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 5px;">
+                <button class="table-tab-btn active" onclick="switchTableTab('tab-users', this)" style="white-space: nowrap; padding: 10px 20px; background: #00c88c; color: #000; font-weight: 600; border: none; border-radius: 5px; cursor: pointer;">users</button>
+                <button class="table-tab-btn" onclick="switchTableTab('tab-sessions', this)" style="white-space: nowrap; padding: 10px 20px; background: #1c2128; color: #fff; border: 1px solid #30363d; border-radius: 5px; cursor: pointer;">user_sessions</button>
+                <button class="table-tab-btn" onclick="switchTableTab('tab-prefs', this)" style="white-space: nowrap; padding: 10px 20px; background: #1c2128; color: #fff; border: 1px solid #30363d; border-radius: 5px; cursor: pointer;">user_preferences</button>
+            </div>
+
+            <!-- Tab: users -->
+            <div id="tab-users" class="table-tab-content" style="display: block;">
+                <pre><code><span class="kw">CREATE TABLE `users` (
+  `id` binary(16) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `role` enum('user','admin','moderator') NOT NULL DEFAULT 'user',
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</span></code></pre>
+            </div>
+
+            <!-- Tab: user_sessions -->
+            <div id="tab-sessions" class="table-tab-content" style="display: none;">
+                <pre><code><span class="kw">CREATE TABLE `user_sessions` (
+  `id` binary(16) NOT NULL,
+  `user_id` binary(16) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `ip_address` varchar(45) DEFAULT NULL,
+  `user_agent` varchar(255) DEFAULT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `token` (`token`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `fk_user_sessions_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</span></code></pre>
+            </div>
+
+            <!-- Tab: user_preferences -->
+            <div id="tab-prefs" class="table-tab-content" style="display: none;">
+                <pre><code><span class="kw">CREATE TABLE `user_preferences` (
+  `id` binary(16) NOT NULL,
+  `user_id` binary(16) NOT NULL,
+  `language` varchar(10) NOT NULL DEFAULT 'tr',
+  `theme` varchar(20) NOT NULL DEFAULT 'light',
+  `push_notifications` tinyint(1) NOT NULL DEFAULT '1',
+  `email_notifications` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`),
+  CONSTRAINT `fk_user_prefs_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</span></code></pre>
+            </div>
+        </div>
+        
+        <script>
+            function switchTableTab(tabId, btn) {
+                const container = btn.closest('.table-tabs-container');
+                container.querySelectorAll('.table-tab-content').forEach(el => el.style.display = 'none');
+                container.querySelectorAll('.table-tab-btn').forEach(el => {
+                    el.style.background = '#1c2128';
+                    el.style.color = '#fff';
+                    el.style.border = '1px solid #30363d';
+                    el.style.fontWeight = '400';
+                });
+                
+                container.querySelector('#' + tabId).style.display = 'block';
+                btn.style.background = '#00c88c';
+                btn.style.color = '#000';
+                btn.style.fontWeight = '600';
+                btn.style.border = 'none';
+            }
+        </script>
+    
+        <h3 style="margin-top: 30px;">Comandos Adicionales</h3>
+        <p><strong>Listar Tablas:</strong> Para ver todas las plantillas de tablas disponibles y sus descripciones:</p>
+        <pre><code>artiframe&gt; <span class="fn">table</span> <span class="st">list</span></code></pre>
+        
+        <p><strong>Vista previa del contenido de la tabla:</strong> Para inspeccionar el contenido SQL en la terminal antes de agregarlo al archivo <code>schema.sql</code>, puede agregar el parámetro <code>check</code>:</p>
+        <pre><code>artiframe&gt; <span class="fn">table:</span><span class="st">users</span> <span class="st">check</span></code></pre>
+
+    </section>
+
+    <!-- cli v -->
 <section id="cli-cliv">
 <h2><code>cli v</code> (o <code>cli version</code>) <span class="tag b-cli">CLI Komutu</span></h2>
 <p>ArtiFrame CLI controla su propia versión (global) de la herramienta. No solo muestra la versión actual, <strong>Registro del MNP</strong> También comprueba si está disponible la versión más actualizada. Si hay una nueva versión, puede actualizarse globalmente con un clic (sí/no).<code>npm install -g @artilingo/artiframe-cli@latest</code>).</p>
@@ -3982,6 +4086,14 @@ if ($response['status'] === 'success') {
 &lt;span&gt;&lt;?= <span class="fn">money</span>(<span class="var">$urun</span>[<span class="st">'fiyat'</span>], <span class="st">'usd'</span>) ?&gt;&lt;/span&gt;
 <span class="cm">&lt;!-- Çıktı: $1.250,00 --&gt;</span></code></pre>
 </section>
+
+    <section id="vh-uuid">
+        <h2>View Helpers - <code>uuid()</code> <span class="tag b-view">ViewMethod</span></h2>
+        <p>Convierte un UUID binario de 16 bytes de la base de datos a un formato de 36 caracteres y lo imprime con protección XSS.</p>
+        <pre><code><span class="cm">&lt;!-- Salida: 0190ed84-3f12-7a91-8bc4-91823741abcd --&gt;</span>
+&lt;div&gt;<span class="kw">&lt;?=</span> <span class="fn">uuid</span>(<span class="var">$pull</span>[<span class="st">'id'</span>]) <span class="kw">?&gt;</span>&lt;/div&gt;</code></pre>
+    </section>
+
 <!-- ====== SYSTEM HELPERS ====== -->
 <section id="sh-apiresponse">
 <h2>Ayudantes del sistema— <code>apiResponse()</code> <span class="tag b-api">SystemMethod</span></h2>
@@ -4024,7 +4136,29 @@ if ($response['status'] === 'success') {
 <span class="cm">// Hata yanıtı</span>
 <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'error'</span>, <span class="st">'message'</span> =&gt; <span class="st">'Yetkisiz erişim.'</span>], <span class="nu">401</span>);</code></pre>
 </section>
-<section id="sh-generatecsrf">
+
+<section id="sh-dd">
+<h2>Ayudantes del sistema— <code>dd()</code> <span class="tag b-api">SystemMethod</span></h2>
+<p>Volcar y morir. Durante la fase de desarrollo, las variables se mostraban en la pantalla en modo oscuro, legible y elegante. <code>&lt;pre&gt;</code> etiqueta y detiene la ejecución del código en esa línea (salida). Puede tomar parámetros ilimitados (Variadic).</p>
+<span class="ret">void dd(mixed ...$vars)</span>
+<pre><code><span class="fn">dd</span>(<span class="var">$_POST</span>, <span class="var">$kullanici_id</span>); 
+<span class="cm">// Değerleri ekrana basar ve sistemi durdurur.</span></code></pre>
+</section>
+<!-- ====== ID GENERATION & UTILITIES ====== -->
+<section id="id-generation-utilities">
+</section>
+
+    
+<section id="sh-redirect">
+<h2>Ayudantes del sistema— <code>redirect()</code> <span class="tag b-api">SystemMethod</span></h2>
+<span class="ret">void redirect(string $url)</span>
+<p>a la página deseada <code>header("Location: ...")</code> Instantáneamente redirige y deja de funcionar con (<code>exit</code>).</p>
+<pre><code><span class="kw">if</span> (!<span class="var">$isLoggedIn</span>) {
+    <span class="fn">redirect</span>(<span class="st">'/login'</span>);
+}</code></pre>
+</section>
+
+    <section id="sh-generatecsrf">
 <h2>Ayudantes del sistema— <code>generateCsrf()</code> <span class="tag b-api">SystemMethod</span></h2>
 <p>Genera un nuevo token CSRF seguro basado en sesión, de 32 bytes de longitud. Para agregar como entrada oculta a formularios <code>csrfField()</code> Se recomienda utilizar (Ver ayudante).</p>
 <span class="ret">string generateCsrf()</span>
@@ -4110,14 +4244,7 @@ if ($response['status'] === 'success') {
 <p>Detecta la dirección IP real del usuario. Llamarada de nube (<code>HTTP_CF_CONNECTING_IP</code>), apoderado (<code>HTTP_X_FORWARDED_FOR</code>) y estándar (<code>REMOTE_ADDR</code>) resuelve todas las conexiones automáticamente.</p>
 <pre><code><span class="var">$ip</span> = <span class="fn">getClientIp</span>(); <span class="cm">// Örn: 192.168.1.1</span></code></pre>
 </section>
-<section id="sh-redirect">
-<h2>Ayudantes del sistema— <code>redirect()</code> <span class="tag b-api">SystemMethod</span></h2>
-<span class="ret">void redirect(string $url)</span>
-<p>a la página deseada <code>header("Location: ...")</code> Instantáneamente redirige y deja de funcionar con (<code>exit</code>).</p>
-<pre><code><span class="kw">if</span> (!<span class="var">$isLoggedIn</span>) {
-    <span class="fn">redirect</span>(<span class="st">'/login'</span>);
-}</code></pre>
-</section>
+
 <section id="sh-verifyemail">
 <h2>Ayudantes del sistema— <code>verifyEmail()</code> <span class="tag b-api">SystemMethod</span></h2>
 <p>Verifica si la dirección de correo electrónico proporcionada es realmente una dirección de correo electrónico válida según el DNS o el formato.</p>
@@ -4159,16 +4286,10 @@ if ($response['status'] === 'success') {
 <pre><code><span class="var">$postData</span> = <span class="fn">arrayOnly</span>(<span class="var">$_POST</span>, [<span class="st">'kullanici_adi'</span>, <span class="st">'sifre'</span>, <span class="st">'email'</span>]);
 <span class="cm">// ID, rol gibi dışarıdan manipüle edilmiş değerler otomatik yok edilir.</span></code></pre>
 </section>
-<section id="sh-dd">
-<h2>Ayudantes del sistema— <code>dd()</code> <span class="tag b-api">SystemMethod</span></h2>
-<p>Volcar y morir. Durante la fase de desarrollo, las variables se mostraban en la pantalla en modo oscuro, legible y elegante. <code>&lt;pre&gt;</code> etiqueta y detiene la ejecución del código en esa línea (salida). Puede tomar parámetros ilimitados (Variadic).</p>
-<span class="ret">void dd(mixed ...$vars)</span>
-<pre><code><span class="fn">dd</span>(<span class="var">$_POST</span>, <span class="var">$kullanici_id</span>); 
-<span class="cm">// Değerleri ekrana basar ve sistemi durdurur.</span></code></pre>
-</section>
-<!-- ====== ID GENERATION & UTILITIES ====== -->
-<section id="id-generation-utilities">
-<h2 id="sh-byteid">Ayudantes del sistema - <code>byteId()</code> <span class="tag b-api">SystemMethod</span></h2>
+
+
+    <section id="sh-byteid">
+        <h2>Ayudantes del sistema - <code>byteId()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">
             16 bytes sin procesar nativos, de alto rendimiento y ordenados por tiempo <strong>UUIDv7</strong> produce.
         </div>
@@ -4184,7 +4305,10 @@ if ($response['status'] === 'success') {
 
 <span class="var">$db</span>-&gt;<span class="fn">prepare</span>(<span class="st">"INSERT INTO users (id, name) VALUES (?, ?)"</span>)-&gt;<span class="fn">execute</span>([<span class="var">$rawId</span>, <span class="st">'Utku'</span>]);</code></pre>
 </div>
-<h2 id="sh-makeid">Ayudantes del sistema - <code>makeId()</code> <span class="tag b-api">SystemMethod</span></h2>
+</section>
+
+    <section id="sh-makeid">
+        <h2>Ayudantes del sistema - <code>makeId()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">
             Nativo, estándar 36 caracteres <strong>UUIDv7</strong> produce la cuerda.
         </div>
@@ -4198,7 +4322,10 @@ if ($response['status'] === 'success') {
 <span class="var">$stringId</span> = SystemMethod::<span class="fn">makeId</span>();
 <span class="cm">// Örnek Çıktı: 0190ed84-3f12-7a91-8bc4-91823741abcd</span></code></pre>
 </div>
-<h2 id="sh-formatid">Ayudantes del sistema - <code>formatId()</code> <span class="tag b-api">SystemMethod</span></h2>
+</section>
+
+    <section id="sh-formatid">
+        <h2>Ayudantes del sistema - <code>formatId()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">
             Convierte UUID binarios sin formato de 16 bytes en una cadena estándar de 36 caracteres.
         </div>
@@ -4213,7 +4340,10 @@ if ($response['status'] === 'success') {
 <span class="var">$readableId</span> = SystemMethod::<span class="fn">formatId</span>(<span class="var">$user</span>[<span class="st">'id'</span>]);
 <span class="cm">// Örnek Çıktı: 0190ed84-3f12-7a91-8bc4-91823741abcd</span></code></pre>
 </div>
-<h2 id="sh-intid">Ayudantes del sistema - <code>intId()</code> <span class="tag b-api">SystemMethod</span></h2>
+</section>
+
+    <section id="sh-intid">
+        <h2>Ayudantes del sistema - <code>intId()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">
             Seguro, aleatorio <code>INT</code> Genera identificación. (Máximo 9 dígitos)
         </div>
@@ -4225,7 +4355,10 @@ if ($response['status'] === 'success') {
 <pre><code><span class="var">$id</span> = <span class="fn">intId</span>(8);
 <span class="cm">// Örnek Çıktı: 49201834</span></code></pre>
 </div>
-<h2 id="sh-bigintid">Ayudantes del sistema - <code>bigintId()</code> <span class="tag b-api">SystemMethod</span></h2>
+</section>
+
+    <section id="sh-bigintid">
+        <h2>Ayudantes del sistema - <code>bigintId()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">
             Seguro, aleatorio <code>BIGINT</code> Genera identificación. (15 dígitos predeterminados: límite seguro para JS)
         </div>
@@ -4237,7 +4370,10 @@ if ($response['status'] === 'success') {
 <pre><code><span class="var">$id</span> = <span class="fn">bigintId</span>(); <span class="cm">// 15 haneli INT döner</span>
 <span class="var">$massiveId</span> = <span class="fn">bigintId</span>(18, <span class="kw">true</span>); <span class="cm">// 18 haneli STRING döner (JS için güvenli)</span></code></pre>
 </div>
-<h2 id="sh-stringer">Ayudantes del sistema - <code>stringer()</code> <span class="tag b-api">SystemMethod</span></h2>
+</section>
+
+    <section id="sh-stringer">
+        <h2>Ayudantes del sistema - <code>stringer()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">
             Envuelve valores en cadenas para proteger contra la insensibilidad a los números enormes (BIGINT) de Javascript.
         </div>
@@ -4249,7 +4385,25 @@ if ($response['status'] === 'success') {
 <pre><code><span class="cm">&lt;!-- JS'in bozmasını engellemek için stringer ile sarmalıyoruz --&gt;</span>
 &lt;button data-id=<span class="st">"&lt;?=</span> <span class="fn">stringer</span>(<span class="var">$data</span>[<span class="st">'id'</span>]) <span class="st">?&gt;"</span>&gt;Sil&lt;/button&gt;</code></pre>
 </div>
-</section>
+
+
+    <section id="sh-otpcoder">
+        <h2>System Helpers - OTP Coder <span class="tag b-api">SystemMethod</span></h2>
+        <div class="info-box">Genera contraseñas de un solo uso (OTP) aleatorias y criptográficamente seguras.</div>
+        <div class="code-block">
+            <pre><code><span class="cm">// Número aleatorio de 6 dígitos</span>
+<span class="var">$code</span> = <span class="fn">otpInt</span>(<span class="nu">6</span>); <span class="cm">// 482910</span>
+
+<span class="cm">// 8 dígitos solo letras ('c': minúscula, 'C': mayúscula, 'cC': mixto)</span>
+<span class="var">$code</span> = <span class="fn">otpStr</span>(<span class="nu">8</span>, <span class="st">'C'</span>); <span class="cm">// PKLMDZRA</span>
+
+<span class="cm">// 6 dígitos alfanuméricos</span>
+<span class="var">$code</span> = <span class="fn">otpMix</span>(<span class="nu">6</span>, <span class="st">'C'</span>); <span class="cm">// 9A4X2Z</span></code></pre>
+        </div>
+    </section>
+
+
+    </section>
 <!-- ====== API GÜVENLİĞİ ====== -->
 <section id="api-methods">
 <h2>API: control de métodos HTTP <span class="tag b-sec">ApiControl</span></h2>

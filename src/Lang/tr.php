@@ -166,4 +166,16 @@ return [
     'MODE_INVALID'             => 'Hatalı mod. Debug için 1, Prod için 0 kullanın.',
     'MODE_NOT_PROJECT'         => 'ArtiFrame projesi bulunamadı (config/app-version.php eksik).',
     'HELP_MODE_DESC'           => 'Uygulama çalışma modunu değiştirir (0=Prod, 1=Debug)',
+
+    // Table
+    'ERROR_TABLE_NAME_REQUIRED' => 'Tablo adı gerekli.',
+    'ERROR_STUB_NOT_FOUND'      => 'sql.stub dosyası bulunamadı.',
+    'ERROR_TABLE_NOT_IN_STUB'   => '\'%s\' tablo şablonu stub dosyasında bulunamadı.',
+    'SUCCESS_TABLE_ADDED'       => '\'%s\' tablosu başarıyla schema.sql dosyasına eklendi.',
+    'HELP_TABLE_DESC'           => 'sql.stub dosyasındaki standart tablo yapılarını schema.sql\'e ekler.',
+    'TABLE_LIST_HEADER' => 'Desteklenen Tablolar:',
+    'TABLE_DESC_USERS' => 'Temel kullanıcı ve yetkilendirme tablosu (UUID).',
+    'TABLE_DESC_USER_SESSIONS' => 'Kullanıcı oturumları (IP, cihaz, token) takibi.',
+    'TABLE_DESC_USER_PREFERENCES' => 'Kullanıcı tercihleri (dil, tema, bildirimler).',
+
 ];

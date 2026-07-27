@@ -166,4 +166,16 @@ return [
     'MODE_INVALID'             => 'Ungültiger Modus. Verwenden Sie 1 für Debug, 0 für Prod.',
     'MODE_NOT_PROJECT'         => 'ArtiFrame-Projekt nicht gefunden (config/app-version.php fehlt).',
     'HELP_MODE_DESC'           => 'Ändert den Anwendungsmodus (0=Prod, 1=Debug)',
+
+    // Table
+    'ERROR_TABLE_NAME_REQUIRED' => 'Tabellenname ist erforderlich.',
+    'ERROR_STUB_NOT_FOUND'      => 'sql.stub Datei konnte nicht gefunden werden.',
+    'ERROR_TABLE_NOT_IN_STUB'   => 'Tabellendefinition \'%s\' nicht in der Stub-Datei gefunden.',
+    'SUCCESS_TABLE_ADDED'       => 'Tabelle \'%s\' erfolgreich an schema.sql angehängt.',
+    'HELP_TABLE_DESC'           => 'Hängt ein Standard-Tabellenschema aus sql.stub an schema.sql an.',
+    'TABLE_LIST_HEADER' => 'Unterstützte Tabellen:',
+    'TABLE_DESC_USERS' => 'Basis-Benutzer- und Autorisierungstabelle (UUID).',
+    'TABLE_DESC_USER_SESSIONS' => 'Benutzersitzungen (IP, Gerät, Token) verfolgen.',
+    'TABLE_DESC_USER_PREFERENCES' => 'Benutzereinstellungen (Sprache, Thema, Benachrichtigungen).',
+
 ];

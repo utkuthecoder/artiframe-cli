@@ -166,4 +166,16 @@ return [
     'MODE_INVALID'             => 'Modo no válido. Use 1 para Depuración, 0 para Producción.',
     'MODE_NOT_PROJECT'         => 'Proyecto ArtiFrame no encontrado (falta config/app-version.php).',
     'HELP_MODE_DESC'           => 'Cambia el modo de la aplicación (0=Prod, 1=Debug)',
+
+    // Table
+    'ERROR_TABLE_NAME_REQUIRED' => 'El nombre de la tabla es obligatorio.',
+    'ERROR_STUB_NOT_FOUND'      => 'No se pudo encontrar el archivo sql.stub.',
+    'ERROR_TABLE_NOT_IN_STUB'   => 'Definición de tabla \'%s\' no encontrada en el archivo stub.',
+    'SUCCESS_TABLE_ADDED'       => 'Tabla \'%s\' añadida con éxito a schema.sql',
+    'HELP_TABLE_DESC'           => 'Añade un esquema de tabla estándar de sql.stub a schema.sql',
+    'TABLE_LIST_HEADER' => 'Tablas compatibles:',
+    'TABLE_DESC_USERS' => 'Tabla básica de usuarios y autorización (UUID).',
+    'TABLE_DESC_USER_SESSIONS' => 'Seguimiento de sesiones de usuario (IP, dispositivo, token).',
+    'TABLE_DESC_USER_PREFERENCES' => 'Preferencias de usuario (idioma, tema, notificaciones).',
+
 ];

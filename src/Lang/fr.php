@@ -166,4 +166,16 @@ return [
     'MODE_INVALID'             => 'Mode invalide. Utilisez 1 pour Débogage, 0 pour Production.',
     'MODE_NOT_PROJECT'         => 'Projet ArtiFrame introuvable (config/app-version.php manquant).',
     'HELP_MODE_DESC'           => 'Modifie le mode de l\'application (0=Prod, 1=Debug)',
+
+    // Table
+    'ERROR_TABLE_NAME_REQUIRED' => 'Le nom de la table est requis.',
+    'ERROR_STUB_NOT_FOUND'      => 'Le fichier sql.stub est introuvable.',
+    'ERROR_TABLE_NOT_IN_STUB'   => 'La définition de la table \'%s\' est introuvable dans le fichier stub.',
+    'SUCCESS_TABLE_ADDED'       => 'Table \'%s\' ajoutée avec succès à schema.sql',
+    'HELP_TABLE_DESC'           => 'Ajoute un schéma de table standard de sql.stub à schema.sql',
+    'TABLE_LIST_HEADER' => 'Tables prises en charge :',
+    'TABLE_DESC_USERS' => 'Table de base pour les utilisateurs et l\'autorisation (UUID).',
+    'TABLE_DESC_USER_SESSIONS' => 'Suivi des sessions utilisateur (IP, appareil, token).',
+    'TABLE_DESC_USER_PREFERENCES' => 'Préférences de l\'utilisateur (langue, thème, notifications).',
+
 ];

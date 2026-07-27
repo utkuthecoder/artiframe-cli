@@ -1,0 +1,46 @@
+-- [TABLE:users]
+CREATE TABLE `users` (
+  `id` binary(16) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `role` enum('user','admin','moderator') NOT NULL DEFAULT 'user',
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- [/TABLE:users]
+
+-- [TABLE:user_sessions]
+CREATE TABLE `user_sessions` (
+  `id` binary(16) NOT NULL,
+  `user_id` binary(16) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `ip_address` varchar(45) DEFAULT NULL,
+  `user_agent` varchar(255) DEFAULT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `token` (`token`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `fk_user_sessions_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- [/TABLE:user_sessions]
+
+-- [TABLE:user_preferences]
+CREATE TABLE `user_preferences` (
+  `id` binary(16) NOT NULL,
+  `user_id` binary(16) NOT NULL,
+  `language` varchar(10) NOT NULL DEFAULT 'tr',
+  `theme` varchar(20) NOT NULL DEFAULT 'light',
+  `push_notifications` tinyint(1) NOT NULL DEFAULT '1',
+  `email_notifications` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`),
+  CONSTRAINT `fk_user_prefs_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- [/TABLE:user_preferences]

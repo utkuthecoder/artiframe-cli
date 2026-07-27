@@ -166,4 +166,16 @@ return [
     'MODE_INVALID'             => 'Invalid mode. Use 1 for Debug, 0 for Prod.',
     'MODE_NOT_PROJECT'         => 'ArtiFrame project not found (config/app-version.php missing).',
     'HELP_MODE_DESC'           => 'Changes the application mode (0=Prod, 1=Debug)',
+
+    // Table
+    'ERROR_TABLE_NAME_REQUIRED' => 'Table name is required.',
+    'ERROR_STUB_NOT_FOUND'      => 'sql.stub file could not be found.',
+    'ERROR_TABLE_NOT_IN_STUB'   => 'Table definition \'%s\' not found in stub file.',
+    'SUCCESS_TABLE_ADDED'       => 'Table \'%s\' successfully appended to schema.sql',
+    'HELP_TABLE_DESC'           => 'Appends a standard table schema from sql.stub to schema.sql',
+    'TABLE_LIST_HEADER' => 'Supported Tables:',
+    'TABLE_DESC_USERS' => 'Basic user and authorization table (UUID).',
+    'TABLE_DESC_USER_SESSIONS' => 'User sessions (IP, device, token) tracking.',
+    'TABLE_DESC_USER_PREFERENCES' => 'User preferences (language, theme, notifications).',
+
 ];

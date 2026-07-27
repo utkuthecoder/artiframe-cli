@@ -345,6 +345,16 @@ class ViewMethod
         $masked = $start . str_repeat('*', max($len - 5, 3)) . $end;
         return self::display($masked);
     }
+
+    /**
+     * Veritabanından gelen 16 byte'lık binary UUID verisini 36 karakterlik 
+     * okunabilir (HEX) formata dönüştürür ve ekrana basar.
+     */
+    public static function uuid(?string $binaryId): string
+    {
+        if (empty($binaryId)) return '-';
+        return self::display(\Bin\SystemMethod::formatId($binaryId));
+    }
 }
 
 // Geliştiriciler (Özellikle Juniorlar) için kullanımı en kolay global yardımcı fonksiyonlar
@@ -459,5 +469,11 @@ if (!function_exists(__NAMESPACE__ . '\\maskEmail')) {
 if (!function_exists(__NAMESPACE__ . '\\maskPhone')) {
     function maskPhone(?string $phone): string {
         return \Bin\ViewMethod::maskPhone($phone);
+    }
+}
+
+if (!function_exists(__NAMESPACE__ . '\\uuid')) {
+    function uuid(?string $binaryId): string {
+        return \Bin\ViewMethod::uuid($binaryId);
     }
 }

@@ -276,6 +276,7 @@
 <a href="#cli-view">make:view</a>
 <a href="#cli-api">make:api</a>
 <a href="#cli-class">make:class</a>
+        <a href="#cli-table">table:</a>
 <a href="#cli-cliv">cli v</a>
 <a href="#cli-show">show</a>
 <a href="#cli-list">list</a>
@@ -309,6 +310,7 @@
 <a href="#vh-maskphone">maskPhone()</a>
 <a href="#vh-slugify">slugify()</a>
 <a href="#vh-money">money()</a>
+        <a href="#vh-uuid">uuid()</a>
 <div class="sb-cat">System Helpers</div>
 <div class="sb-subcat">Response &amp; Debug</div>
 <a href="#sh-apiresponse">apiResponse()</a>
@@ -345,6 +347,7 @@
 <a href="#sh-intid">intId()</a>
 <a href="#sh-bigintid">bigintId()</a>
 <a href="#sh-stringer">stringer()</a>
+        <a href="#sh-otpcoder">OTP Coder</a>
 <div class="sb-cat">API Security</div>
 <a href="#api-methods">HTTP Method Control</a>
 <a href="#api-cors">CORS</a>
@@ -454,7 +457,15 @@
                 btn.style.border = 'none';
             }
         </script>
-</section>
+
+        <h3 style="margin-top: 30px;">Additional Commands</h3>
+        <p><strong>List Tables:</strong> To see all available table templates and their descriptions:</p>
+        <pre><code>artiframe&gt; <span class="fn">table</span> <span class="st">list</span></code></pre>
+        
+        <p><strong>Preview Table Content:</strong> To inspect the SQL content in the terminal before adding it to the <code>schema.sql</code> file, you can append the <code>check</code> parameter:</p>
+        <pre><code>artiframe&gt; <span class="fn">table:</span><span class="st">users</span> <span class="st">check</span></code></pre>
+
+    </section>
 <!-- ====== KURULUM ====== -->
 <section id="kurulum">
 <h2>Setup</h2>
@@ -762,7 +773,100 @@ project-name/
 ❌ Hata: Sınıfın oluşturulacağı dizin belirtilmeli! (örn: /app veya /src)
 Example: /src/Service/PaymentService</code></pre>
 </section>
-<!-- cli v -->
+
+    <!-- table: -->
+    <section id="cli-table">
+        <h2><code>table:</code> <span class="tag b-cli">CLI Command</span></h2>
+        <p>Allows you to quickly append standard and relational database tables to your project's <code>schema.sql</code> file. The templates are read from the global <code>stubs/sql.stub</code> file.</p>
+        <pre><code>artiframe&gt; <span class="fn">table:</span><span class="st">users</span></code></pre>
+        <p>Currently supported standard tables:</p>
+                <div class="table-tabs-container" style="margin-top: 20px;">
+            <div class="tabs-header" style="display: flex; gap: 10px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 5px;">
+                <button class="table-tab-btn active" onclick="switchTableTab('tab-users', this)" style="white-space: nowrap; padding: 10px 20px; background: #00c88c; color: #000; font-weight: 600; border: none; border-radius: 5px; cursor: pointer;">users</button>
+                <button class="table-tab-btn" onclick="switchTableTab('tab-sessions', this)" style="white-space: nowrap; padding: 10px 20px; background: #1c2128; color: #fff; border: 1px solid #30363d; border-radius: 5px; cursor: pointer;">user_sessions</button>
+                <button class="table-tab-btn" onclick="switchTableTab('tab-prefs', this)" style="white-space: nowrap; padding: 10px 20px; background: #1c2128; color: #fff; border: 1px solid #30363d; border-radius: 5px; cursor: pointer;">user_preferences</button>
+            </div>
+
+            <!-- Tab: users -->
+            <div id="tab-users" class="table-tab-content" style="display: block;">
+                <pre><code><span class="kw">CREATE TABLE `users` (
+  `id` binary(16) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `role` enum('user','admin','moderator') NOT NULL DEFAULT 'user',
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</span></code></pre>
+            </div>
+
+            <!-- Tab: user_sessions -->
+            <div id="tab-sessions" class="table-tab-content" style="display: none;">
+                <pre><code><span class="kw">CREATE TABLE `user_sessions` (
+  `id` binary(16) NOT NULL,
+  `user_id` binary(16) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `ip_address` varchar(45) DEFAULT NULL,
+  `user_agent` varchar(255) DEFAULT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `token` (`token`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `fk_user_sessions_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</span></code></pre>
+            </div>
+
+            <!-- Tab: user_preferences -->
+            <div id="tab-prefs" class="table-tab-content" style="display: none;">
+                <pre><code><span class="kw">CREATE TABLE `user_preferences` (
+  `id` binary(16) NOT NULL,
+  `user_id` binary(16) NOT NULL,
+  `language` varchar(10) NOT NULL DEFAULT 'tr',
+  `theme` varchar(20) NOT NULL DEFAULT 'light',
+  `push_notifications` tinyint(1) NOT NULL DEFAULT '1',
+  `email_notifications` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`),
+  CONSTRAINT `fk_user_prefs_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</span></code></pre>
+            </div>
+        </div>
+        
+        <script>
+            function switchTableTab(tabId, btn) {
+                const container = btn.closest('.table-tabs-container');
+                container.querySelectorAll('.table-tab-content').forEach(el => el.style.display = 'none');
+                container.querySelectorAll('.table-tab-btn').forEach(el => {
+                    el.style.background = '#1c2128';
+                    el.style.color = '#fff';
+                    el.style.border = '1px solid #30363d';
+                    el.style.fontWeight = '400';
+                });
+                
+                container.querySelector('#' + tabId).style.display = 'block';
+                btn.style.background = '#00c88c';
+                btn.style.color = '#000';
+                btn.style.fontWeight = '600';
+                btn.style.border = 'none';
+            }
+        </script>
+    
+        <h3 style="margin-top: 30px;">Additional Commands</h3>
+        <p><strong>List Tables:</strong> To see all available table templates and their descriptions:</p>
+        <pre><code>artiframe&gt; <span class="fn">table</span> <span class="st">list</span></code></pre>
+        
+        <p><strong>Preview Table Content:</strong> To inspect the SQL content in the terminal before adding it to the <code>schema.sql</code> file, you can append the <code>check</code> parameter:</p>
+        <pre><code>artiframe&gt; <span class="fn">table:</span><span class="st">users</span> <span class="st">check</span></code></pre>
+
+    </section>
+
+    <!-- cli v -->
 <section id="cli-cliv">
 <h2><code>cli v</code> (or <code>cli version</code>) <span class="tag b-cli">CLI Komutu</span></h2>
 <p>ArtiFrame CLI controls its own (global) version of the tool. Not only shows the current version, <strong>NPM Registry</strong> It also checks whether the most up-to-date version is available. If there is a new version, it can update itself globally with one click (y/n).<code>npm install -g @artilingo/artiframe-cli@latest</code>).</p>
@@ -3982,6 +4086,14 @@ if ($response['status'] === 'success') {
 &lt;span&gt;&lt;?= <span class="fn">money</span>(<span class="var">$product</span>[<span class="st">'price'</span>], <span class="st">'usd'</span>) ?&gt;&lt;/span&gt;
 <span class="cm">&lt;!-- Output: $1,250.00 --&gt;</span></code></pre>
 </section>
+
+    <section id="vh-uuid">
+        <h2>View Helpers - <code>uuid()</code> <span class="tag b-view">ViewMethod</span></h2>
+        <p>Converts a 16-byte binary UUID from the database into a 36-character format and prints it to the screen with XSS protection.</p>
+        <pre><code><span class="cm">&lt;!-- Output: 0190ed84-3f12-7a91-8bc4-91823741abcd --&gt;</span>
+&lt;div&gt;<span class="kw">&lt;?=</span> <span class="fn">uuid</span>(<span class="var">$pull</span>[<span class="st">'id'</span>]) <span class="kw">?&gt;</span>&lt;/div&gt;</code></pre>
+    </section>
+
 <!-- ====== SYSTEM HELPERS ====== -->
 <section id="sh-apiresponse">
 <h2>System Helpers— <code>apiResponse()</code> <span class="tag b-api">SystemMethod</span></h2>
@@ -4024,7 +4136,29 @@ if ($response['status'] === 'success') {
 <span class="cm">// Error response</span>
 <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'error'</span>, <span class="st">'message'</span> =&gt; <span class="st">'Unauthorized access.'</span>], <span class="nu">401</span>);</code></pre>
 </section>
-<section id="sh-generatecsrf">
+
+<section id="sh-dd">
+<h2>System Helpers— <code>dd()</code> <span class="tag b-api">SystemMethod</span></h2>
+<p>Dump &amp; Die. During the development phase, the variables were displayed on the screen in a dark mode, readable and stylish way. <code>&lt;pre&gt;</code> tag and stops the execution of the code at that line (exit). It can take unlimited parameters (Variadic).</p>
+<span class="ret">void dd(mixed ...$vars)</span>
+<pre><code><span class="fn">dd</span>(<span class="var">$_POST</span>, <span class="var">$user_id</span>); 
+<span class="cm">// Prints the values ​​to the screen and stops the system.</span></code></pre>
+</section>
+<!-- ====== ID GENERATION & UTILITIES ====== -->
+<section id="id-generation-utilities">
+</section>
+
+    
+<section id="sh-redirect">
+<h2>System Helpers— <code>redirect()</code> <span class="tag b-api">SystemMethod</span></h2>
+<span class="ret">void redirect(string $url)</span>
+<p>to the desired page <code>header("Location: ...")</code> It instantly redirects and stops working with (<code>exit</code>).</p>
+<pre><code><span class="kw">if</span> (!<span class="var">$isLoggedIn</span>) {
+    <span class="fn">redirect</span>(<span class="st">'/login'</span>);
+}</code></pre>
+</section>
+
+    <section id="sh-generatecsrf">
 <h2>System Helpers— <code>generateCsrf()</code> <span class="tag b-api">SystemMethod</span></h2>
 <p>It generates a brand new session-based secure CSRF token, 32 bytes long. To add as hidden input to forms <code>csrfField()</code> It is recommended to use (View Helper).</p>
 <span class="ret">string generateCsrf()</span>
@@ -4110,14 +4244,7 @@ if ($response['status'] === 'success') {
 <p>Detects the user's real IP address. Cloudflare (<code>HTTP_CF_CONNECTING_IP</code>), Proxy (<code>HTTP_X_FORWARDED_FOR</code>) and standard (<code>REMOTE_ADDR</code>) resolves all connections automatically.</p>
 <pre><code><span class="var">$ip</span> = <span class="fn">getClientIp</span>(); <span class="cm">// Ex: 192.168.1.1</span></code></pre>
 </section>
-<section id="sh-redirect">
-<h2>System Helpers— <code>redirect()</code> <span class="tag b-api">SystemMethod</span></h2>
-<span class="ret">void redirect(string $url)</span>
-<p>to the desired page <code>header("Location: ...")</code> It instantly redirects and stops working with (<code>exit</code>).</p>
-<pre><code><span class="kw">if</span> (!<span class="var">$isLoggedIn</span>) {
-    <span class="fn">redirect</span>(<span class="st">'/login'</span>);
-}</code></pre>
-</section>
+
 <section id="sh-verifyemail">
 <h2>System Helpers— <code>verifyEmail()</code> <span class="tag b-api">SystemMethod</span></h2>
 <p>It verifies whether the given email address is actually a valid email address based on DNS or format.</p>
@@ -4159,16 +4286,10 @@ if ($response['status'] === 'success') {
 <pre><code><span class="var">$postData</span> = <span class="fn">arrayOnly</span>(<span class="var">$_POST</span>, [<span class="st">'user_name'</span>, <span class="st">'password'</span>, <span class="st">'e-mail'</span>]);
 <span class="cm">// Externally manipulated values ​​such as ID and role are automatically destroyed.</span></code></pre>
 </section>
-<section id="sh-dd">
-<h2>System Helpers— <code>dd()</code> <span class="tag b-api">SystemMethod</span></h2>
-<p>Dump &amp; Die. During the development phase, the variables were displayed on the screen in a dark mode, readable and stylish way. <code>&lt;pre&gt;</code> tag and stops the execution of the code at that line (exit). It can take unlimited parameters (Variadic).</p>
-<span class="ret">void dd(mixed ...$vars)</span>
-<pre><code><span class="fn">dd</span>(<span class="var">$_POST</span>, <span class="var">$user_id</span>); 
-<span class="cm">// Prints the values ​​to the screen and stops the system.</span></code></pre>
-</section>
-<!-- ====== ID GENERATION & UTILITIES ====== -->
-<section id="id-generation-utilities">
-<h2 id="sh-byteid">System Helpers - <code>byteId()</code> <span class="tag b-api">SystemMethod</span></h2>
+
+
+    <section id="sh-byteid">
+        <h2>System Helpers - <code>byteId()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">
             Native, high-performance and time-ordered raw 16-byte <strong>UUIDv7</strong> produces.
         </div>
@@ -4184,7 +4305,10 @@ if ($response['status'] === 'success') {
 
 <span class="var">$db</span>-&gt;<span class="fn">prepare</span>(<span class="st">"INSERT INTO users (id, name) VALUES (?, ?)"</span>)-&gt;<span class="fn">execute</span>([<span class="var">$rawId</span>, <span class="st">'Triumph'</span>]);</code></pre>
 </div>
-<h2 id="sh-makeid">System Helpers - <code>makeId()</code> <span class="tag b-api">SystemMethod</span></h2>
+</section>
+
+    <section id="sh-makeid">
+        <h2>System Helpers - <code>makeId()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">
             Native, standard 36 characters <strong>UUIDv7</strong> produces the string.
         </div>
@@ -4198,7 +4322,10 @@ if ($response['status'] === 'success') {
 <span class="var">$stringId</span> = SystemMethod::<span class="fn">makeId</span>();
 <span class="cm">// Sample Output: 0190ed84-3f12-7a91-8bc4-91823741abcd</span></code></pre>
 </div>
-<h2 id="sh-formatid">System Helpers - <code>formatId()</code> <span class="tag b-api">SystemMethod</span></h2>
+</section>
+
+    <section id="sh-formatid">
+        <h2>System Helpers - <code>formatId()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">
             Converts raw 16-byte binary UUIDs to a standard 36-character string.
         </div>
@@ -4213,7 +4340,10 @@ if ($response['status'] === 'success') {
 <span class="var">$readableId</span> = SystemMethod::<span class="fn">formatId</span>(<span class="var">$user</span>[<span class="st">'ID'</span>]);
 <span class="cm">// Sample Output: 0190ed84-3f12-7a91-8bc4-91823741abcd</span></code></pre>
 </div>
-<h2 id="sh-intid">System Helpers - <code>intId()</code> <span class="tag b-api">SystemMethod</span></h2>
+</section>
+
+    <section id="sh-intid">
+        <h2>System Helpers - <code>intId()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">
             Safe, random <code>INT</code> Generates ID. (Max 9 Digits)
         </div>
@@ -4225,7 +4355,10 @@ if ($response['status'] === 'success') {
 <pre><code><span class="var">$id</span> = <span class="fn">intId</span>(8);
 <span class="cm">// Sample Output: 49201834</span></code></pre>
 </div>
-<h2 id="sh-bigintid">System Helpers - <code>bigintId()</code> <span class="tag b-api">SystemMethod</span></h2>
+</section>
+
+    <section id="sh-bigintid">
+        <h2>System Helpers - <code>bigintId()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">
             Safe, random <code>BIGINT</code> Generates ID. (Default 15 digits - safe limit for JS)
         </div>
@@ -4237,7 +4370,10 @@ if ($response['status'] === 'success') {
 <pre><code><span class="var">$id</span> = <span class="fn">bigintId</span>(); <span class="cm">// Returns 15 digit INT</span>
 <span class="var">$massiveId</span> = <span class="fn">bigintId</span>(18, <span class="kw">true</span>); <span class="cm">// returns 18 digit STRING (JS safe)</span></code></pre>
 </div>
-<h2 id="sh-stringer">System Helpers - <code>stringer()</code> <span class="tag b-api">SystemMethod</span></h2>
+</section>
+
+    <section id="sh-stringer">
+        <h2>System Helpers - <code>stringer()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">
             Wraps values ​​into strings to protect against Javascript's huge number (BIGINT) insensitivity.
         </div>
@@ -4249,7 +4385,25 @@ if ($response['status'] === 'success') {
 <pre><code><span class="cm">&lt;!-- We wrap it with a stringer to prevent JS from corrupting it --&gt;</span>
 &lt;button data-id=<span class="st">"&lt;?=</span> <span class="fn">Stringer</span>(<span class="var">$data</span>[<span class="st">'ID'</span>]) <span class="st">?&gt;"</span>&gt;Sil&lt;/button&gt;</code></pre>
 </div>
-</section>
+
+
+    <section id="sh-otpcoder">
+        <h2>System Helpers - OTP Coder <span class="tag b-api">SystemMethod</span></h2>
+        <div class="info-box">Generates random, cryptographically secure One-Time Passwords (OTP).</div>
+        <div class="code-block">
+            <pre><code><span class="cm">// 6-digit random number</span>
+<span class="var">$code</span> = <span class="fn">otpInt</span>(<span class="nu">6</span>); <span class="cm">// 482910</span>
+
+<span class="cm">// 8-digit letters only ('c': lowercase, 'C': uppercase, 'cC': mixed)</span>
+<span class="var">$code</span> = <span class="fn">otpStr</span>(<span class="nu">8</span>, <span class="st">'C'</span>); <span class="cm">// PKLMDZRA</span>
+
+<span class="cm">// 6-digit alphanumeric</span>
+<span class="var">$code</span> = <span class="fn">otpMix</span>(<span class="nu">6</span>, <span class="st">'C'</span>); <span class="cm">// 9A4X2Z</span></code></pre>
+        </div>
+    </section>
+
+
+    </section>
 <!-- ====== API GÜVENLİĞİ ====== -->
 <section id="api-methods">
 <h2>API — HTTP Method Control <span class="tag b-sec">ApiControl</span></h2>
