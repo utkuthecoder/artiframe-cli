@@ -75,6 +75,8 @@ return [
     'HELP_MAJOR_DOWN'        => 'Roll back last major release.',
     'HELP_HELP_DESC'         => 'Show this help message.',
     'HELP_EXIT_DESC'         => 'Exit the interactive shell.',
+    'HELP_AUTH_DESC'         => 'Authenticate with GitHub to enable issue suggestions.',
+    'HELP_SUGGEST_DESC'      => 'Submit a feature request, bug report, or helper suggestion directly to GitHub.',
 
     // LangCommand
     'LANG_CURRENT'        => 'Current language:',

@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>ArtiFrame | Official Developer Documentation</title>
-
+    <title>Official Developer Documentation — ArtiFrame PHP Framework</title>
+    <meta name="description" content="Master the ArtiFrame framework. Comprehensive guides, API references, and tutorials for the fastest secure PHP framework.">
+    <meta name="keywords" content="artiframe, artiframe framework, php framework, fast php framework, secure php framework, artilingo framework, php, framework, mvc">
+    <meta name="author" content="Artilingo">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Official Developer Documentation — ArtiFrame PHP Framework">
+    <meta property="og:description" content="Master the ArtiFrame framework. Comprehensive guides, API references, and tutorials for the fastest secure PHP framework.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://artiframe.artilingo.com/docs/en.html">
+    <meta property="og:site_name" content="ArtiFrame">
 <link rel="icon" type="image/png" href="../../public/assets/images/favicon-96x96.png" sizes="96x96" />
 <link rel="icon" type="image/svg+xml" href="../../public/assets/images/favicon.svg" />
 <link rel="shortcut icon" href="../../public/assets/images/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="../../public/assets/images/apple-touch-icon.png" />
 <link rel="manifest" href="../../public/assets/images/site.webmanifest" />
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
 <style>
         :root {
@@ -33,9 +40,7 @@
             --sidebar-w:   280px;
         }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
         html { scroll-behavior: smooth; }
-
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg);
@@ -43,7 +48,6 @@
             line-height: 1.75;
             display: flex;
         }
-
         /* ---- SIDEBAR ---- */
         .sidebar {
             width: var(--sidebar-w);
@@ -57,7 +61,6 @@
             display: flex;
             flex-direction: column;
         }
-
         .sb-logo {
             padding: 0 22px 24px;
             border-bottom: 1px solid var(--border);
@@ -75,7 +78,6 @@
             color: var(--muted);
             margin-top: 3px;
         }
-
                 .sb-subcat {
             padding: 12px 22px 4px;
             font-size: 0.62rem;
@@ -107,7 +109,6 @@
             background: var(--green-dim);
             border-left-color: var(--green);
         }
-
         /* ---- MAIN ---- */
         .content {
             margin-left: var(--sidebar-w);
@@ -115,7 +116,6 @@
             max-width: 1100px;
             width: 100%;
         }
-
         /* ---- TYPOGRAPHY ---- */
         h1 { font-size: 2.6rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 16px; }
         h1 span { color: var(--green); }
@@ -133,10 +133,8 @@
         li { margin-bottom: 8px; }
         a { color: var(--green-light); text-decoration: none; }
         a:hover { text-decoration: underline; }
-
         /* ---- LEAD ---- */
         .lead { font-size: 1.05rem; color: var(--muted); margin-bottom: 0; max-width: 720px; }
-
         /* ---- BADGES ---- */
         .badge { font-size: 0.68rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
         .b-view   { background: rgba(88,166,255,.12); color: #58a6ff; border: 1px solid rgba(88,166,255,.3); }
@@ -144,7 +142,6 @@
         .b-cli    { background: rgba(0,200,140,.12);   color: #00c88c; border: 1px solid rgba(0,200,140,.3); }
         .b-core   { background: rgba(227,179,65,.12);  color: #e3b341; border: 1px solid rgba(227,179,65,.3); }
         .b-sec    { background: rgba(248,81,73,.12);   color: #f85149; border: 1px solid rgba(248,81,73,.3); }
-
         /* ---- CODE ---- */
         pre {
             background: var(--code-bg);
@@ -172,7 +169,6 @@
         .cm { color: #8b949e; }   /* comment */
         .nu { color: #79c0ff; }   /* number / bool */
         .var { color: #ffa657; }  /* variable */
-
         /* ---- CARDS ---- */
         .card {
             background: var(--surface);
@@ -182,21 +178,17 @@
             margin-bottom: 20px;
         }
         .card.highlight { border-left: 3px solid var(--green); }
-
         /* ---- ALERTS ---- */
         .alert { padding: 18px 22px; border-radius: 8px; margin: 24px 0; border-left: 3px solid; font-size: 0.95rem; }
         .a-info    { background: rgba(88,166,255,.08);  border-color: var(--blue);   color: #93c5fd; }
         .a-warn    { background: rgba(227,179,65,.08);  border-color: var(--yellow); color: #fbbf24; }
         .a-danger  { background: rgba(248,81,73,.08);   border-color: var(--red);    color: #fca5a5; }
         .a-success { background: rgba(0,157,108,.08);   border-color: var(--green);  color: #6ee7b7; }
-
         /* ---- RETURN TYPE ---- */
         .ret { display: inline-block; font-size: 0.78rem; color: var(--green); font-family: 'JetBrains Mono', monospace; background: rgba(0,157,108,.12); padding: 3px 10px; border-radius: 4px; border: 1px solid rgba(0,157,108,.25); margin-bottom: 12px; }
-
         /* ---- GRID ---- */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 24px; }
         @media(max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
-
         /* ---- DIR TREE ---- */
         .tree { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 22px 24px; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; line-height: 1.9; white-space: pre; overflow-x: auto; }
         .tree .dir { color: var(--blue); font-weight: 600; }
@@ -204,7 +196,6 @@
         .tree .note { color: #8b949e; }
         .tree .warn { color: var(--yellow); }
         .tree .safe { color: var(--green); }
-
         /* ---- STEP LIST ---- */
         .steps { counter-reset: step; list-style: none; margin: 0 0 24px; padding: 0; }
         .steps li { counter-increment: step; display: flex; gap: 18px; margin-bottom: 20px; }
@@ -220,17 +211,14 @@
             font-weight: 700; font-size: 0.85rem;
             margin-top: 2px;
         }
-
         /* ---- SIGNATURE TABLE ---- */
         .sig-table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.87rem; }
         .sig-table th { text-align: left; padding: 10px 14px; background: var(--surface-2); color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--border); }
         .sig-table td { padding: 10px 14px; border-bottom: 1px solid rgba(48,54,61,.5); vertical-align: top; }
         .sig-table td:first-child { font-family: 'JetBrains Mono', monospace; color: var(--yellow); white-space: nowrap; }
         .sig-table td:last-child { color: var(--muted); }
-
         /* ---- SCROLL SPY ---- */
         header#page-header { margin-bottom: 52px; }
-    
         .table-wrapper {
             width: 100%;
             overflow-x: auto;
@@ -241,7 +229,6 @@
             margin-bottom: 0; /* Override default table margin if any */
             white-space: nowrap; /* Keep table cells on one line for better scroll */
         }
-    
         @media(max-width: 900px) {
             body { flex-direction: column; }
             .sidebar { position: relative; width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); padding: 20px; z-index: 10; }
@@ -285,6 +272,8 @@
 <a href="#cli-version">version</a>
 <a href="#cli-mode">mode</a>
         <a href="#cli-serve">serve</a>
+<a href="#cli-auth">auth</a>
+<a href="#cli-suggest">suggest</a>
 <a href="#cli-add">add</a>
 <div class="sb-cat">Integrated Services</div>
                 <a href="#svc-qrcode">QR Code</a>
@@ -448,23 +437,18 @@
                     el.style.border = '1px solid #30363d';
                     el.style.fontWeight = '400';
                 });
-                
                 document.getElementById(tabId).style.display = 'block';
-                
                 btn.style.background = tabId === 'tab-enduser' ? '#00c88c' : '#58a6ff';
                 btn.style.color = '#000';
                 btn.style.fontWeight = '600';
                 btn.style.border = 'none';
             }
         </script>
-
         <h3 style="margin-top: 30px;">Additional Commands</h3>
         <p><strong>List Tables:</strong> To see all available table templates and their descriptions:</p>
         <pre><code>artiframe&gt; <span class="fn">table</span> <span class="st">list</span></code></pre>
-        
         <p><strong>Preview Table Content:</strong> To inspect the SQL content in the terminal before adding it to the <code>schema.sql</code> file, you can append the <code>check</code> parameter:</p>
         <pre><code>artiframe&gt; <span class="fn">table:</span><span class="st">users</span> <span class="st">check</span></code></pre>
-
     </section>
 <!-- ====== KURULUM ====== -->
 <section id="kurulum">
@@ -473,7 +457,6 @@
 <h3>1. Install CLI Tool Globally</h3>
 <pre><code><span class="cm"># Global installation via NPM</span>
 npm install -g @artilingo/artiframe-cli
-
 <span class="cm"># Verify installation</span>
 artiframe</code></pre>
 <h3>2. Interactive Shell</h3>
@@ -482,7 +465,6 @@ artiframe</code></pre>
         ArtiFrame CLI Interactive Shell v1.0.0
 ==================================================
 Type 'help' for commands, or 'exit' to quit.
-
 artiframe&gt; </code></pre>
 <h3>3. Start a New Project</h3>
 <pre><code>artiframe&gt; new benim-projem</code></pre>
@@ -563,10 +545,8 @@ artiframe&gt; </code></pre>
 <span class="kw">&lt;?php</span>
 <span class="cm">// $allowedMethods MUST be defined before require</span>
 <span class="var">$allowedMethods</span> = [<span class="st">'GET'</span>];
-
 <span class="fn">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>]
     . <span class="st">'/../app/ApiControl.php'</span>;
-
 <span class="kw">use</span> Bin\SystemMethod;</code></pre>
 </div>
 </div>
@@ -583,7 +563,6 @@ artiframe&gt; </code></pre>
 <pre><code><span class="cm">&lt;!-- ❌ Anti-Pattern — not supported --&gt;</span>
 &lt;button id="submitBtn" class="btn"&gt;Gönder&lt;/button&gt;
 <span class="cm">// JS: document.getElementById('submitBtn').addEventListener(...)</span>
-
 <span class="cm">&lt;!-- ✅ ArtiFrame Standard --&gt;</span>
 &lt;button class="btn btn-primary" <span class="var">data-js</span>="login-submit"&gt;Gönder&lt;/button&gt;
 <span class="cm">// JS: document.querySelector('[data-js="login-submit"]').addEventListener(...)</span></code></pre>
@@ -593,7 +572,6 @@ artiframe&gt; </code></pre>
 <p>Dark/Light mode and themes, <code class="ic">&lt;html&gt;</code> of the label <code class="ic">data-theme</code> And <code class="ic">data-mode</code> It is managed through its attributes. Body classes are not used.</p>
 <pre><code><span class="cm">&lt;!-- HTML opening tag from view.stub template --&gt;</span>
 &lt;html lang="tr" data-theme="default" data-mode="light"&gt;
-
 <span class="cm">/* theme definition in app.css */</span>
 html[data-theme="default"][data-mode="dark"] {
     --bg-color: #0b0c0e;
@@ -613,7 +591,6 @@ html[data-theme="default"][data-mode="light"] {
 <p><code class="ic">.env</code> in the file <code class="ic">APP_ENV</code> The value determines error visibility. In Production, no error message is shown to the user.</p>
 <pre><code><span class="cm">//config/app-version.php</span>
 define(<span class="st">'APP_ENV'</span>, (int)<span class="var">$_ENV</span>[<span class="st">'APP_ENV'</span>]); <span class="cm">// 1=Debug, 0=Production</span>
-
 <span class="kw">if</span> (APP_ENV === <span class="nu">1</span>) {
     ini_set(<span class="st">'display_errors'</span>, <span class="nu">1</span>);
     error_reporting(E_ALL);
@@ -629,7 +606,6 @@ define(<span class="st">'APP_ENV'</span>, (int)<span class="var">$_ENV</span>[<s
 <pre><code><span class="cm"># Interactive mode (recommended)</span>
 artiframe
 artiframe&gt; make:view admin/kullanicilar.php
-
 <span class="cm"># One-time mode</span>
 artiframe make:view admin/kullanicilar.php</code></pre>
 </section>
@@ -638,48 +614,39 @@ artiframe make:view admin/kullanicilar.php</code></pre>
 <h2><code>new</code> <span class="tag b-cli">CLI Komutu</span></h2>
 <p>Creates a new ArtiFrame project. When this command is run, an interactive wizard is launched and your project <code>composer.json</code> It asks you for the basic information required for its configuration (package name, author, license type, etc.). Once all files are copied, dependencies are installed automatically.</p>
 <pre><code>artiframe&gt; <span class="fn">new</span> <span class="st">my-project</span>
-
 <span class="cm">  ╔═════════════════════════ ═════════════════════════╗
   ║ ArtiFrame Project Builder ║
   ╚═════════════════════════ ═════════════════════════╝
-
   Project: my-project
   Location: C:/artiframe/my-project</span>
-
   <span class="kw">?</span> Package name (e.g. vendor/project) <span class="st">[artiframe/my-project]</span>: 
   <span class="kw">?</span> Description <span class="st">[ArtiFrame Core PHP Application]</span>: 
   <span class="kw">?</span> Author name <span class="st">[Artilingo]</span>: 
   <span class="kw">?</span> Author homepage <span class="st">[https://artilingo.com]</span>: 
   <span class="kw">?</span> Type (project, library, composer-plugin) <span class="st">[project]</span>: 
   <span class="kw">?</span> License (AGPL-3.0-or-later, MIT, Apache-2.0, GPL-2.0-or-later, GPL-3.0-or-later, BSD-2-Clause, BSD-3-Clause, ISC, proprietary, none) <span class="st">[AGPL-3.0-or-later]</span>: 
-
 <span class="cm">  ┌──────────────────────── ─────────────────────────┐
   │ 📂 Phase 1/4 — Copying... │
   │ Files to be Processed: 42 Pieces │
   └──────────────────────── ─────────────────────────┘
   [████████████████████] 100% (42/42) docs/guide.html...
-  
   ┌──────────────────────── ─────────────────────────┐
   │ 📂 Phase 2/4 — Creating Directories... │
   │ Files to be Processed: 10 Pieces │
   └──────────────────────── ─────────────────────────┘
   [████████████████████] 100% (52/52) public/assets/images/...
-  
   ┌──────────────────────── ─────────────────────────┐
   │ 📂 Phase 3/4 — Generating Dynamic Files... │
   │ Files to be Processed: 14 Pieces │
   └──────────────────────── ─────────────────────────┘
   [████████████████████] 100% (66/66) .agents/AGENTS.md...
-  
   ┌──────────────────────── ─────────────────────────┐
   │ 📦 Phase 4/4 — Installing Dependencies (Composer)│
   └──────────────────────── ─────────────────────────┘</span>
 <span class="cm">Installing dependencies from lock file (including require-dev)...</span>
-
 <span class="cm">  ╔═════════════════════════ ═════════════════════════╗
   ║ Congratulations! The project has been created successfully.         ║
   ╚═════════════════════════ ═════════════════════════╝</span>
-
   📂 benim-projem/
   │  ├── 📂 bin/
   │  ├── 📂 config/
@@ -693,7 +660,6 @@ artiframe make:view admin/kullanicilar.php</code></pre>
   │  └── 📄 kilavuz.html  [125 KB]
   │
   Sonraki Adım: Lütfen .env dosyasındaki ortam değişkenlerini yapılandırın.
-
 </code></pre>
 <p>Once the project is created, ArtiFrame CLI runs it for you. <strong>automatically opens a new terminal window</strong>, goes to that directory and restarts the tool focused on that project. You can close the old terminal window.</p>
 <p>Skeletal structure created:</p>
@@ -730,9 +696,7 @@ project-name/
 <pre><code><span class="kw">&lt;?php</span>
 <span class="var">$allowedMethods</span> = [<span class="st">'POST'</span>]; <span class="cm">// Accept POST only</span>
 <span class="fn">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/../app/ApiControl.php'</span>;
-
 <span class="kw">use</span> Bin\SystemMethod;
-
 <span class="cm">//Business logic here...</span>
 <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'success'</span>], <span class="nu">200</span>);</code></pre>
 </div>
@@ -743,11 +707,8 @@ project-name/
 <pre><code><span class="kw">&lt;?php</span>
 <span class="var">$allowedMethods</span> = [<span class="st">'POST'</span>];
 <span class="fn">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/../app/ApiControl.php'</span>;
-
 <span class="kw">use</span> Bin\SystemMethod;
-
 <span class="var">$action</span> = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'action'</span>] ?? <span class="st">''</span>);
-
 <span class="kw">switch</span> (<span class="var">$action</span>) {
     <span class="kw">case</span> <span class="st">'create'</span>:
         <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'success'</span>, <span class="st">'message'</span> =&gt; <span class="st">'Created.'</span>], <span class="nu">200</span>);
@@ -773,7 +734,6 @@ project-name/
 ❌ Hata: Sınıfın oluşturulacağı dizin belirtilmeli! (örn: /app veya /src)
 Example: /src/Service/PaymentService</code></pre>
 </section>
-
     <!-- table: -->
     <section id="cli-table">
         <h2><code>table:</code> <span class="tag b-cli">CLI Command</span></h2>
@@ -786,7 +746,6 @@ Example: /src/Service/PaymentService</code></pre>
                 <button class="table-tab-btn" onclick="switchTableTab('tab-sessions', this)" style="white-space: nowrap; padding: 10px 20px; background: #1c2128; color: #fff; border: 1px solid #30363d; border-radius: 5px; cursor: pointer;">user_sessions</button>
                 <button class="table-tab-btn" onclick="switchTableTab('tab-prefs', this)" style="white-space: nowrap; padding: 10px 20px; background: #1c2128; color: #fff; border: 1px solid #30363d; border-radius: 5px; cursor: pointer;">user_preferences</button>
             </div>
-
             <!-- Tab: users -->
             <div id="tab-users" class="table-tab-content" style="display: block;">
                 <pre><code><span class="kw">CREATE TABLE `users` (
@@ -802,7 +761,6 @@ Example: /src/Service/PaymentService</code></pre>
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</span></code></pre>
             </div>
-
             <!-- Tab: user_sessions -->
             <div id="tab-sessions" class="table-tab-content" style="display: none;">
                 <pre><code><span class="kw">CREATE TABLE `user_sessions` (
@@ -819,7 +777,6 @@ Example: /src/Service/PaymentService</code></pre>
   CONSTRAINT `fk_user_sessions_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</span></code></pre>
             </div>
-
             <!-- Tab: user_preferences -->
             <div id="tab-prefs" class="table-tab-content" style="display: none;">
                 <pre><code><span class="kw">CREATE TABLE `user_preferences` (
@@ -837,7 +794,6 @@ Example: /src/Service/PaymentService</code></pre>
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</span></code></pre>
             </div>
         </div>
-        
         <script>
             function switchTableTab(tabId, btn) {
                 const container = btn.closest('.table-tabs-container');
@@ -848,7 +804,6 @@ Example: /src/Service/PaymentService</code></pre>
                     el.style.border = '1px solid #30363d';
                     el.style.fontWeight = '400';
                 });
-                
                 container.querySelector('#' + tabId).style.display = 'block';
                 btn.style.background = '#00c88c';
                 btn.style.color = '#000';
@@ -856,16 +811,12 @@ Example: /src/Service/PaymentService</code></pre>
                 btn.style.border = 'none';
             }
         </script>
-    
         <h3 style="margin-top: 30px;">Additional Commands</h3>
         <p><strong>List Tables:</strong> To see all available table templates and their descriptions:</p>
         <pre><code>artiframe&gt; <span class="fn">table</span> <span class="st">list</span></code></pre>
-        
         <p><strong>Preview Table Content:</strong> To inspect the SQL content in the terminal before adding it to the <code>schema.sql</code> file, you can append the <code>check</code> parameter:</p>
         <pre><code>artiframe&gt; <span class="fn">table:</span><span class="st">users</span> <span class="st">check</span></code></pre>
-
     </section>
-
     <!-- cli v -->
 <section id="cli-cliv">
 <h2><code>cli v</code> (or <code>cli version</code>) <span class="tag b-cli">CLI Komutu</span></h2>
@@ -873,10 +824,8 @@ Example: /src/Service/PaymentService</code></pre>
 <pre><code>artiframe&gt; <span class="fn">cli v</span>
 <span class="cm">  Current Version: v1.0.0
   Current Version: v1.0.1
-
   A new update is available! v1.0.0 → v1.0.1
   Would you like to update now? (y/n)</span> <span class="st">y</span>
-
 <span class="cm">  Updating...
   ✅ CLI updated successfully!</span></code></pre>
 </section>
@@ -906,7 +855,6 @@ Example: /src/Service/PaymentService</code></pre>
 <pre><code>artiframe&gt; <span class="fn">go</span> <span class="st">public</span>
   ✅  Dizin başarıyla değiştirildi.
       C:\projeler\benim_projem\public
-
 artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
   ✅  Dizin başarıyla değiştirildi.
       C:\projeler\benim_projem</code></pre>
@@ -921,13 +869,10 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
 </ul>
 <pre><code>artiframe&gt; <span class="fn">remove</span> <span class="st">src/Auth/UserManager.php</span>
 ⚠️  Bu dosyayı KÖKTEN silmek üzeresiniz. Emin misiniz? C:\...\src\Auth\UserManager.php [y/N]: y
-
 🚨 DİKKAT: Sildiğiniz UserManager sınıfı şu API dosyalarında kullanılıyor:
    -&gt; C:\...\public\api\auth\login.php (Satır: 12)
    -&gt; C:\...\public\api\auth\register.php (Satır: 15)
-
 📌 Yukarıdaki API dosyalarındaki ilgili satırları kendiniz düzenlemeli veya silmelisiniz.
-
 ✅ Dosya başarıyla silindi: C:\...\src\Auth\UserManager.php</code></pre>
 </section>
 <!-- version -->
@@ -969,6 +914,20 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
 <p>You can specify a different port number if you want:</p>
 <pre><code>artiframe&gt; <span class="fn">serve</span> <span class="st">8080</span></code></pre>
 </section>
+<!-- auth -->
+<section id="cli-auth">
+<h2><code>auth</code> <span class="tag b-cli">CLI Command</span></h2>
+<p>Authenticates the CLI with your GitHub account using OAuth Device Flow. This is required before you can submit suggestions or bug reports.</p>
+<pre><code>artiframe&gt; <span class="fn">auth</span></code></pre>
+<p>This command will display a user code and open your browser to the GitHub device activation page. Once authorized, it securely stores your token.</p>
+</section>
+<!-- suggest -->
+<section id="cli-suggest">
+<h2><code>suggest</code> <span class="tag b-cli">CLI Command</span></h2>
+<p>Submit a feature request, bug report, or a helper suggestion directly from your terminal. Requires authentication via the <code>auth</code> command.</p>
+<pre><code>artiframe&gt; <span class="fn">suggest</span></code></pre>
+<p>You will be prompted interactively to select a category, write a title, and provide a detailed description. The suggestion is then published as an issue on the official ArtiFrame repository.</p>
+</section>
 <!-- add -->
 <section id="cli-add">
 <h2><code>add</code> <span class="tag b-cli">CLI Komutu</span></h2>
@@ -1008,7 +967,6 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
 <tr><td><code>add mpdf</code></td><td>mpdf/mpdf</td></tr>
 <tr><td><code>add dompdf</code></td><td>dompdf/dompdf</td></tr>
 <tr><td><code>add spreadsheet</code></td><td>phpoffice/phpspreadsheet</td></tr>
-
 <tr><td><code>add guzzle</code></td><td>guzzlehttp/guzzle</td></tr>
 <tr><td><code>add uuid</code></td><td>ramsey/uuid</td></tr>
 <tr><td><code>add carbon</code></td><td>nesbot/carbon</td></tr>
@@ -1028,7 +986,6 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
             <h2>QR Code</h2>
             <div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Wrapper Class:</strong> When you run the <code>add qrcode</code> command, the <code>endroid/qr-code</code> library is installed and the <code>src/Service/QrCode.php</code> wrapper class is created.</div>
             <p>A modern and fluent class that hides the complex object instantiation (Builder/Writer) processes of the Endroid QR Code library, allowing you to generate a QR code and embed a logo in a single line.</p>
-            
             <h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Methods and Usage</h3>
             <ul style="line-height: 1.6; margin-bottom: 20px;">
                 <li><code>->generate('Metin')</code> : Starts the chain by setting the text or URL to be converted to a QR code.</li>
@@ -1041,32 +998,25 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
                 <li><code>->base64()</code> : Returns the QR code as a base64 string so you can use it directly in an HTML <code>&lt;img src="..."&gt;</code> tag.</li>
                 <li><code>->output()</code> : Outputs the QR code directly to the browser with the appropriate HTTP headers.</li>
             </ul>
-
             <h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Usage Examples</h3>
             <pre><code><span class="kw">use</span> <span class="var">App\Service\QrCode</span>;
-
 <span class="cm">// Örnek 1: Ekrana HTML Img olarak basma</span>
 <span class="var">$base64</span> = <span class="var">QrCode</span>::generate(<span class="st">'https://artiframe.dev'</span>)
     -&gt;<span class="fn">size</span>(400)
     -&gt;<span class="fn">logo</span>(<span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/assets/logo.png'</span>)
     -&gt;<span class="fn">base64</span>();
-
 <span class="kw">echo</span> <span class="st">'&lt;img src="'</span> . <span class="var">$base64</span> . <span class="st">'" alt="QR"&gt;'</span>;
-
 <span class="cm">// Örnek 2: Fiziksel PNG Olarak Kaydetme</span>
 <span class="var">QrCode</span>::generate(<span class="st">'VCARD Bilgileri'</span>)
     -&gt;<span class="fn">color</span>(<span class="st">'#ff0000'</span>, <span class="st">'#ffffff'</span>)
     -&gt;<span class="fn">save</span>(<span class="st">'/temp/kullanici_karti.png'</span>);
-
 <span class="cm">// Örnek 3: API Endpoint olarak resmi tarayıcıya basma</span>
 <span class="var">QrCode</span>::generate(<span class="st">'https://artilingo.com'</span>)-&gt;<span class="fn">output</span>();</code></pre>
         </div>
-
         <div class="card" id="svc-phpmailer">
             <h2>PHPMailer (Mail)</h2>
             <div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Automatic .env Setup:</strong> When you run the <code>add phpmailer</code> command, SMTP settings are automatically added to your <code>.env</code> file and the <code>src/Service/Mailer.php</code> class is created.</div>
             <p>A much more modern, fluent, and secure (CRLF protected) Wrapper class working on top of the PHPMailer library. All methods provided by the class are chainable.</p>
-            
             <h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Methods and Usage</h3>
             <ul style="line-height: 1.6; margin-bottom: 20px;">
                 <li><code>->to('mail@adres.com', 'İsim')</code> : Sets who the email will be sent to.</li>
@@ -1079,20 +1029,16 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
                 <li><code>->text('Düz Metin')</code> : Used if you want to send the email strictly as plain text.</li>
                 <li><code>->send()</code> : Completes all chained operations and sends the email via SMTP. Throws an Exception if there is an error.</li>
             </ul>
-
             <h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Advanced Example: PHP Template (View) and Dynamic File Attachment</h3>
             <p>If you do not want to write the HTML content of the email directly in strings like spaghetti code, you can use <code>ob_start()</code> to include an external PHP template file (containing variables) and attach a dynamically generated PDF directly to the email:</p>
             <pre><code><span class="kw">use</span> <span class="var">App\Service\Mailer</span>;
-
 <span class="cm">// 1. Your dynamic data</span>
 <span class="var">$siparisNo</span> = <span class="st">'#90210'</span>;
 <span class="var">$pdfDosyasi</span> = <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/temp/fatura_90210.pdf'</span>;
-
 <span class="cm">// 2. Loading HTML Template externally (Output Buffering)</span>
 <span class="fn">ob_start</span>();
 <span class="kw">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/views/email/siparis.php'</span>;
 <span class="var">$htmlIcerik</span> = <span class="fn">ob_get_clean</span>();
-
 <span class="cm">// 3. Sending the Mail</span>
 <span class="var">Mailer</span>::create()
     -&gt;<span class="fn">to</span>(<span class="st">'musteri@mail.com'</span>, <span class="st">'Ahmet Yılmaz'</span>)
@@ -1102,7 +1048,6 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
     -&gt;<span class="fn">attach</span>(<span class="var">$pdfDosyasi</span>, <span class="st">'Siparis_Faturasi.pdf'</span>)
     -&gt;<span class="fn">send</span>();</code></pre>
         </div>
-
         <div class="card" id="svc-iyzico">
 <h2>Iyzico <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></h2>
 <div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Membership &amp; API Keys:</strong> To use Iyzico payment infrastructure <a href="https://www.iyzico.com" style="color: var(--green); font-weight: bold;" target="_blank">iyzico.com</a> (live) or <a href="https://sandbox-merchants.iyzipay.com/" style="color: var(--green); font-weight: bold;" target="_blank">sandbox.iyzipay.com</a> You need to create a seller account via (test) and get your API/Secret keys.</div>
@@ -1153,7 +1098,6 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$iyzico = new \Service\Iyzico();
-
 $response = $iyzico-&gt;pay([
     'price'       =&gt; 150.50,
     'paidPrice'   =&gt; 160.00,
@@ -1186,7 +1130,6 @@ $response = $iyzico-&gt;pay([
         ]
     ]
 ]);
-
 if ($response['status'] === 'success') {
     $paymentId = $response['data']['paymentId'];
     echo "Ödeme başarılı! ID: " . $paymentId;
@@ -1219,7 +1162,6 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$iyzico = new \Service\Iyzico();
-
 $response = $iyzico-&gt;threeDSecureInit([
     'price'       =&gt; 500.00,
     'paidPrice'   =&gt; 500.00,
@@ -1253,7 +1195,6 @@ $response = $iyzico-&gt;threeDSecureInit([
         ]
     ]
 ]);
-
 if ($response['status'] === 'success') {
     // Bankanın 3D doğrulama sayfasına yönlendirecek HTML formu
     echo $response['data']['threeDSHtmlContent'];
@@ -1285,10 +1226,8 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$iyzico = new \Service\Iyzico();
-
 // Bankadan dönen POST verisi (paymentId ve conversationData vb.)
 $response = $iyzico-&gt;threeDSecureComplete($_POST);
-
 if ($response['status'] === 'success') {
     echo "3D Doğrulama başarılı, ödeme çekildi: " . $response['data']['paymentId'];
 }</code></pre>
@@ -1319,9 +1258,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$iyzico = new \Service\Iyzico();
-
 $response = $iyzico-&gt;refund('dummy_data', $price);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -1350,9 +1287,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$iyzico = new \Service\Iyzico();
-
 $response = $iyzico-&gt;cancel('dummy_data');
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -1388,9 +1323,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$iyzico = new \Service\Iyzico();
-
 $response = $iyzico-&gt;saveCard($cardData, $email);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -1421,9 +1354,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$iyzico = new \Service\Iyzico();
-
 $response = $iyzico-&gt;listCards($cardUserKey);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -1452,9 +1383,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$iyzico = new \Service\Iyzico();
-
 $response = $iyzico-&gt;checkPayment('dummy_data');
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -1495,9 +1424,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$iyzico = new \Service\Iyzico();
-
 $response = $iyzico-&gt;createSubMerchant($data);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -1541,12 +1468,10 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$stripe = new \Service\Stripe();
-
 $response = $stripe-&gt;createPaymentIntent(199.50, 'usd', [
     'order_id' =&gt; 'ORD-54321',
     'customer_email' =&gt; 'utku@artilingo.com'
 ]);
-
 if ($response['status'] === 'success') {
     $clientSecret = $response['data']['clientSecret'];
     echo json_encode(['clientSecret' =&gt; $clientSecret]);
@@ -1576,9 +1501,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$stripe = new \Service\Stripe();
-
 $response = $stripe-&gt;confirmPayment('dummy_data');
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -1610,9 +1533,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$stripe = new \Service\Stripe();
-
 $response = $stripe-&gt;charge($amount, $source);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -1642,9 +1563,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$stripe = new \Service\Stripe();
-
 $response = $stripe-&gt;refund('dummy_data');
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -1675,9 +1594,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$stripe = new \Service\Stripe();
-
 $response = $stripe-&gt;createCustomer($email);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -1706,9 +1623,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$stripe = new \Service\Stripe();
-
 $response = $stripe-&gt;subscribe('dummy_data', 'dummy_data');
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -1737,9 +1652,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$stripe = new \Service\Stripe();
-
 $response = $stripe-&gt;cancelSubscription('dummy_data');
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -1770,9 +1683,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$stripe = new \Service\Stripe();
-
 $response = $stripe-&gt;createProduct('dummy_data', $price);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -1802,9 +1713,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$stripe = new \Service\Stripe();
-
 $response = $stripe-&gt;webhook($payload, $signature);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -1833,9 +1742,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$stripe = new \Service\Stripe();
-
 $response = $stripe-&gt;listPayments();
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -1878,13 +1785,11 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$jwt = new \Auth\JwtAuth();
-
 $payload = [
     'user_id' =&gt; 1453,
     'role'    =&gt; 'admin',
     'email'   =&gt; 'utku@artilingo.com'
 ];
-
 $token = $jwt-&gt;generate($payload, 7200);
 echo "Bearer " . $token;</code></pre>
 </div>
@@ -1916,9 +1821,7 @@ echo "Bearer " . $token;</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$jwt = new \Auth\JwtAuth();
-
 $response = $jwt-&gt;verify('dummy_data');
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -1950,9 +1853,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$jwt = new \Auth\JwtAuth();
-
 $response = $jwt-&gt;payload('dummy_data');
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -1982,9 +1883,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$jwt = new \Auth\JwtAuth();
-
 $response = $jwt-&gt;refresh('dummy_data');
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2013,9 +1912,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$jwt = new \Auth\JwtAuth();
-
 $response = $jwt-&gt;isExpired('dummy_data');
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2042,9 +1939,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$jwt = new \Auth\JwtAuth();
-
 $response = $jwt-&gt;getUserId('dummy_data');
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2072,9 +1967,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$jwt = new \Auth\JwtAuth();
-
 $response = $jwt-&gt;generateRefreshToken($payload);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2097,9 +1990,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$jwt = new \Auth\JwtAuth();
-
 $response = $jwt-&gt;middleware();
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2144,7 +2035,6 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$img = new \Service\ImageProcessor();
-
 $success = $img-&gt;resize(
     '/var/www/uploads/orijinal.jpg',
     '/var/www/uploads/resized.jpg',
@@ -2179,9 +2069,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$image = new \Service\ImageProcessor();
-
 $response = $image-&gt;crop($inputPath, $outputPath, 'dummy_data', $height);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2210,9 +2098,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$image = new \Service\ImageProcessor();
-
 $response = $image-&gt;thumbnail($inputPath, $outputPath);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2250,9 +2136,7 @@ left, center, right, bottom-left, bottom, bottom-right.
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$image = new \Service\ImageProcessor();
-
 $response = $image-&gt;watermark($inputPath, $outputPath, $watermarkPath);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2281,9 +2165,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$image = new \Service\ImageProcessor();
-
 $response = $image-&gt;toWebp($inputPath);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2312,9 +2194,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$image = new \Service\ImageProcessor();
-
 $response = $image-&gt;compress($inputPath);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2343,9 +2223,7 @@ Returns an array with an 'error' key on failure.</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$image = new \Service\ImageProcessor();
-
 $response = $image-&gt;info($path);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2378,9 +2256,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$image = new \Service\ImageProcessor();
-
 $response = $image-&gt;rotate($inputPath, $outputPath, $angle);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2408,9 +2284,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$image = new \Service\ImageProcessor();
-
 $response = $image-&gt;greyscale($inputPath, $outputPath);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2453,9 +2327,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$s3 = new \Service\S3Storage();
-
 $response = $s3-&gt;upload($localPath, $remotePath);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2487,9 +2359,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$s3 = new \Service\S3Storage();
-
 $response = $s3-&gt;uploadFromString($content, $remotePath, $contentType);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2519,9 +2389,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$s3 = new \Service\S3Storage();
-
 $response = $s3-&gt;download($remotePath, $localPath);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2548,9 +2416,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$s3 = new \Service\S3Storage();
-
 $response = $s3-&gt;delete($remotePath);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2577,9 +2443,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$s3 = new \Service\S3Storage();
-
 $response = $s3-&gt;deleteMany($remotePaths);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2606,9 +2470,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$s3 = new \Service\S3Storage();
-
 $response = $s3-&gt;url($remotePath);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2636,9 +2498,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$s3 = new \Service\S3Storage();
-
 $response = $s3-&gt;signedUrl($remotePath);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2665,9 +2525,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$s3 = new \Service\S3Storage();
-
 $response = $s3-&gt;exists($remotePath);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2694,9 +2552,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$s3 = new \Service\S3Storage();
-
 $response = $s3-&gt;list();
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2726,9 +2582,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$s3 = new \Service\S3Storage();
-
 $response = $s3-&gt;copy($from, $to);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2756,9 +2610,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$s3 = new \Service\S3Storage();
-
 $response = $s3-&gt;move($from, $to);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2785,9 +2637,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$s3 = new \Service\S3Storage();
-
 $response = $s3-&gt;size($remotePath);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2828,9 +2678,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$redis = new \Service\RedisCache();
-
 $response = $redis-&gt;get($key);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2859,9 +2707,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$redis = new \Service\RedisCache();
-
 $response = $redis-&gt;set($key, $value);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2888,9 +2734,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$redis = new \Service\RedisCache();
-
 $response = $redis-&gt;has($key);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2917,9 +2761,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$redis = new \Service\RedisCache();
-
 $response = $redis-&gt;forget($key);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2948,9 +2790,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$redis = new \Service\RedisCache();
-
 $response = $redis-&gt;remember($key, $ttl, $callback);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -2980,9 +2820,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$redis = new \Service\RedisCache();
-
 $response = $redis-&gt;increment($key);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3010,9 +2848,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$redis = new \Service\RedisCache();
-
 $response = $redis-&gt;decrement($key);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3035,9 +2871,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$redis = new \Service\RedisCache();
-
 $response = $redis-&gt;flush();
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3064,9 +2898,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$redis = new \Service\RedisCache();
-
 $response = $redis-&gt;keys();
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3095,9 +2927,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$redis = new \Service\RedisCache();
-
 $response = $redis-&gt;ttl($key);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3125,9 +2955,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$redis = new \Service\RedisCache();
-
 $response = $redis-&gt;expire($key, $seconds);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3156,9 +2984,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$redis = new \Service\RedisCache();
-
 $response = $redis-&gt;hSet($hash, $field, $value);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3187,9 +3013,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$redis = new \Service\RedisCache();
-
 $response = $redis-&gt;hGet($hash, $field);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3218,9 +3042,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$redis = new \Service\RedisCache();
-
 $response = $redis-&gt;hGetAll($hash);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3250,9 +3072,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$redis = new \Service\RedisCache();
-
 $response = $redis-&gt;hDel($hash, $field);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3295,9 +3115,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$pusher = new \Service\Pusher();
-
 $response = $pusher-&gt;broadcast($channel, $event, $data);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3326,9 +3144,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$pusher = new \Service\Pusher();
-
 $response = $pusher-&gt;broadcastToMany($channels, $event, $data);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3357,9 +3173,7 @@ true</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$pusher = new \Service\Pusher();
-
 $response = $pusher-&gt;toUser('dummy_data', $event, $data);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3387,9 +3201,7 @@ Returns empty array on failure</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$pusher = new \Service\Pusher();
-
 $response = $pusher-&gt;channelInfo($channel);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3419,9 +3231,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$pusher = new \Service\Pusher();
-
 $response = $pusher-&gt;channels();
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3451,9 +3261,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$pusher = new \Service\Pusher();
-
 $response = $pusher-&gt;auth('dummy_data', 'dummy_data');
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3483,9 +3291,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$pusher = new \Service\Pusher();
-
 $response = $pusher-&gt;presenceAuth('dummy_data', 'dummy_data', 'dummy_data');
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3528,9 +3334,7 @@ On error: 'status' =&gt; 'error', 'message' =&gt; error description</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$twilio = new \Service\Twilio();
-
 $response = $twilio-&gt;sendSms($to, $message);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3560,9 +3364,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$twilio = new \Service\Twilio();
-
 $response = $twilio-&gt;sendWhatsApp($to, $message);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3592,9 +3394,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$twilio = new \Service\Twilio();
-
 $response = $twilio-&gt;call($to, $twimlUrl);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3625,9 +3425,7 @@ status will be 'pending' on success</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$twilio = new \Service\Twilio();
-
 $response = $twilio-&gt;verifyStart($to);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3658,9 +3456,7 @@ status will be 'approved' on successful verification</code></pre>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$twilio = new \Service\Twilio();
-
 $response = $twilio-&gt;verifyCheck($to, $code);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3690,9 +3486,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$twilio = new \Service\Twilio();
-
 $response = $twilio-&gt;getMessageStatus('dummy_data');
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3722,9 +3516,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$twilio = new \Service\Twilio();
-
 $response = $twilio-&gt;listMessages();
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3755,9 +3547,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$twilio = new \Service\Twilio();
-
 $response = $twilio-&gt;sendBulkSms($recipients, $message);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3810,9 +3600,7 @@ No-op fallback when Sentry is not configured.
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$sentry = new \Service\sentry();
-
 $response = $sentry-&gt;captureError($e);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3842,9 +3630,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$sentry = new \Service\sentry();
-
 $response = $sentry-&gt;captureMessage($message);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3880,9 +3666,7 @@ Capture a Throwable and send it to Sentry.
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$sentry = new \Service\sentry();
-
 $response = $sentry-&gt;captureError($e);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3912,9 +3696,7 @@ if ($response['status'] === 'success') {
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
 <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$sentry = new \Service\sentry();
-
 $response = $sentry-&gt;captureMessage($message);
-
 if ($response['status'] === 'success') {
     // Başarılı
 }</code></pre>
@@ -3944,7 +3726,6 @@ if ($response['status'] === 'success') {
         </div>
 <pre><code><span class="cm">&lt;!-- ❌ Insecure — Creates an XSS vulnerability --&gt;</span>
 &lt;h1&gt;&lt;?= <span class="var">$user</span>[<span class="st">'name'</span>] ?&gt;&lt;/h1&gt;
-
 <span class="cm">&lt;!-- ✅ Safe Use of ArtiFrame --&gt;</span>
 &lt;h1&gt;&lt;?= <span class="fn">display</span>(<span class="var">$user</span>[<span class="st">'name'</span>], <span class="st">'Anonymous User'</span>) ?&gt;&lt;/h1&gt;</code></pre>
 </section>
@@ -3954,7 +3735,6 @@ if ($response['status'] === 'success') {
 <span class="ret">string escapeUrl(string $url)</span>
 <pre><code><span class="cm">&lt;!-- ❌ Insecure — JS code may be leaked via URL --&gt;</span>
 &lt;a href="&lt;?= <span class="var">$user</span>[<span class="st">'website'</span>] ?&gt;"&gt;Siteyi Ziyaret Et&lt;/a&gt;
-
 <span class="cm">&lt;!-- ✅ Safe Use of ArtiFrame --&gt;</span>
 &lt;a href="&lt;?= <span class="fn">escapeUrl</span>(<span class="var">$user</span>[<span class="st">'website'</span>]) ?&gt;"&gt;Siteyi Ziyaret Et&lt;/a&gt;</code></pre>
 </section>
@@ -3966,20 +3746,16 @@ if ($response['status'] === 'success') {
 <pre><code><span class="cm">&lt;!-- Frontend (HTML) --&gt;</span>
 &lt;form data-js="kaydet-form"&gt;
     &lt;?= <span class="fn">csrfField</span>() ?&gt; <span class="cm">&lt;!-- Automatically generates hidden input --&gt;</span>
-    
     <span class="cm">&lt;!-- OR Manual Usage:
     &lt;input type="hidden" name="csrf_token" value="&lt;?= display($_SESSION['csrf_token'] ?? '') ?&gt;"&gt;
     --&gt;</span>
-
     &lt;input type="text" name="ad" placeholder="Adınız"&gt;
     &lt;button type="submit"&gt;Kaydet&lt;/button&gt;
 &lt;/form&gt;
-
 <span class="cm">// Frontend (JavaScript) - Capturing and Sending Data</span>
 <span class="fn">document</span>.<span class="fn">querySelector</span>(<span class="st">'[data-js="save-form"]'</span>).<span class="fn">addEventListener</span>(<span class="st">'submit'</span>, (e) =&gt; {
     e.<span class="fn">preventDefault</span>();
     <span class="kw">const</span> <span class="var">formData</span> = <span class="kw">new</span> <span class="fn">FormData</span>(e.target);
-    
     <span class="cm">// csrf_token is automatically included in formData</span>
     <span class="fn">fetch</span>(<span class="st">'/api/save.php'</span>, {
         <span class="kw">method</span>: <span class="st">'POST'</span>,
@@ -4013,15 +3789,12 @@ if ($response['status'] === 'success') {
 </div>
 <pre><code><span class="cm">&lt;!-- Assume it is a UNIX timestamp retrieved with the time() function --&gt;</span>
 <span class="kw">&lt;?php</span> <span class="var">$date</span> = <span class="fn">time</span>(); <span class="kw">?&gt;</span>
-
 <span class="cm">&lt;!-- Exact date by language --&gt;</span>
 &lt;span&gt;&lt;?= <span class="fn">fulldateName</span>(<span class="var">$date</span>, <span class="st">'tr'</span>) ?&gt;&lt;/span&gt;
 <span class="cm">&lt;!-- Released: July 24, 2026 --&gt;</span>
-
 <span class="cm">&lt;!-- Social media style time display --&gt;</span>
 &lt;span&gt;&lt;?= <span class="fn">timeAgo</span>(<span class="var">$date</span>, <span class="st">'most'</span>) ?&gt;&lt;/span&gt;
 <span class="cm">&lt;!-- Released: 5 minutes ago --&gt;</span>
-
 &lt;span&gt;&lt;?= <span class="fn">timeAgo</span>(<span class="var">$date</span>, <span class="st">'also'</span>) ?&gt;&lt;/span&gt;
 <span class="cm">&lt;!-- Output: vor 5 Minutes --&gt;</span></code></pre>
 </section>
@@ -4082,18 +3855,15 @@ if ($response['status'] === 'success') {
 </table>
 <pre><code>&lt;span&gt;&lt;?= <span class="fn">money</span>(<span class="var">$product</span>[<span class="st">'price'</span>], <span class="st">'try'</span>) ?&gt;&lt;/span&gt;
 <span class="cm">&lt;!-- Output: ₺ 1,250.00 --&gt;</span>
-
 &lt;span&gt;&lt;?= <span class="fn">money</span>(<span class="var">$product</span>[<span class="st">'price'</span>], <span class="st">'usd'</span>) ?&gt;&lt;/span&gt;
 <span class="cm">&lt;!-- Output: $1,250.00 --&gt;</span></code></pre>
 </section>
-
     <section id="vh-uuid">
         <h2>View Helpers - <code>uuid()</code> <span class="tag b-view">ViewMethod</span></h2>
         <p>Converts a 16-byte binary UUID from the database into a 36-character format and prints it to the screen with XSS protection.</p>
         <pre><code><span class="cm">&lt;!-- Output: 0190ed84-3f12-7a91-8bc4-91823741abcd --&gt;</span>
 &lt;div&gt;<span class="kw">&lt;?=</span> <span class="fn">uuid</span>(<span class="var">$pull</span>[<span class="st">'id'</span>]) <span class="kw">?&gt;</span>&lt;/div&gt;</code></pre>
     </section>
-
 <!-- ====== SYSTEM HELPERS ====== -->
 <section id="sh-apiresponse">
 <h2>System Helpers— <code>apiResponse()</code> <span class="tag b-api">SystemMethod</span></h2>
@@ -4104,7 +3874,6 @@ if ($response['status'] === 'success') {
 <h3>PHP (Backend) Submission</h3>
 <pre><code><span class="cm">// 1. Standard Shipping</span>
 <span class="fn">apiResponse</span>(<span class="st">'success'</span>, <span class="st">'The operation completed successfully.'</span>, [<span class="st">'ID'</span> =&gt; <span class="nu">1453</span>]);
-
 <span class="cm">// 2. Error Submission (with Exception)</span>
 <span class="kw">try</span> {
     <span class="cm">// Database queries...</span>
@@ -4117,7 +3886,6 @@ if ($response['status'] === 'success') {
   .then(response =&gt; {
       <span class="cm">// WARNING: response.status or response.message WILL NOT work!</span>
       <span class="cm">// No matter what you send from PHP, the keys are always status, message and data.</span>
-      
       <span class="kw">if</span> (response.status === <span class="st">'success'</span>) { <span class="cm">// Whatever comes from PHP ('success', 'ok', 'successful' etc.)</span>
           console.log(<span class="st">"Message:"</span>, response.message);
           console.log(<span class="st">"Incoming Data:"</span>, response.data);
@@ -4132,11 +3900,9 @@ if ($response['status'] === 'success') {
 <span class="ret">void jsonResponse(array $data, int $statusCode = 200)</span>
 <pre><code><span class="cm">// Successful response</span>
 <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'success'</span>, <span class="st">'data'</span> =&gt; <span class="var">$user</span>], <span class="nu">200</span>);
-
 <span class="cm">// Error response</span>
 <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'error'</span>, <span class="st">'message'</span> =&gt; <span class="st">'Unauthorized access.'</span>], <span class="nu">401</span>);</code></pre>
 </section>
-
 <section id="sh-dd">
 <h2>System Helpers— <code>dd()</code> <span class="tag b-api">SystemMethod</span></h2>
 <p>Dump &amp; Die. During the development phase, the variables were displayed on the screen in a dark mode, readable and stylish way. <code>&lt;pre&gt;</code> tag and stops the execution of the code at that line (exit). It can take unlimited parameters (Variadic).</p>
@@ -4147,8 +3913,6 @@ if ($response['status'] === 'success') {
 <!-- ====== ID GENERATION & UTILITIES ====== -->
 <section id="id-generation-utilities">
 </section>
-
-    
 <section id="sh-redirect">
 <h2>System Helpers— <code>redirect()</code> <span class="tag b-api">SystemMethod</span></h2>
 <span class="ret">void redirect(string $url)</span>
@@ -4157,7 +3921,6 @@ if ($response['status'] === 'success') {
     <span class="fn">redirect</span>(<span class="st">'/login'</span>);
 }</code></pre>
 </section>
-
     <section id="sh-generatecsrf">
 <h2>System Helpers— <code>generateCsrf()</code> <span class="tag b-api">SystemMethod</span></h2>
 <p>It generates a brand new session-based secure CSRF token, 32 bytes long. To add as hidden input to forms <code>csrfField()</code> It is recommended to use (View Helper).</p>
@@ -4244,7 +4007,6 @@ if ($response['status'] === 'success') {
 <p>Detects the user's real IP address. Cloudflare (<code>HTTP_CF_CONNECTING_IP</code>), Proxy (<code>HTTP_X_FORWARDED_FOR</code>) and standard (<code>REMOTE_ADDR</code>) resolves all connections automatically.</p>
 <pre><code><span class="var">$ip</span> = <span class="fn">getClientIp</span>(); <span class="cm">// Ex: 192.168.1.1</span></code></pre>
 </section>
-
 <section id="sh-verifyemail">
 <h2>System Helpers— <code>verifyEmail()</code> <span class="tag b-api">SystemMethod</span></h2>
 <p>It verifies whether the given email address is actually a valid email address based on DNS or format.</p>
@@ -4286,8 +4048,6 @@ if ($response['status'] === 'success') {
 <pre><code><span class="var">$postData</span> = <span class="fn">arrayOnly</span>(<span class="var">$_POST</span>, [<span class="st">'user_name'</span>, <span class="st">'password'</span>, <span class="st">'e-mail'</span>]);
 <span class="cm">// Externally manipulated values ​​such as ID and role are automatically destroyed.</span></code></pre>
 </section>
-
-
     <section id="sh-byteid">
         <h2>System Helpers - <code>byteId()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">
@@ -4299,14 +4059,11 @@ if ($response['status'] === 'success') {
 <span class="code-lang">PHP</span>
 </div>
 <pre><code><span class="kw">use</span> Bin\SystemMethod;
-
 <span class="var">$rawId</span> = SystemMethod::<span class="fn">byteId</span>();
 <span class="cm">// Or global helper: byteId();</span>
-
 <span class="var">$db</span>-&gt;<span class="fn">prepare</span>(<span class="st">"INSERT INTO users (id, name) VALUES (?, ?)"</span>)-&gt;<span class="fn">execute</span>([<span class="var">$rawId</span>, <span class="st">'Triumph'</span>]);</code></pre>
 </div>
 </section>
-
     <section id="sh-makeid">
         <h2>System Helpers - <code>makeId()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">
@@ -4318,12 +4075,10 @@ if ($response['status'] === 'success') {
 <span class="code-lang">PHP</span>
 </div>
 <pre><code><span class="kw">use</span> Bin\SystemMethod;
-
 <span class="var">$stringId</span> = SystemMethod::<span class="fn">makeId</span>();
 <span class="cm">// Sample Output: 0190ed84-3f12-7a91-8bc4-91823741abcd</span></code></pre>
 </div>
 </section>
-
     <section id="sh-formatid">
         <h2>System Helpers - <code>formatId()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">
@@ -4335,13 +4090,11 @@ if ($response['status'] === 'success') {
 <span class="code-lang">PHP</span>
 </div>
 <pre><code><span class="kw">use</span> Bin\SystemMethod;
-
 <span class="var">$user</span> = <span class="var">$db</span>-&gt;<span class="fn">query</span>(<span class="st">"SELECT id FROM users LIMIT 1"</span>)-&gt;<span class="fn">fetch</span>();
 <span class="var">$readableId</span> = SystemMethod::<span class="fn">formatId</span>(<span class="var">$user</span>[<span class="st">'ID'</span>]);
 <span class="cm">// Sample Output: 0190ed84-3f12-7a91-8bc4-91823741abcd</span></code></pre>
 </div>
 </section>
-
     <section id="sh-intid">
         <h2>System Helpers - <code>intId()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">
@@ -4356,7 +4109,6 @@ if ($response['status'] === 'success') {
 <span class="cm">// Sample Output: 49201834</span></code></pre>
 </div>
 </section>
-
     <section id="sh-bigintid">
         <h2>System Helpers - <code>bigintId()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">
@@ -4371,7 +4123,6 @@ if ($response['status'] === 'success') {
 <span class="var">$massiveId</span> = <span class="fn">bigintId</span>(18, <span class="kw">true</span>); <span class="cm">// returns 18 digit STRING (JS safe)</span></code></pre>
 </div>
 </section>
-
     <section id="sh-stringer">
         <h2>System Helpers - <code>stringer()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">
@@ -4385,24 +4136,18 @@ if ($response['status'] === 'success') {
 <pre><code><span class="cm">&lt;!-- We wrap it with a stringer to prevent JS from corrupting it --&gt;</span>
 &lt;button data-id=<span class="st">"&lt;?=</span> <span class="fn">Stringer</span>(<span class="var">$data</span>[<span class="st">'ID'</span>]) <span class="st">?&gt;"</span>&gt;Sil&lt;/button&gt;</code></pre>
 </div>
-
-
     <section id="sh-otpcoder">
         <h2>System Helpers - OTP Coder <span class="tag b-api">SystemMethod</span></h2>
         <div class="info-box">Generates random, cryptographically secure One-Time Passwords (OTP).</div>
         <div class="code-block">
             <pre><code><span class="cm">// 6-digit random number</span>
 <span class="var">$code</span> = <span class="fn">otpInt</span>(<span class="nu">6</span>); <span class="cm">// 482910</span>
-
 <span class="cm">// 8-digit letters only ('c': lowercase, 'C': uppercase, 'cC': mixed)</span>
 <span class="var">$code</span> = <span class="fn">otpStr</span>(<span class="nu">8</span>, <span class="st">'C'</span>); <span class="cm">// PKLMDZRA</span>
-
 <span class="cm">// 6-digit alphanumeric</span>
 <span class="var">$code</span> = <span class="fn">otpMix</span>(<span class="nu">6</span>, <span class="st">'C'</span>); <span class="cm">// 9A4X2Z</span></code></pre>
         </div>
     </section>
-
-
     </section>
 <!-- ====== API GÜVENLİĞİ ====== -->
 <section id="api-methods">
@@ -4411,7 +4156,6 @@ if ($response['status'] === 'success') {
 <pre><code><span class="cm">// An endpoint that accepts only GET and POST</span>
 <span class="var">$allowedMethods</span> = [<span class="st">'GET'</span>, <span class="st">'POST'</span>];
 <span class="fn">require_once</span> ... . <span class="st">'/../app/ApiControl.php'</span>;
-
 <span class="cm">// An endpoint that only accepts DELETE</span>
 <span class="var">$allowedMethods</span> = [<span class="st">'DELETE'</span>];
 <span class="fn">require_once</span> ... . <span class="st">'/../app/ApiControl.php'</span>;</code></pre>
@@ -4495,20 +4239,16 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
 <span class="var">$allowedMethods</span> = [<span class="st">'POST'</span>];
 <span class="fn">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/../app/ApiControl.php'</span>;
 <span class="kw">use</span> Bin\SystemMethod;
-
 <span class="cm">// 1. CSRF Verification</span>
 <span class="kw">if</span> (!<span class="fn">verifyCsrf</span>(<span class="var">$_POST</span>[<span class="st">'csrf_token'</span>] ?? <span class="st">''</span>)) {
     <span class="fn">jsonResponse</span>([<span class="st">'error'</span> =&gt; <span class="st">'Invalid token.'</span>], <span class="nu">403</span>);
 }
-
 <span class="cm">// 2. Clear Data</span>
 <span class="var">$name</span>     = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'name'</span>] ?? <span class="st">''</span>);
 <span class="var">$email</span> = <span class="fn">sanitizeEmail</span>(<span class="var">$_POST</span>[<span class="st">'email'</span>] ?? <span class="st">''</span>);
 <span class="var">$message</span>  = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'message'</span>] ?? <span class="st">''</span>);
-
 <span class="cm">// 3. Business Logic (Send e-mail, save to DB, etc.)</span>
 <span class="cm">//...</span>
-
 <span class="cm">// 4. Reply</span>
 <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'success'</span>, <span class="st">'message'</span> =&gt; <span class="st">'Your message has been received.'</span>], <span class="nu">200</span>);</code></pre>
 </div>
@@ -4522,7 +4262,6 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
 <script>
     const sections = document.querySelectorAll('section[id], header[id], div.card[id]');
     const links = document.querySelectorAll('.sidebar nav a');
-
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -4532,7 +4271,6 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
             }
         });
     }, { rootMargin: '-20% 0px -70% 0px' });
-
     sections.forEach(s => observer.observe(s));
 </script>
 <script>
@@ -4541,7 +4279,6 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
         const ctx = canvas.getContext('2d');
         const cw = canvas.width;
         const ch = canvas.height;
-
         function drawRoundedRect(x, y, w, h, r, fill, stroke) {
             ctx.beginPath();
             ctx.moveTo(x + r, y);
@@ -4562,7 +4299,6 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
                 ctx.stroke();
             }
         }
-
         function drawLine(x1, y1, x2, y2, color) {
             ctx.beginPath();
             ctx.moveTo(x1, y1);
@@ -4578,7 +4314,6 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
             ctx.fillStyle = color;
             ctx.fill();
         }
-        
         function drawPath(points, color) {
             if(points.length < 2) return;
             ctx.beginPath();
@@ -4599,7 +4334,6 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
             ctx.fillStyle = color;
             ctx.fill();
         }
-
         function drawText(text, x, y, color, font = "14px Inter", align = "center") {
             ctx.fillStyle = color;
             ctx.font = font;
@@ -4607,7 +4341,6 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
             ctx.textBaseline = "middle";
             ctx.fillText(text, x, y);
         }
-
         const nodes = [
             { id: 'n1', x: 20, y: 220, w: 170, h: 50, text: "Proje Nerede Çalışacak?", bg: "#1c2128", border: "#58a6ff", textColor: "#e6edf3" },
             { id: 'n2_local', x: 250, y: 80, w: 220, h: 50, text: "Sadece Localhost / Bireysel\n(Dış Ağ Bağlantısı Yok)", bg: "#1c2128", border: "#30363d", textColor: "#e6edf3" },
@@ -4619,28 +4352,20 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
             { id: 'n7_sell', x: 960, y: 340, w: 160, h: 50, text: "❌ İmkansız\n(AGPLv3 İhlali)", bg: "rgba(248,81,73,0.12)", border: "#f85149", textColor: "#f85149" },
             { id: 'n8_corp', x: 960, y: 440, w: 180, h: 50, text: "💼 Ticari Çift-Lisans\n(Artilingo İletişim)", bg: "rgba(227,179,65,0.12)", border: "#e3b341", textColor: "#e3b341" }
         ];
-
         ctx.fillStyle = "#0d1117";
         ctx.fillRect(0, 0, cw, ch);
-
         drawPath([{x:190, y:245}, {x:220, y:245}, {x:220, y:105}, {x:250, y:105}], "#30363d");
         drawPath([{x:190, y:245}, {x:220, y:245}, {x:220, y:345}, {x:250, y:345}], "#30363d");
-
         drawLine(470, 105, 550, 105, "#30363d");
         drawLine(450, 345, 510, 345, "#30363d");
-
         drawPath([{x:690, y:345}, {x:725, y:345}, {x:725, y:245}, {x:760, y:245}], "#30363d");
         drawText("Evet", 740, 235, "#00c88c", "12px Inter");
-
         drawPath([{x:690, y:345}, {x:725, y:345}, {x:725, y:420}, {x:760, y:420}], "#30363d");
         drawText("Hayır", 740, 410, "#f85149", "12px Inter");
-
         drawPath([{x:900, y:420}, {x:930, y:420}, {x:930, y:365}, {x:960, y:365}], "#30363d");
         drawText("Satmak/Dağıtmak", 945, 355, "#f85149", "11px Inter");
-
         drawPath([{x:900, y:420}, {x:930, y:420}, {x:930, y:465}, {x:960, y:465}], "#30363d");
         drawText("Kendi Projem (SaaS)", 945, 455, "#e3b341", "11px Inter");
-
         nodes.forEach(n => {
             drawRoundedRect(n.x, n.y, n.w, n.h, 6, n.bg, n.border);
             const lines = n.text.split('\n');
@@ -4653,7 +4378,6 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
         });
     }
 </script>
-
         <a href="../../public/index.html" class="btn-back-home" style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: var(--surface, #111); color: var(--text-primary, #fff); border: 1px solid var(--border, #333); padding: 10px 15px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: all 0.2s;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Home
@@ -4661,6 +4385,5 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
         <style>
             .btn-back-home:hover { border-color: var(--accent, #00E599) !important; color: var(--accent, #00E599) !important; transform: translateY(-2px); }
         </style>
-        
 </body>
 </html>

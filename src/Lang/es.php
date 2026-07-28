@@ -75,6 +75,8 @@ return [
     'HELP_MAJOR_DOWN'        => 'Revertir la última versión mayor.',
     'HELP_HELP_DESC'         => 'Mostrar este mensaje de ayuda.',
     'HELP_EXIT_DESC'         => 'Salir del shell interactivo.',
+    'HELP_AUTH_DESC'         => 'Autentifícate con GitHub para habilitar las sugerencias de issues.',
+    'HELP_SUGGEST_DESC'      => 'Envía una solicitud de función, un informe de error o una sugerencia de ayuda directamente a GitHub.',
 
     // LangCommand
     'LANG_CURRENT'        => 'Idioma actual:',

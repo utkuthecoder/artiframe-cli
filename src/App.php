@@ -230,6 +230,18 @@ class App
                 (new \ArtiFrame\Cli\Commands\ServeCommand($this->translator))->execute($commandArgs);
                 break;
 
+            case 'auth':
+                (new \ArtiFrame\Cli\Commands\AuthCommand($this->translator))->execute($commandArgs);
+                break;
+
+            case 'suggest':
+                (new \ArtiFrame\Cli\Commands\SuggestCommand($this->translator))->execute($commandArgs);
+                break;
+
+            case 'issues':
+                (new \ArtiFrame\Cli\Commands\IssuesCommand($this->translator))->execute($commandArgs);
+                break;
+
             case 'add':
                 (new \ArtiFrame\Cli\Commands\AddCommand($this->translator))->execute($commandArgs);
                 break;
@@ -381,6 +393,24 @@ class App
         echo "  " . $d . "├── " . $r . "Example: " . $lg . "add iyzico" . $r . PHP_EOL;
         echo "  " . $d . "├── " . $r . "Example: " . $lg . "add phpmailer" . $r . PHP_EOL;
         echo "  " . $d . "└── " . $r . $lg . "add list" . $r . $d . "       " . $t->get('HELP_ADD_LIST') . $r . PHP_EOL;
+        echo PHP_EOL;
+
+        // auth
+        echo "  " . $g . "auth" . $r . PHP_EOL;
+        echo "  " . $d . "│" . $r . "   " . $t->get('HELP_AUTH_DESC') . PHP_EOL;
+        echo "  " . $d . "└── " . $r . "Example: " . $lg . "auth" . $r . PHP_EOL;
+        echo PHP_EOL;
+
+        // suggest
+        echo "  " . $g . "suggest" . $r . PHP_EOL;
+        echo "  " . $d . "│" . $r . "   " . $t->get('HELP_SUGGEST_DESC') . PHP_EOL;
+        echo "  " . $d . "└── " . $r . "Example: " . $lg . "suggest" . $r . PHP_EOL;
+        echo PHP_EOL;
+
+        // issues
+        echo "  " . $g . "issues" . $r . " " . $y . "[id]" . $r . PHP_EOL;
+        echo "  " . $d . "│" . $r . "   " . $t->get('HELP_ISSUES_DESC') . PHP_EOL;
+        echo "  " . $d . "└── " . $r . "Example: " . $lg . "issues" . $r . " or " . $lg . "issues 4" . $r . PHP_EOL;
         echo PHP_EOL;
 
         // help / exit

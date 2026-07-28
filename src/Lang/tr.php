@@ -74,7 +74,9 @@ return [
     'HELP_MINOR_DOWN'        => 'Son minör sürümün geri alınması.',
     'HELP_MAJOR_DOWN'        => 'Son majör sürümün geri alınması.',
     'HELP_HELP_DESC'         => 'Bu yardım mesajını gösterir.',
-    'HELP_EXIT_DESC'         => 'İnteraktif kabuğu kapatır.',
+    'HELP_EXIT_DESC'         => 'Etkileşimli kabuktan çık.',
+    'HELP_AUTH_DESC'         => 'Issue önerileri için GitHub ile kimlik doğrulaması yapın.',
+    'HELP_SUGGEST_DESC'      => 'GitHub\'a doğrudan özellik isteği, hata bildirimi veya öneri gönderin.',
 
     // LangCommand
     'LANG_CURRENT'        => 'Mevcut dil:',

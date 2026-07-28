@@ -75,6 +75,8 @@ return [
     'HELP_MAJOR_DOWN'        => 'Annuler la dernière version majeure.',
     'HELP_HELP_DESC'         => 'Afficher ce message d\'aide.',
     'HELP_EXIT_DESC'         => 'Quitter le shell interactif.',
+    'HELP_AUTH_DESC'         => 'Authentifiez-vous avec GitHub pour permettre les suggestions.',
+    'HELP_SUGGEST_DESC'      => 'Soumettez une demande de fonctionnalité, un rapport de bogue ou une suggestion d\'aide directement sur GitHub.',
 
     // LangCommand
     'LANG_CURRENT'        => 'Langue actuelle :',

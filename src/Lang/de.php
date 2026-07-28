@@ -75,6 +75,8 @@ return [
     'HELP_MAJOR_DOWN'        => 'Letzte Major-Version zurücksetzen.',
     'HELP_HELP_DESC'         => 'Diese Hilfemeldung anzeigen.',
     'HELP_EXIT_DESC'         => 'Die interaktive Shell beenden.',
+    'HELP_AUTH_DESC'         => 'Authentifizieren Sie sich bei GitHub, um Vorschläge einzureichen.',
+    'HELP_SUGGEST_DESC'      => 'Reichen Sie einen Funktionswunsch, Fehlerbericht oder Vorschlag direkt bei GitHub ein.',
 
     // LangCommand
     'LANG_CURRENT'        => 'Aktuelle Sprache:',
