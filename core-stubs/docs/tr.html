@@ -927,7 +927,14 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
 <pre><code>artiframe&gt; <span class="fn">suggest</span></code></pre>
 <p>Komut, interaktif olarak kategori seçmenizi, başlık yazmanızı ve detaylı bir açıklama girmenizi ister. İşlem tamamlandığında resmi ArtiFrame deposunda bir Issue olarak yayınlanır.</p>
 </section>
-    <!-- add -->
+    <!-- issues -->
+<section id="cli-issues">
+<h2><code>issues</code> <span class="tag b-cli">CLI Komutu</span></h2>
+<p>Gönderdiğiniz issue'ları listeleyin ve yorumlarını doğrudan terminalinizden okuyun. <code>auth</code> komutu ile giriş yapmayı gerektirir.</p>
+<pre><code>artiframe&gt; <span class="fn">issues</span> [id]</code></pre>
+<p>Issue'larınızın listesini görmek için <code>issues</code> çalıştırın. 4 numaralı issue'nun detaylarını ve yorumlarını görmek için <code>issues 4</code> çalıştırın.</p>
+</section>
+<!-- add -->
     <section id="cli-add">
         <h2><code>add</code> <span class="tag b-cli">CLI Komutu</span></h2>
         <p>Projenize harici modüller veya hazır entegrasyonlar dahil etmenizi sağlayan en güçlü komuttur. Klasik <code>composer require</code> işleminin ötesine geçerek, bazı modüller için otomatik servis sınıfları (stubs) oluşturur ve <code>.env</code> dosyalarınıza gerekli tanımlamaları kendiliğinden yapar.</p>
