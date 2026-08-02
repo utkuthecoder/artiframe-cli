@@ -425,7 +425,11 @@ class NewProjectCommand
       "Bin\\\\": "bin/",
       "App\\\\": "app/",
       "Src\\\\": "src/"
-    }
+    },
+    "files": [
+      "bin/ViewMethod.php",
+      "bin/SystemMethod.php"
+    ]
   },
   "authors": [
     {
@@ -469,6 +473,7 @@ JSON;
             "# Uygulama",
             "APP_NAME=ArtiFrame",
             "APP_URL=http://localhost",
+            "APP_MAINTENANCE=false",
             "",
             "# Veritabanı (MySQL / MariaDB)",
             "DB_HOST=localhost",
@@ -476,22 +481,7 @@ JSON;
             "DB_PASS=",
             "DB_NAME=artiframe",
             "",
-            "# SMTP (PHPMailer)",
-            "MAIL_HOST=smtp.example.com",
-            "MAIL_PORT=587",
-            "MAIL_USERNAME=",
-            "MAIL_PASSWORD=",
-            "MAIL_FROM_ADDRESS=noreply@example.com",
-            "MAIL_FROM_NAME=ArtiFrame",
-            "MAIL_ENCRYPTION=tls",
-            "",
-            "# Cloudflare R2 (AWS S3 Uyumlu Depolama)",
-            "R2_ACCOUNT_ID=",
-            "R2_ACCESS_KEY=",
-            "R2_SECRET_KEY=",
-            "R2_BUCKET_NAME=",
-            "R2_PUBLIC_URL=",
-            "",
+
             "# Redis",
             "REDIS_HOST=127.0.0.1",
             "REDIS_PORT=6379",
@@ -645,14 +635,14 @@ REDISPHP;
         // public/index.php — localized welcome page
         $lang    = $this->translator->getLang();
         $docFile = [
-            'tr' => ['file' => 'kilavuz.html',  'installed' => 'Projeniz Başarıyla Oluşturuldu!',      'guide' => 'İlk adımlar için kılavuzu inceleyebilirsiniz:'],
-            'en' => ['file' => 'guide.html',     'installed' => 'Project Created Successfully!',        'guide' => 'Check out the guide for the first steps:'],
-            'de' => ['file' => 'handbuch.html',  'installed' => 'Projekt Erfolgreich Erstellt!',        'guide' => 'Für die ersten Schritte sehen Sie im Handbuch nach:'],
-            'fr' => ['file' => 'guide_fr.html',  'installed' => 'Projet Créé avec Succès !',            'guide' => 'Consultez le guide pour les premières étapes :'],
-            'es' => ['file' => 'guia.html',       'installed' => '¡Proyecto Creado Exitosamente!',      'guide' => 'Consulta la guía para los primeros pasos:'],
-        ][$lang] ?? ['file' => 'guide.html', 'installed' => 'ArtiFrame Installed Successfully!', 'guide' => 'To get started, see'];
+            'tr' => ['file' => 'kilavuz.html',  'installed' => 'Projeniz Başarıyla Oluşturuldu!',      'guide' => 'İlk adımlar için kılavuzu inceleyebilirsiniz:', 'note' => '💡 <b>Not:</b> Eğer anasayfa (landing.php) ismini değiştirmek isterseniz, <code>bin/ViewMethod.php</code> içindeki <code>routeLink()</code> metodunda bulunan varsayılan sayfa adını da güncellemelisiniz.'],
+            'en' => ['file' => 'guide.html',     'installed' => 'Project Created Successfully!',        'guide' => 'Check out the guide for the first steps:', 'note' => '💡 <b>Note:</b> If you want to change the homepage (landing.php) filename, you must also update the default page name in the <code>routeLink()</code> method inside <code>bin/ViewMethod.php</code>.'],
+            'de' => ['file' => 'handbuch.html',  'installed' => 'Projekt Erfolgreich Erstellt!',        'guide' => 'Für die ersten Schritte sehen Sie im Handbuch nach:', 'note' => '💡 <b>Hinweis:</b> Wenn Sie den Dateinamen der Startseite (landing.php) ändern möchten, müssen Sie auch den Standardseitennamen in der Methode <code>routeLink()</code> in <code>bin/ViewMethod.php</code> aktualisieren.'],
+            'fr' => ['file' => 'guide_fr.html',  'installed' => 'Projet Créé avec Succès !',            'guide' => 'Consultez le guide pour les premières étapes :', 'note' => '💡 <b>Remarque :</b> Si vous souhaitez modifier le nom de fichier de la page d\'accueil (landing.php), vous devez également mettre à jour le nom de page par défaut dans la méthode <code>routeLink()</code> dans <code>bin/ViewMethod.php</code>.'],
+            'es' => ['file' => 'guia.html',       'installed' => '¡Proyecto Creado Exitosamente!',      'guide' => 'Consulta la guía para los primeros pasos:', 'note' => '💡 <b>Nota:</b> Si desea cambiar el nombre del archivo de la página de inicio (landing.php), también debe actualizar el nombre de la página predeterminada en el método <code>routeLink()</code> dentro de <code>bin/ViewMethod.php</code>.'],
+        ][$lang] ?? ['file' => 'guide.html', 'installed' => 'ArtiFrame Installed Successfully!', 'guide' => 'To get started, see', 'note' => '💡 <b>Note:</b> If you want to change the homepage (landing.php) filename, you must also update the default page name in the <code>routeLink()</code> method inside <code>bin/ViewMethod.php</code>.'];
 
-        $indexContent = "<?php\nrequire_once __DIR__ . '/../app/ViewControl.php';\n"
+        $landingContent = "<?php\n"
             . "if (isset(\$_GET['guide'])) {\n"
             . "    header('Content-Type: text/html; charset=utf-8');\n"
             . "    readfile(__DIR__ . '/../{$docFile['file']}');\n"
@@ -696,6 +686,12 @@ REDISPHP;
             . "            transition: all 0.3s ease; box-shadow: 0 4px 14px 0 rgba(9, 151, 114, 0.39);\n"
             . "        }\n"
             . "        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(9, 151, 114, 0.45); }\n"
+            . "        .note {\n"
+            . "            font-size: 0.85rem; color: #6b7280; margin-top: 2rem;\n"
+            . "            background: rgba(255,255,255,0.5); padding: 1rem; border-radius: 0.75rem;\n"
+            . "            border: 1px solid rgba(0,0,0,0.05); text-align: left; line-height: 1.5;\n"
+            . "        }\n"
+            . "        .note code { background: rgba(0,0,0,0.05); padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace; }\n"
             . "        .footer {\n"
             . "            display: flex; align-items: center; gap: 0.5rem;\n"
             . "            color: #6b7280; font-size: 0.875rem; font-weight: 500;\n"
@@ -714,6 +710,7 @@ REDISPHP;
             . "        <h1>{$docFile['installed']}</h1>\n"
             . "        <p>{$docFile['guide']}</p>\n"
             . "        <a href=\"?guide\" class=\"btn\">{$docFile['file']}</a>\n"
+            . "        <div class=\"note\">{$docFile['note']}</div>\n"
             . "    </div>\n"
             . "    <div class=\"footer\">\n"
             . "        <span>Powered by</span>\n"
@@ -723,8 +720,23 @@ REDISPHP;
             . "    </div>\n"
             . "</body>\n"
             . "</html>\n";
+        file_put_contents($targetDir . '/public/landing.php', $landingContent);
+        $this->tick('public/landing.php');
+
+        // public/index.php - router
+        $indexContent = "<?php\n\nrequire_once __DIR__ . '/../vendor/autoload.php';\n\nrouteLink();\n";
         file_put_contents($targetDir . '/public/index.php', $indexContent);
         $this->tick('public/index.php');
+
+        // public/404.php
+        $error404Content = "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>404 Not Found</title>\n    <style>body{font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;background:#f3f4f6;color:#374151;text-align:center;} h1{font-size:3rem;margin-bottom:0;} p{font-size:1.2rem;color:#6b7280;}</style>\n</head>\n<body>\n    <div>\n        <h1>404</h1>\n        <p>Page Not Found</p>\n    </div>\n</body>\n</html>\n";
+        file_put_contents($targetDir . '/public/404.php', $error404Content);
+        $this->tick('public/404.php');
+
+        // public/503.php
+        $error503Content = "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>503 Service Unavailable</title>\n    <style>body{font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;background:#f3f4f6;color:#374151;text-align:center;} h1{font-size:3rem;margin-bottom:0;} p{font-size:1.2rem;color:#6b7280;}</style>\n</head>\n<body>\n    <div>\n        <h1>503</h1>\n        <p>Service Unavailable / Maintenance Mode</p>\n    </div>\n</body>\n</html>\n";
+        file_put_contents($targetDir . '/public/503.php', $error503Content);
+        $this->tick('public/503.php');
 
         // public/.htaccess
         $htaccessContent = <<<HTACCESS

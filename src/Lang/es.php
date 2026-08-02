@@ -59,6 +59,7 @@ return [
     // Help screen
     'HELP_COMMANDS'          => 'COMANDOS',
     'HELP_NEW_DESC'          => 'Crea un nuevo proyecto ArtiFrame desde cero.',
+    'HELP_UPGRADE_DESC'      => 'Aplica las características actualizadas del núcleo CLI (app, bin) desde NPM al proyecto.',
     'HELP_MAKEVIEW_DESC1'    => 'Genera un nuevo archivo de vista con sus recursos CSS y JS.',
     'HELP_MAKEVIEW_DESC2'    => 'La ruta puede usar subdirectorios (creados automáticamente).',
     'HELP_MAKEAPI_DESC'      => 'Genera un nuevo archivo de punto de conexión API.',
@@ -178,6 +179,11 @@ return [
     'TABLE_LIST_HEADER' => 'Tablas compatibles:',
     'TABLE_DESC_USERS' => 'Tabla básica de usuarios y autorización (UUID).',
     'TABLE_DESC_USER_SESSIONS' => 'Seguimiento de sesiones de usuario (IP, dispositivo, token).',
-    'TABLE_DESC_USER_PREFERENCES' => 'Preferencias de usuario (idioma, tema, notificaciones).',
+    'TABLE_DESC_USER_PREFERENCES' => 'Preferencias del usuario (idioma, tema, notificaciones).',
+
+    // Upgrade
+    'UPGRADE_INDEX_ABORT' => '¡Archivo public/index.php detectado! En la nueva versión, este archivo actúa como un enrutador. Para continuar con la actualización, cambie el nombre de su index.php existente a landing.php (o cualquier otro nombre) y vuelva a ejecutar el comando.',
+    'UPGRADE_CORE_WARNING' => 'El núcleo de su proyecto es diferente de la versión original. Si ha agregado funciones manualmente, haga una copia de seguridad antes de actualizar para evitar la pérdida de datos. Presione Entrar para continuar después de hacer la copia de seguridad.',
+    'UPGRADE_SUCCESS' => '¡Núcleo (app/ y bin/) y stubs de servicio actualizados con éxito!',
 
 ];

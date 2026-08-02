@@ -35,7 +35,7 @@ class MakeClassCommand
             $target .= '.php';
         }
 
-        $projectRoot = getcwd();
+        $projectRoot = $this->safeguard->getProjectRoot();
         $classPath   = $projectRoot . '/' . $target;
 
         if (!$this->safeguard->checkTarget($classPath)) {

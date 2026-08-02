@@ -254,11 +254,13 @@
         <a href="#kurulum">Kurulum</a>
         <a href="#dizin">Dizin Yapısı</a>
         <div class="sb-cat">Mimari</div>
+        <a href="#v2-routing">Zero-Config Routing (v2.0)</a>
         <a href="#bootstrapper">Bootstrapper Mimarisi</a>
         <a href="#kurallar">Kural Seti</a>
         <div class="sb-cat">CLI Aracı</div>
         <a href="#cli-giris">CLI'ye Giriş</a>
         <a href="#cli-new">new</a>
+        <a href="#cli-upgrade">upgrade</a>
         <a href="#cli-view">make:view</a>
         <a href="#cli-api">make:api</a>
         <a href="#cli-class">make:class</a>
@@ -468,6 +470,7 @@ artiframe&gt; </code></pre>
         <h3>3. Yeni Proje Başlat</h3>
         <pre><code>artiframe&gt; new benim-projem</code></pre>
         <p>Bu komut <code class="ic">benim-projem/</code> dizinini oluşturur ve tüm iskelet yapıyı içine kopyalar: <code class="ic">app/</code>, <code class="ic">bin/</code>, <code class="ic">config/</code>, <code class="ic">public/</code>, <code class="ic">src/</code>, <code class="ic">.env.example</code> ve ilk <code class="ic">index.php</code> sayfası.</p>
+
         <h3>4. Ortam Ayarları</h3>
         <pre><code>cp .env.example .env</code></pre>
         <p><code class="ic">.env</code> dosyanızı açıp veritabanı ve uygulama bilgilerini doldurun. Bu dosya asla versiyon kontrolüne girmez.</p>
@@ -485,8 +488,7 @@ artiframe&gt; </code></pre>
 │   ├── <span class="file">ViewControl.php</span>      <span class="note"># View (HTML sayfa) bootstrapper'ı</span>
 │   ├── <span class="file">ApiControl.php</span>       <span class="note"># API endpoint bootstrapper'ı</span>
 │   ├── <span class="file">Database.php</span>         <span class="note"># PDO tabanlı veritabanı bağlantısı</span>
-│   ├── <span class="file">DotEnv.php</span>           <span class="note"># .env okuyucu</span>
-│   └── <span class="file">R2Manager.php</span>        <span class="note"># Cloudflare R2 dosya yöneticisi</span>
+│   └── <span class="file">DotEnv.php</span>           <span class="note"># .env okuyucu</span>
 │
 ├── <span class="dir warn">bin/</span>                     <span class="note"># ⚠️ Çekirdek sistem — doğrudan düzenlemeyin</span>
 │   ├── <span class="file">SystemMethod.php</span>     <span class="note"># API/Backend global yardımcıları</span>
@@ -506,8 +508,9 @@ artiframe&gt; </code></pre>
 │   │   └── <span class="dir">js/</span>              <span class="note"># View'a özel JS dosyaları</span>
 │   ├── <span class="dir">includes/</span>            <span class="note"># Paylaşılan bileşenler</span>
 │   │   ├── head.php
-│   │   ├── header.php
-│   │   └── footer.php
+│   ├── <span class="file">head.php</span>
+│   ├── <span class="file">header.php</span>
+│   └── <span class="file">footer.php</span>
 │   ├── <span class="dir">api/</span>                 <span class="note"># API endpoint dosyaları</span>
 │   └── <span class="file">index.php</span>            <span class="note"># Ana sayfa</span>
 │
@@ -520,6 +523,92 @@ artiframe&gt; </code></pre>
             <strong>🚫 bin/ dizinine dokunmayın:</strong> <code class="ic">bin/</code> içindeki dosyalar çerçevenin çekirdeğidir. Projeye özel iş mantığı buraya eklenmez. Ekleyeceğiniz sınıflar ve servisler <code class="ic">src/</code> altında, altyapı bileşenleri <code class="ic">app/</code> altında yer alır.
         </div>
     </section>
+
+    <!-- ====== V2.0 ROUTING & MİMARİ ====== -->
+    <section id="v2-routing">
+        <h2>Zero-Config Routing & v2.0.0 Yenilikleri <span class="tag b-cli">YENİ</span></h2>
+        <p class="lead">ArtiFrame v2.0.0 ile birlikte framework'ün çekirdek yapısı çok daha hafif, hızlı ve geliştirici dostu bir "Zero-Config" (Sıfır Ayar) dosya tabanlı yönlendirme (routing) mimarisine kavuşmuştur.</p>
+
+        <h3>1. Dosya Tabanlı Otomatik Yönlendirme (routeLink)</h3>
+        <p>Geleneksel framework'lerin aksine ArtiFrame, her rota için tek tek yapılandırma (örn: <code>web.php</code> içine route ekleme) yapmanızı istemez. Tüm istekler <code>public/index.php</code> dosyasındaki <strong>tek bir Gateway'e</strong> düşer ve <code>routeLink()</code> metodu aracılığıyla sihirli bir şekilde yönetilir.</p>
+        
+        <div class="card highlight">
+            <h4>Nasıl Çalışır?</h4>
+            <p>Eğer tarayıcıdan <code>/kategori/elektronik/15</code> adresine girilirse, sistem <code>DOCUMENT_ROOT</code> dizininde aşağıdan yukarıya en uzun eşleşen PHP dosyasını arar:</p>
+            <ol>
+                <li><code>/kategori/elektronik/15.php</code> (Bulunamadı)</li>
+                <li><code>/kategori/elektronik.php</code> (Bulunamadı)</li>
+                <li><code>/kategori.php</code> (Bulundu!)</li>
+            </ol>
+            <p>Eşleşen dosya çalıştırılırken, kalan URL parçaları otomatik olarak <code>$_GET</code> parametrelerine dönüştürülür:</p>
+            <pre><code>$_GET['params'] = ['elektronik', '15'];
+$_GET['param1'] = 'elektronik';
+$_GET['param2'] = '15';</code></pre>
+        </div>
+
+        <div class="alert a-info">
+            <strong>💡 Geriye Uyumluluk (ID):</strong> Eski sürümlerdeki alışkanlıkların bozulmaması adına <code>$_GET['param1']</code> her zaman <code>$_GET['id']</code> içine de eşitlenir. Böylece detay sayfalarında direkt <code>$_GET['id']</code> kullanabilirsiniz.
+        </div>
+
+        <div class="card">
+            <h4>Link (a) Etiketleri Nasıl Olmalı?</h4>
+            <p>Yeni routing sisteminde eski tarz query string parametreleri (<code>?id=...&token=...</code>) yerine <strong>Temiz URL (Clean URL)</strong> yapısı kullanılır. Bu sayede linkleriniz hem daha okunaklı hem de SEO dostu olur.</p>
+            <pre><code><span class="cm">&lt;!-- ❌ ESKİ YAPI (Kullanılmamalı) --&gt;</span>
+&lt;a href="user.php?id=123456&token=123j54m23k"&gt;Profili Gör&lt;/a&gt;
+
+<span class="cm">&lt;!-- ✅ YENİ YAPI (ArtiFrame Standardı) --&gt;</span>
+&lt;a href="/user/123456/123j54m23k"&gt;Profili Gör&lt;/a&gt;</code></pre>
+            <p>Yukarıdaki yeni yapıda ilgili sayfada verilere erişmek oldukça basittir:</p>
+            <pre><code><span class="cm">// public/user.php içerisinde:</span>
+$userId = sanitizeInt($_GET['param1']); <span class="cm">// 123456 (veya $_GET['id'])</span>
+$token = sanitizeString($_GET['param2']); <span class="cm">// 123j54m23k</span></code></pre>
+        </div>
+
+        <h3>2. Global Yardımcı Fonksiyonlar (Helpers)</h3>
+        <p>Eski sürümlerde <code>\Bin\SystemMethod::generateToken()</code> veya <code>\Bin\ViewMethod::display()</code> gibi uzun namespace çağrıları gerekiyordu. v2.0.0 ile birlikte bu fonksiyonların tamamı global namespace (<code>namespace { }</code>) içine alındı.</p>
+        <p>Artık uygulamanızın her yerinden sadece şu şekilde çağırabilirsiniz:</p>
+        <pre><code>$token = generateToken();
+echo display($user['name']);
+echo csrfField();</code></pre>
+
+        <h3>3. Yapısal Değişiklikler (Breaking Changes)</h3>
+        
+        <div class="alert a-success">
+            <strong>🕊️ Refactor Korkusuna Son:</strong> Diğer framework'lerin aksine, ArtiFrame çekirdek güncellemeleri yayınlandığında projelerinizde günlerce süren "refactor" (kod yeniden yapılandırma) krizleri yaşamazsınız. <code>artiframe new</code> dediğiniz an, o sürümün tüm çekirdeği (core files) projenize kopyalanır. Çıkan yeni sürümler (örneğin v3, v4) mevcut projelerinizi asla bozmaz; projeye kurulan sürümün gereksinimi ne ise yıllarca o şekilde stabil çalışmaya devam eder.
+        </div>
+
+        <div class="alert a-danger">
+            <strong>⚠️ Önemli:</strong> Eski projelerinizde <code>public/index.php</code> bir karşılama sayfası HTML'i içeriyordu. v2.0.0 itibariyle <code>index.php</code> sadece bir Router dosyasıdır. Eski anasayfa tasarımınız artık varsayılan olarak <code>public/landing.php</code> üzerinden sunulmaktadır. (Boş bir URL geldiğinde sistem varsayılan olarak <code>landing.php</code> dosyasına yönlendirir).
+        </div>
+        <p>Ayrıca yeni projelerde <code>artiframe new</code> çalıştırdığınızda otomatik olarak sistemin fallback yapabilmesi için <code>public/404.php</code> ve <code>public/503.php</code> hata sayfaları üretilir.</p>
+
+        <div class="card">
+            <h4>Akıllı API Hata Yönetimi</h4>
+            <p>Eğer 404 (Sayfa Bulunamadı) veya 503 (Bakım Modu) hataları bir <strong>API uç noktasına</strong> (örneğin <code>/api/user/get</code>) gelirse; sistem, HTTP istemcisine (mobil uygulama, frontend) HTML sayfa göstermek yerine, durum kodunu ayarlayıp otomatik olarak standart bir <strong>JSON hatası</strong> döndürür. Bu, API'nizin kırılmadan (crash olmadan) her zaman JSON yanıt verebilmesini garanti eder.</p>
+            <pre><code>{
+  "status": "error",
+  "message": "API Endpoint Not Found",
+  "data": []
+}</code></pre>
+            
+            <div class="alert a-warning" style="margin-top: 15px;">
+                <strong>💡 Not: İstemci Tarafında (Frontend) Hata Yakalama</strong><br>
+                Hata kodu (404, 503 vb.) JSON verisinin içinde değil, doğrudan standart <strong>HTTP Ağ Yanıtında (Status Code)</strong> döner. Bu sayede JSON içeriğini parse etmeye gerek kalmadan hataları ağ katmanında yakalayabilirsiniz:
+            </div>
+            <pre><code><span class="cm">// Fetch API Örneği:</span>
+fetch('/api/user/get').then(response => {
+    if (!response.ok) {
+        console.error("HTTP Hatası:", response.status); <span class="cm">// 404 veya 503</span>
+    }
+});
+
+<span class="cm">// Axios Örneği:</span>
+axios.get('/api/user/get').catch(error => {
+    console.error("HTTP Hatası:", error.response.status); <span class="cm">// 404 veya 503</span>
+});</code></pre>
+        </div>
+    </section>
+
     <!-- ====== BOOTSTRAPPER ====== -->
     <section id="bootstrapper">
         <h2>Bootstrapper Mimarisi <span class="tag b-core">Kritik</span></h2>
@@ -673,6 +762,20 @@ proje-adi/
 └── kilavuz.html
         </div>
     </section>
+    <!-- upgrade -->
+    <section id="cli-upgrade">
+        <h2><code>upgrade</code> <span class="tag b-cli">CLI Komutu</span></h2>
+        <p>Küresel olarak NPM üzerinden güncellediğiniz ArtiFrame CLI aracındaki yeni özellikleri mevcut projenize güvenle entegre etmenizi sağlar.</p>
+        <pre><code>artiframe&gt; <span class="fn">upgrade</span></code></pre>
+        <ul style="margin-left: 20px; margin-bottom: 15px; line-height: 1.6;">
+            <li>Sadece <code>app/</code> ve <code>bin/</code> çekirdek klasörlerini ile <code>src/Service/</code> altındaki sabit servis sınıflarını (varsa) günceller.</li>
+            <li>İş mantığınızın bulunduğu <code>src/</code>, <code>public/</code> ve <code>config/</code> dizinlerine kesinlikle <strong>dokunulmaz</strong> (böylece projeniz zarar görmez).</li>
+            <li><strong>Güvenlik Duvarı:</strong> Eğer projeniz v1.x ise ve <code>public/index.php</code> dosyanız yeni router yapısına uymuyorsa, hata verir ve sizden mevcut index.php'nizin adını <code>landing.php</code> olarak değiştirmenizi ister.</li>
+            <li><strong>Modifikasyon Uyarısı:</strong> Eğer daha önce <code>bin/</code> altındaki çekirdek fonksiyonları elle değiştirdiyseniz, veri kaybı yaşamamanız için işleme başlamadan önce sizden <strong>Enter</strong> tuşuyla manuel onay (yedekleme uyarısı) ister.</li>
+            <li><strong>Akıllı Değişiklik Raporu (Diff):</strong> Güncelleme bittiğinde terminale, projenize yeni eklenen veya üzerinde değişiklik yapılan (güncellenen) dosyaların detaylı bir raporunu basar.</li>
+            <li><strong>Fonksiyon Düzeyinde Analiz:</strong> Eğer güncellenen dosya bir <code>.php</code> dosyası ise, eski ve yeni dosya içindeki metodları karşılaştırır. Yeni bir fonksiyon eklendiyse, raporda <code>[YENİ FONKSİYON] ad()</code> şeklinde özel olarak uyararak dokümantasyonu okumaya yönlendirir.</li>
+        </ul>
+    </section>
     <!-- make:view -->
     <section id="cli-view">
         <h2><code>make:view</code> <span class="tag b-cli">CLI Komutu</span></h2>
@@ -816,6 +919,7 @@ Example: /src/Service/PaymentService</code></pre>
         <p><strong>Tablo İçeriğini Önizlemek:</strong> Bir tabloyu <code>schema.sql</code> dosyasına eklemeden önce SQL içeriğini terminalde incelemek için komutun sonuna <code>check</code> parametresini ekleyebilirsiniz:</p>
         <pre><code>artiframe&gt; <span class="fn">table:</span><span class="st">users</span> <span class="st">check</span></code></pre>
     </section>
+    <!-- upgrade -->
     <!-- cli v -->
     <section id="cli-cliv">
         <h2><code>cli v</code> (veya <code>cli version</code>) <span class="tag b-cli">CLI Komutu</span></h2>
@@ -906,10 +1010,13 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
     <!-- serve -->
     <section id="cli-serve">
         <h2><code>serve</code> <span class="tag b-cli">CLI Komutu</span></h2>
-        <p>Projeyi test etmek için yerel bir geliştirme sunucusu (localhost) başlatır. Ek bir web sunucusu kurmanıza (XAMPP, Nginx vs.) gerek kalmadan projenizi saniyeler içinde ayağa kaldırır ve tarayıcınızda otomatik açar.</p>
+        <p>Projeyi test etmek için yerel bir geliştirme sunucusu başlatır ve 0.0.0.0 (tüm ağ arayüzleri) üzerinden yerel ağa (Local Network) açar. Ek bir web sunucusu kurmanıza (XAMPP, Nginx vs.) gerek kalmadan projenizi saniyeler içinde ayağa kaldırır, kendi bilgisayarınızda localhost sekmesini otomatik açar ve ağdaki diğer cihazlar (telefon/tablet) için bağlantı IP'sini ekrana basar.</p>
         <pre><code>artiframe&gt; <span class="fn">serve</span>
-  🚀  Geliştirme sunucusu başlatılıyor: http://localhost:8000
-      Durdurmak için CTRL+C tuşlarına basın.</code></pre>
+  🚀  Geliştirme sunucusu başlatıldı: 0.0.0.0:8000
+      Durdurmak için CTRL+C tuşlarına basın.
+
+      Local:   http://localhost:8000
+      Network: http://192.168.1.34:8000</code></pre>
         <p>İsterseniz farklı bir port numarası belirtebilirsiniz:</p>
         <pre><code>artiframe&gt; <span class="fn">serve</span> <span class="st">8080</span></code></pre>
     </section>
@@ -954,7 +1061,7 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
                     <tr><td><code>add jwt</code></td><td>firebase/php-jwt</td><td><span class="tag b-core">src/Auth/JwtAuth.php</span></td></tr>
                     <tr><td><code>add image</code></td><td>intervention/image</td><td><span class="tag b-core">src/Service/ImageProcessor.php</span></td></tr>
                     <tr><td><code>add s3</code></td><td>aws/aws-sdk-php</td><td><span class="tag b-core">src/Service/S3Storage.php</span></td></tr>
-                    <tr><td><code>add sentry</code></td><td>sentry/sentry</td><td><span class="tag b-core">config/sentry.php</span></td></tr>
+                    <tr><td><code>add sentry</code></td><td>sentry/sentry</td><td><span class="tag b-core">src/Service/Sentry.php</span></td></tr>
                     <tr><td><code>add redis</code></td><td>predis/predis</td><td><span class="tag b-core">src/Service/RedisCache.php</span></td></tr>
                     <tr><td><code>add pusher</code></td><td>pusher/pusher-php-server</td><td><span class="tag b-core">src/Service/Pusher.php</span></td></tr>
                     <tr><td><code>add twilio</code></td><td>twilio/sdk</td><td><span class="tag b-core">src/Service/Twilio.php</span></td></tr>
@@ -3574,78 +3681,23 @@ if ($response['status'] === 'success') {
             <h2>Sentry <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Ücretli/Lisanslı Servis">$</span></h2>
         <div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Üyelik & API Anahtarları:</strong> Hata ve performans takibini devreye almak için <a href="https://sentry.io" target="_blank" style="color: var(--green); font-weight: bold;">sentry.io</a> üzerinden ücretsiz hesabınızı oluşturup, PHP projesi ekleyerek size verilen DSN (Client Key) adresini kopyalamalısınız.</div>
             <div class="code-badge" style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; font-family: monospace;">
-                <strong>Sınıf Konumu:</strong> <code style="color: #4ade80;">config/sentry.php</code>
+                <strong>Sınıf Konumu:</strong> <code style="color: #4ade80;">src/Service/Sentry.php</code>
             </div>
-            <p style="margin-bottom: 15px; font-size: 0.95em; color: #a1a1aa;"></p>
+            <p style="margin-bottom: 15px; font-size: 0.95em; color: #a1a1aa;">Projenizdeki hataları ve uyarıları merkezi bir log sisteminde toplamanızı sağlar. Uygulamanızın başlangıcında (örneğin <code>ApiControl.php</code> veya <code>ViewControl.php</code> içinde) başlatılması tavsiye edilir.</p>
             <div class="alert a-info" style="margin-bottom: 20px;">
-                <strong>ℹ️ Standart Dönüş:</strong> Tüm metotlar <code>['status' => 'success|error', 'message' => '...', 'data' => [...]]</code> formatında standart bir dizi çevirir (istisnai durumlar hariç). <strong>Aşağıdaki "Beklenen Dönüş" kısmında dönen dizinin içindeki <code>data</code> anahtarının detaylı yapısı gösterilmiştir.</strong>
+                <strong>ℹ️ Statik Sınıf:</strong> Bu servis sınıfı doğrudan statik metotlarla kullanılır, yeni bir nesne (instance) oluşturmanıza gerek yoktur.
             </div>
             <h3>Metotlar ve Kullanım Örnekleri</h3>
             <div class="accordion-group">
                 <details class="accordion" style="margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 5px; background: rgba(0,0,0,0.1); box-sizing: border-box; max-width: 100%;">
-                    <summary style="cursor: pointer; padding: 10px; font-weight: bold; background: rgba(255,255,255,0.05); color: #fff; border-radius: 4px; box-sizing: border-box; max-width: 100%; word-break: break-all;"><code style="background: transparent; color: #60a5fa; font-size: 1.1em; white-space: pre-wrap; word-break: break-all;">captureError(\Throwable $e)</code></summary>
+                    <summary style="cursor: pointer; padding: 10px; font-weight: bold; background: rgba(255,255,255,0.05); color: #fff; border-radius: 4px; box-sizing: border-box; max-width: 100%; word-break: break-all;"><code style="background: transparent; color: #60a5fa; font-size: 1.1em; white-space: pre-wrap; word-break: break-all;">init()</code></summary>
                     <div class="accordion-content" style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.05); box-sizing: border-box; max-width: 100%; overflow-x: hidden;">
-                        <p style="color: #d1d5db; margin-bottom: 15px; word-wrap: break-word;">Sentry Error Tracking Configuration Initializes the Sentry SDK for error reporting and provides helper functions for capturing exceptions and messages. Required ENV variables: SENTRY_DSN — Sentry Data Source Name (project DSN from sentry.io) Optional ENV variables: APP_ENV     — "0" for production, "1" for development (default: 0) APP_VERSION — Application version string, used as Sentry release tag Usage: require_once __DIR__ . '/sentry.php'; // Capture an exception try { ... } catch (\Throwable $e) { $eventId = captureError($e);</p>
+                        <p style="color: #d1d5db; margin-bottom: 15px; word-wrap: break-word;">Sentry SDK'sını ortam değişkenlerine göre başlatır. Uygulamanın en başında bir kez çağrılmalıdır.</p>
                         <div style="display: flex; flex-direction: column; gap: 15px; box-sizing: border-box; width: 100%; max-width: 100%;">
-                            <div style="flex: 1; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-                                <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Parametre Yapısı:</h4>
-                                <pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #a78bfa; border: 1px solid rgba(255,255,255,0.05); margin: 0; box-sizing: border-box; max-width: 100%;"><code>}
-// Capture an informational message
-captureMessage('Deployment completed', 'info');
-/
-// ---------------------------------------------------------------
-//  Guard — only initialize when a DSN is available
-// ---------------------------------------------------------------
-if (empty($_ENV['SENTRY_DSN'])) {
-/**
-No-op fallback when Sentry is not configured.
-@param  \Throwable $e The exception (ignored).</code></pre>
-                            </div>
                             <div style="display: flex; flex-wrap: wrap; gap: 15px; box-sizing: border-box; width: 100%;">
                                 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
                                     <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Örnek Kullanım:</h4>
-                                    <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$sentry = new \Service\sentry();
-$response = $sentry-&gt;captureError($e);
-if ($response['status'] === 'success') {
-    // Başarılı
-}</code></pre>
-                                </div>
-                                <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-                                    <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Beklenen Dönüş ($response['data']):</h4>
-                                    <pre style="background: rgba(69,26,3,0.4); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #facc15; border: 1px solid rgba(250,204,21,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>[
-    'id'      =&gt; '...',
-    'success' =&gt; true
-]</code></pre>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </details>
-                <details class="accordion" style="margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 5px; background: rgba(0,0,0,0.1); box-sizing: border-box; max-width: 100%;">
-                    <summary style="cursor: pointer; padding: 10px; font-weight: bold; background: rgba(255,255,255,0.05); color: #fff; border-radius: 4px; box-sizing: border-box; max-width: 100%; word-break: break-all;"><code style="background: transparent; color: #60a5fa; font-size: 1.1em; white-space: pre-wrap; word-break: break-all;">captureMessage(string $message, string $level = 'info')</code></summary>
-                    <div class="accordion-content" style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.05); box-sizing: border-box; max-width: 100%; overflow-x: hidden;">
-                        <p style="color: #d1d5db; margin-bottom: 15px; word-wrap: break-word;">No-op fallback when Sentry is not configured.</p>
-                        <div style="display: flex; flex-direction: column; gap: 15px; box-sizing: border-box; width: 100%; max-width: 100%;">
-                            <div style="flex: 1; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-                                <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Parametre Yapısı:</h4>
-                                <pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #a78bfa; border: 1px solid rgba(255,255,255,0.05); margin: 0; box-sizing: border-box; max-width: 100%;"><code>@param  string $message The message (ignored).
-@param  string $level   Severity level (ignored).</code></pre>
-                            </div>
-                            <div style="display: flex; flex-wrap: wrap; gap: 15px; box-sizing: border-box; width: 100%;">
-                                <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-                                    <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Örnek Kullanım:</h4>
-                                    <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$sentry = new \Service\sentry();
-$response = $sentry-&gt;captureMessage($message);
-if ($response['status'] === 'success') {
-    // Başarılı
-}</code></pre>
-                                </div>
-                                <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-                                    <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Beklenen Dönüş ($response['data']):</h4>
-                                    <pre style="background: rgba(69,26,3,0.4); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #facc15; border: 1px solid rgba(250,204,21,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>[
-    'id'      =&gt; '...',
-    'success' =&gt; true
-]</code></pre>
+                                    <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>\Src\Service\Sentry::init();</code></pre>
                                 </div>
                             </div>
                         </div>
@@ -3654,34 +3706,20 @@ if ($response['status'] === 'success') {
                 <details class="accordion" style="margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 5px; background: rgba(0,0,0,0.1); box-sizing: border-box; max-width: 100%;">
                     <summary style="cursor: pointer; padding: 10px; font-weight: bold; background: rgba(255,255,255,0.05); color: #fff; border-radius: 4px; box-sizing: border-box; max-width: 100%; word-break: break-all;"><code style="background: transparent; color: #60a5fa; font-size: 1.1em; white-space: pre-wrap; word-break: break-all;">captureError(\Throwable $e)</code></summary>
                     <div class="accordion-content" style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.05); box-sizing: border-box; max-width: 100%; overflow-x: hidden;">
-                        <p style="color: #d1d5db; margin-bottom: 15px; word-wrap: break-word;">$isProduction = ($_ENV['APP_ENV'] ?? '0') === '0'; /** @var string Human-readable environment name for Sentry */ $environment = $isProduction ? 'production' : 'development'; /** Sample rate: 1.0 — capture 100 % of events in production 0.0 — capture nothing in development (use captureError/captureMessage explicitly) / $sampleRate = $isProduction ? 1.0 : 0.0; // --------------------------------------------------------------- //  Sentry initialization // --------------------------------------------------------------- $options = [ 'dsn'         => $_ENV['SENTRY_DSN'], 'environment' => $environment, 'sample_rate' => $sampleRate, ]; // Attach release version when available if (!empty($_ENV['APP_VERSION'])) { $options['release'] = $_ENV['APP_VERSION'];</p>
+                        <p style="color: #d1d5db; margin-bottom: 15px; word-wrap: break-word;">Yakalanan bir Exception veya Throwable nesnesini Sentry'e gönderir.</p>
                         <div style="display: flex; flex-direction: column; gap: 15px; box-sizing: border-box; width: 100%; max-width: 100%;">
-                            <div style="flex: 1; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-                                <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Parametre Yapısı:</h4>
-                                <pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #a78bfa; border: 1px solid rgba(255,255,255,0.05); margin: 0; box-sizing: border-box; max-width: 100%;"><code>}
-\Sentry\init($options);
-// ---------------------------------------------------------------
-//  Helper functions
-// ---------------------------------------------------------------
-/**
-Capture a Throwable and send it to Sentry.
-@param  \Throwable $e The exception or error to report.</code></pre>
-                            </div>
                             <div style="display: flex; flex-wrap: wrap; gap: 15px; box-sizing: border-box; width: 100%;">
                                 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
                                     <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Örnek Kullanım:</h4>
-                                    <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$sentry = new \Service\sentry();
-$response = $sentry-&gt;captureError($e);
-if ($response['status'] === 'success') {
-    // Başarılı
+                                    <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>try {
+    // Hata yapabilecek işlemler...
+} catch (\Throwable $e) {
+    $eventId = \Src\Service\Sentry::captureError($e);
 }</code></pre>
                                 </div>
                                 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-                                    <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Beklenen Dönüş ($response['data']):</h4>
-                                    <pre style="background: rgba(69,26,3,0.4); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #facc15; border: 1px solid rgba(250,204,21,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>[
-    'id'      =&gt; '...',
-    'success' =&gt; true
-]</code></pre>
+                                    <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Beklenen Dönüş (string|null):</h4>
+                                    <pre style="background: rgba(69,26,3,0.4); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #facc15; border: 1px solid rgba(250,204,21,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>"dfb9370...b86" // Sentry Olay ID'si</code></pre>
                                 </div>
                             </div>
                         </div>
@@ -3690,28 +3728,12 @@ if ($response['status'] === 'success') {
                 <details class="accordion" style="margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 5px; background: rgba(0,0,0,0.1); box-sizing: border-box; max-width: 100%;">
                     <summary style="cursor: pointer; padding: 10px; font-weight: bold; background: rgba(255,255,255,0.05); color: #fff; border-radius: 4px; box-sizing: border-box; max-width: 100%; word-break: break-all;"><code style="background: transparent; color: #60a5fa; font-size: 1.1em; white-space: pre-wrap; word-break: break-all;">captureMessage(string $message, string $level = 'info')</code></summary>
                     <div class="accordion-content" style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.05); box-sizing: border-box; max-width: 100%; overflow-x: hidden;">
-                        <p style="color: #d1d5db; margin-bottom: 15px; word-wrap: break-word;">Capture a plain-text message and send it to Sentry. Supported severity levels: fatal, error, warning, info, debug.</p>
+                        <p style="color: #d1d5db; margin-bottom: 15px; word-wrap: break-word;">Belirtilen bir metni bilgi/uyarı mesajı olarak Sentry'e gönderir. Geçerli seviyeler: <code>fatal</code>, <code>error</code>, <code>warning</code>, <code>info</code>, <code>debug</code>.</p>
                         <div style="display: flex; flex-direction: column; gap: 15px; box-sizing: border-box; width: 100%; max-width: 100%;">
-                            <div style="flex: 1; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-                                <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Parametre Yapısı:</h4>
-                                <pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #a78bfa; border: 1px solid rgba(255,255,255,0.05); margin: 0; box-sizing: border-box; max-width: 100%;"><code>@param  string $message Human-readable message to log.
-@param  string $level   Sentry severity level (default: info).</code></pre>
-                            </div>
                             <div style="display: flex; flex-wrap: wrap; gap: 15px; box-sizing: border-box; width: 100%;">
                                 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
                                     <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Örnek Kullanım:</h4>
-                                    <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$sentry = new \Service\sentry();
-$response = $sentry-&gt;captureMessage($message);
-if ($response['status'] === 'success') {
-    // Başarılı
-}</code></pre>
-                                </div>
-                                <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-                                    <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Beklenen Dönüş ($response['data']):</h4>
-                                    <pre style="background: rgba(69,26,3,0.4); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #facc15; border: 1px solid rgba(250,204,21,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>[
-    'id'      =&gt; '...',
-    'success' =&gt; true
-]</code></pre>
+                                    <pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$eventId = \Src\Service\Sentry::captureMessage('Sipariş başarıyla tamamlandı.', 'info');</code></pre>
                                 </div>
                             </div>
                         </div>

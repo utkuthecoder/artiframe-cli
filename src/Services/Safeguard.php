@@ -45,4 +45,29 @@ class Safeguard
         
         return true;
     }
+
+    /**
+     * Attempts to find the project root by recursively looking up for composer.json or app/public dirs.
+     */
+    public function getProjectRoot(): string
+    {
+        $dir = rtrim(str_replace('\\', '/', getcwd()), '/');
+        $current = $dir;
+        
+        while (true) {
+            if (file_exists($current . '/composer.json') || (is_dir($current . '/app') && is_dir($current . '/public'))) {
+                return $current;
+            }
+            
+            $parent = dirname($current);
+            if ($parent === $current || $parent === '.' || $parent === '') {
+                // Reached the filesystem root without finding project root
+                break;
+            }
+            $current = $parent;
+        }
+        
+        // Fallback to getcwd() if we couldn't detect the root
+        return $dir;
+    }
 }

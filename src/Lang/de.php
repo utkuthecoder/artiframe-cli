@@ -59,6 +59,7 @@ return [
     // Help screen
     'HELP_COMMANDS'          => 'BEFEHLE',
     'HELP_NEW_DESC'          => 'Erstellt ein neues ArtiFrame-Projekt von Grund auf.',
+    'HELP_UPGRADE_DESC'      => 'Wendet aktualisierte CLI-Kernfunktionen (app, bin) von NPM auf Ihr Projekt an.',
     'HELP_MAKEVIEW_DESC1'    => 'Erstellt eine neue View-Datei mit CSS- und JS-Assets.',
     'HELP_MAKEVIEW_DESC2'    => 'Der Pfad kann Unterverzeichnisse enthalten (automatisch erstellt).',
     'HELP_MAKEAPI_DESC'      => 'Erstellt eine neue API-Endpunkt-Datei.',
@@ -178,6 +179,11 @@ return [
     'TABLE_LIST_HEADER' => 'Unterstützte Tabellen:',
     'TABLE_DESC_USERS' => 'Basis-Benutzer- und Autorisierungstabelle (UUID).',
     'TABLE_DESC_USER_SESSIONS' => 'Benutzersitzungen (IP, Gerät, Token) verfolgen.',
-    'TABLE_DESC_USER_PREFERENCES' => 'Benutzereinstellungen (Sprache, Thema, Benachrichtigungen).',
+    'TABLE_DESC_USER_PREFERENCES' => 'Benutzereinstellungen (Sprache, Design, Benachrichtigungen).',
+
+    // Upgrade
+    'UPGRADE_INDEX_ABORT' => 'public/index.php Datei erkannt! In der neuen Version fungiert diese Datei als Router. Um das Upgrade fortzusetzen, benennen Sie bitte Ihre bestehende index.php in landing.php (oder einen anderen Namen) um und führen Sie den Befehl erneut aus.',
+    'UPGRADE_CORE_WARNING' => 'Ihr Projektkern unterscheidet sich von der Originalversion. Wenn Sie manuell Funktionen hinzugefügt haben, sichern Sie diese bitte vor dem Upgrade, um Datenverlust zu vermeiden. Drücken Sie die Eingabetaste, um nach der Sicherung fortzufahren.',
+    'UPGRADE_SUCCESS' => 'Kern (app/ und bin/) und Service-Stubs erfolgreich aktualisiert!',
 
 ];

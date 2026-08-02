@@ -59,6 +59,7 @@ return [
     // Help screen
     'HELP_COMMANDS'          => 'COMMANDES',
     'HELP_NEW_DESC'          => 'Crée un nouveau projet ArtiFrame de zéro.',
+    'HELP_UPGRADE_DESC'      => 'Applique les fonctionnalités principales mises à jour du CLI (app, bin) depuis NPM au projet.',
     'HELP_MAKEVIEW_DESC1'    => 'Génère un nouveau fichier vue avec ses assets CSS et JS.',
     'HELP_MAKEVIEW_DESC2'    => 'Le chemin peut utiliser des sous-répertoires (créés automatiquement).',
     'HELP_MAKEAPI_DESC'      => 'Génère un nouveau fichier de point de terminaison API.',
@@ -179,5 +180,10 @@ return [
     'TABLE_DESC_USERS' => 'Table de base pour les utilisateurs et l\'autorisation (UUID).',
     'TABLE_DESC_USER_SESSIONS' => 'Suivi des sessions utilisateur (IP, appareil, token).',
     'TABLE_DESC_USER_PREFERENCES' => 'Préférences de l\'utilisateur (langue, thème, notifications).',
+
+    // Upgrade
+    'UPGRADE_INDEX_ABORT' => 'Fichier public/index.php détecté ! Dans la nouvelle version, ce fichier agit comme un routeur. Pour continuer la mise à jour, veuillez renommer votre index.php existant en landing.php (ou tout autre nom) et relancez la commande.',
+    'UPGRADE_CORE_WARNING' => 'Le cœur de votre projet diffère de la version originale. Si vous avez ajouté manuellement des fonctions, veuillez les sauvegarder avant la mise à jour pour éviter toute perte de données. Appuyez sur Entrée pour continuer après la sauvegarde.',
+    'UPGRADE_SUCCESS' => 'Cœur (app/ et bin/) et stubs de services mis à jour avec succès !',
 
 ];

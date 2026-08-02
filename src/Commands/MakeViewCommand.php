@@ -32,7 +32,7 @@ class MakeViewCommand
             $target .= '.php';
         }
 
-        $projectRoot = getcwd();
+        $projectRoot = $this->safeguard->getProjectRoot();
         $viewPath = $projectRoot . '/public/' . $target;
 
         if (!$this->safeguard->checkTarget($viewPath)) {

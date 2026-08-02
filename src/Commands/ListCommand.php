@@ -14,7 +14,8 @@ class ListCommand
 
     public function execute(array $args): void
     {
-        $dir = getcwd();
+        $safeguard = new \ArtiFrame\Cli\Services\Safeguard($this->translator);
+        $dir = $safeguard->getProjectRoot();
         $projectName = basename($dir);
         
         echo "

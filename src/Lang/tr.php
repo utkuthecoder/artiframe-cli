@@ -59,6 +59,7 @@ return [
     // Help screen
     'HELP_COMMANDS'          => 'KOMUTLAR',
     'HELP_NEW_DESC'          => 'Sıfırdan yeni bir ArtiFrame projesi oluşturur.',
+    'HELP_UPGRADE_DESC'      => 'NPM üzerinden güncellenen çekirdek özellikleri (app, bin) mevcut projeye uygular.',
     'HELP_MAKEVIEW_DESC1'    => 'CSS ve JS varlıklarıyla birlikte yeni bir view dosyası oluşturur.',
     'HELP_MAKEVIEW_DESC2'    => 'Yol alt dizinleri içerebilir (otomatik oluşturulur).',
     'HELP_MAKEAPI_DESC'      => 'Yeni bir API endpoint dosyası oluşturur.',
@@ -158,7 +159,7 @@ return [
     'SERVE_NOT_PROJECT' => 'Bu dizin geçerli bir ArtiFrame projesi değil (public/index.php bulunamadı).',
     'SERVE_STARTING'    => 'Geliştirme sunucusu başlatılıyor: :url',
     'SERVE_STOP_INFO'   => 'Durdurmak için CTRL+C tuşlarına basın.',
-    'HELP_SERVE_DESC'   => 'Lokal geliştirme sunucusunu başlatır.',
+    'HELP_SERVE_DESC'   => 'Geliştirme sunucusunu başlatır ve yerel ağa açar.',
 
     'INVALID_PACKAGE_NAME' => 'Geçersiz paket adı. Format şuna benzemeli: vendor/project',
 
@@ -179,5 +180,10 @@ return [
     'TABLE_DESC_USERS' => 'Temel kullanıcı ve yetkilendirme tablosu (UUID).',
     'TABLE_DESC_USER_SESSIONS' => 'Kullanıcı oturumları (IP, cihaz, token) takibi.',
     'TABLE_DESC_USER_PREFERENCES' => 'Kullanıcı tercihleri (dil, tema, bildirimler).',
+
+    // Upgrade
+    'UPGRADE_INDEX_ABORT' => 'public/index.php dosyası tespit edildi! Yeni sürümde bu dosya artık bir router\'dır. Güncellemeye devam edebilmek için lütfen mevcut index.php\'nizin adını landing.php (veya istediğiniz başka bir isim) olarak değiştirin ve komutu tekrar çalıştırın.',
+    'UPGRADE_CORE_WARNING' => 'Proje çekirdeğiniz orijinal sürümden farklı. Manuel olarak eklediğiniz fonksiyonlar varsa kayba uğramamak için güncellemeden önce lütfen kopyalarını alın. Kopyalarını aldıktan sonra Enter tuşuna basarak devam edebilirsiniz.',
+    'UPGRADE_SUCCESS' => 'Çekirdek (app/ ve bin/) ile servis şablonları başarıyla güncellendi!',
 
 ];

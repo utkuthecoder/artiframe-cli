@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 namespace ArtiFrame\Cli\Commands;
 
 use ArtiFrame\Cli\Services\Translator;
@@ -24,7 +24,7 @@ class RemoveCommand
             return;
         }
 
-        $projectRoot = getcwd();
+        $projectRoot = $this->safeguard->getProjectRoot();
         
         $targetPath = $target;
         if (!file_exists($targetPath)) {
@@ -52,15 +52,26 @@ class RemoveCommand
         $isClass = strpos($normalizedPath, '/src/') !== false || strpos($normalizedPath, '/app/') !== false;
 
         if ($isView) {
-            $relPath = str_replace(str_replace('\\', '/', $projectRoot) . '/public/', '', $normalizedPath);
-            $relPath = preg_replace('/\.php$/', '', $relPath);
-            
-            $cssPath = $projectRoot . '/public/assets/css/' . $relPath . '.css';
-            $jsPath  = $projectRoot . '/public/assets/js/' . $relPath . '.js';
-
             $assetsFound = [];
-            if (file_exists($cssPath)) $assetsFound[] = $cssPath;
-            if (file_exists($jsPath)) $assetsFound[] = $jsPath;
+            $content = file_get_contents($targetPath);
+            
+            // Extract CSS path from href="/assets/css/...css"
+            if (preg_match('/href="(\/assets\/css\/[^"]+\.css)(?:\?[^"]*)?"/i', $content, $matches)) {
+                $cssRelative = ltrim($matches[1], '/');
+                $cssPath = rtrim($projectRoot, '/') . '/public/' . $cssRelative;
+                if (file_exists($cssPath)) {
+                    $assetsFound[] = $cssPath;
+                }
+            }
+            
+            // Extract JS path from src="/assets/js/...js"
+            if (preg_match('/src="(\/assets\/js\/[^"]+\.js)(?:\?[^"]*)?"/i', $content, $matches)) {
+                $jsRelative = ltrim($matches[1], '/');
+                $jsPath = rtrim($projectRoot, '/') . '/public/' . $jsRelative;
+                if (file_exists($jsPath)) {
+                    $assetsFound[] = $jsPath;
+                }
+            }
 
             if (!empty($assetsFound)) {
                 echo "\n⚠️  " . $this->translator->get('REMOVE_CONFIRM_ASSETS') . " [y/N]: ";

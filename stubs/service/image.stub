@@ -1,6 +1,6 @@
 <?php
 
-namespace Service;
+namespace Src\Service;
 
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver as GdDriver;

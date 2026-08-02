@@ -199,6 +199,10 @@ class App
             case 'new':
                 (new \ArtiFrame\Cli\Commands\NewProjectCommand($this->translator))->execute($commandArgs);
                 break;
+
+            case 'upgrade':
+                (new \ArtiFrame\Cli\Commands\UpgradeCommand($this->translator))->execute($commandArgs);
+                break;
                 
             case 'make:view':
                 (new \ArtiFrame\Cli\Commands\MakeViewCommand($this->translator))->execute($commandArgs);
@@ -302,6 +306,10 @@ class App
         echo "  " . $g . "new" . $r . " " . $y . "<project-path>" . $r . PHP_EOL;
         echo "  " . $d . "│" . $r . "   " . $t->get('HELP_NEW_DESC') . PHP_EOL;
         echo "  " . $d . "└── " . $r . "Example: " . $lg . "new my-app" . $r . PHP_EOL;
+        // upgrade
+        echo "  " . $g . "upgrade" . $r . PHP_EOL;
+        echo "  " . $d . "│" . $r . "   " . $t->get('HELP_UPGRADE_DESC') . PHP_EOL;
+        echo "  " . $d . "└── " . $r . "Example: " . $lg . "upgrade" . $r . PHP_EOL;
         echo PHP_EOL;
 
         // make:view

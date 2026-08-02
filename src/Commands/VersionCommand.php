@@ -27,7 +27,8 @@ class VersionCommand
             return;
         }
 
-        $projectRoot = getcwd();
+        $safeguard = new \ArtiFrame\Cli\Services\Safeguard($this->translator);
+        $projectRoot = $safeguard->getProjectRoot();
         $versionFile = $projectRoot . '/config/app-version.php';
 
         if (!file_exists($versionFile)) {

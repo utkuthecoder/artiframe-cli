@@ -1,5 +1,5 @@
 <?php
-namespace App\Service;
+namespace Src\Service;
 
 use Endroid\QrCode\QrCode as EndroidQrCode;
 use Endroid\QrCode\Color\Color;

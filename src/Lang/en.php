@@ -59,6 +59,7 @@ return [
     // Help screen
     'HELP_COMMANDS'          => 'COMMANDS',
     'HELP_NEW_DESC'          => 'Create a new ArtiFrame project from scratch.',
+    'HELP_UPGRADE_DESC'      => 'Applies updated core features (app, bin) from NPM to the current project.',
     'HELP_MAKEVIEW_DESC1'    => 'Generate a new view file with its paired CSS and JS assets.',
     'HELP_MAKEVIEW_DESC2'    => 'The path can use subdirectories (auto-created).',
     'HELP_MAKEAPI_DESC'      => 'Generate a new API endpoint file.',
@@ -179,5 +180,10 @@ return [
     'TABLE_DESC_USERS' => 'Basic user and authorization table (UUID).',
     'TABLE_DESC_USER_SESSIONS' => 'User sessions (IP, device, token) tracking.',
     'TABLE_DESC_USER_PREFERENCES' => 'User preferences (language, theme, notifications).',
+
+    // Upgrade
+    'UPGRADE_INDEX_ABORT' => 'public/index.php file detected! In the new version, this file acts as a router. To continue the upgrade, please rename your existing index.php to landing.php (or any other name) and run the command again.',
+    'UPGRADE_CORE_WARNING' => 'Your project core is different from the original version. If you have manually added functions, please back them up before upgrading to prevent data loss. Press Enter to continue after backing up.',
+    'UPGRADE_SUCCESS' => 'Core (app/ and bin/) and service stubs updated successfully!',
 
 ];

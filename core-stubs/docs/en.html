@@ -1,25 +1,23 @@
-<!DOCTYPE html>
-<!DOCTYPE html>
+html
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Official Developer Documentation — ArtiFrame PHP Framework</title>
-    <meta name="description" content="Master the ArtiFrame framework. Comprehensive guides, API references, and tutorials for the fastest secure PHP framework.">
-    <meta name="keywords" content="artiframe, artiframe framework, php framework, fast php framework, secure php framework, artilingo framework, php, framework, mvc">
-    <meta name="author" content="Artilingo">
-    
-    <!-- Open Graph / Social Media -->
-    <meta property="og:title" content="Official Developer Documentation — ArtiFrame PHP Framework">
-    <meta property="og:description" content="Master the ArtiFrame framework. Comprehensive guides, API references, and tutorials for the fastest secure PHP framework.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://artiframe.artilingo.com/docs/en.html">
-    <meta property="og:site_name" content="ArtiFrame">
-<link rel="icon" type="image/png" href="../../public/assets/images/favicon-96x96.png" sizes="96x96" />
-<link rel="icon" type="image/svg+xml" href="../../public/assets/images/favicon.svg" />
-<link rel="shortcut icon" href="../../public/assets/images/favicon.ico" />
-<link rel="apple-touch-icon" sizes="180x180" href="../../public/assets/images/apple-touch-icon.png" />
-<link rel="manifest" href="../../public/assets/images/site.webmanifest" />
+<title>Official Developer Documentation — ArtiFrame PHP Framework</title>
+<meta content="ArtiFrame framework kullanım rehberi ve API referansları. En hızlı ve güvenli PHP framework'ünü öğrenin." name="description"/>
+<meta content="artiframe, artiframe framework, php framework, fast php framework, secure php framework, artilingo framework, php, framework, mvc" name="keywords"/>
+<meta content="Artilingo" name="author"/>
+Open Graph / Social Media
+<meta content="Resmi Geliştirici Dokümantasyonu — ArtiFrame PHP Framework" property="og:title"/>
+<meta content="ArtiFrame framework kullanım rehberi ve API referansları. En hızlı ve güvenli PHP framework'ünü öğrenin." property="og:description"/>
+<meta content="website" property="og:type"/>
+<meta content="https://artiframe.artilingo.com/docs/tr.html" property="og:url"/>
+<meta content="ArtiFrame" property="og:site_name"/>
+<link href="../../public/assets/images/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png"/>
+<link href="../../public/assets/images/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="../../public/assets/images/favicon.ico" rel="shortcut icon"/>
+<link href="../../public/assets/images/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
+<link href="../../public/assets/images/site.webmanifest" rel="manifest"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
 <style>
         :root {
@@ -242,7 +240,7 @@
     </style>
 </head>
 <body>
-<!-- SIDEBAR -->
+SIDEBAR
 <aside class="sidebar">
 <div class="sb-logo">
 <strong>ArtiFrame</strong>
@@ -255,15 +253,17 @@
 <a href="#kurulum">Setup</a>
 <a href="#dizin">Directory Structure</a>
 <div class="sb-cat">Architectural</div>
+<a href="#v2-routing">Zero-Config Routing (v2.0)</a>
 <a href="#bootstrapper">Bootstrapper Architecture</a>
 <a href="#kurallar">Rule Set</a>
 <div class="sb-cat">CLI Tool</div>
 <a href="#cli-giris">Introduction to CLI</a>
 <a href="#cli-new">new</a>
+<a href="#cli-upgrade">upgrade</a>
 <a href="#cli-view">make:view</a>
 <a href="#cli-api">make:api</a>
 <a href="#cli-class">make:class</a>
-        <a href="#cli-table">table:</a>
+<a href="#cli-table">table:</a>
 <a href="#cli-cliv">cli v</a>
 <a href="#cli-show">show</a>
 <a href="#cli-list">list</a>
@@ -271,22 +271,22 @@
 <a href="#cli-remove">remove</a>
 <a href="#cli-version">version</a>
 <a href="#cli-mode">mode</a>
-        <a href="#cli-serve">serve</a>
+<a href="#cli-serve">serve</a>
 <a href="#cli-auth">auth</a>
 <a href="#cli-suggest">suggest</a>
 <a href="#cli-add">add</a>
 <div class="sb-cat">Integrated Services</div>
-                <a href="#svc-qrcode">QR Code</a>
-        <a href="#svc-phpmailer">PHPMailer (Mail)</a>
-        <a href="#svc-iyzico">Iyzico <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></a>
-<a href="#svc-stripe">Stripe <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></a>
+<a href="#svc-qrcode">QR Code</a>
+<a href="#svc-phpmailer">PHPMailer (Mail)</a>
+<a href="#svc-iyzico">Iyzico<span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></a>
+<a href="#svc-stripe">Stripe<span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></a>
 <a href="#svc-jwt">J.W.T.</a>
 <a href="#svc-image">Image Processing</a>
-<a href="#svc-s3">AWS S3 <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></a>
+<a href="#svc-s3">AWS S3<span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></a>
 <a href="#svc-redis">Redis</a>
-<a href="#svc-pusher">pusher <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></a>
-<a href="#svc-twilio">Twitter <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></a>
-<a href="#svc-sentry">sentry <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></a>
+<a href="#svc-pusher">pusher<span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></a>
+<a href="#svc-twilio">Twitter<span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></a>
+<a href="#svc-sentry">sentry<span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></a>
 <div class="sb-cat">View Helpers</div>
 <a href="#vh-display">display()</a>
 <a href="#vh-escapeurl">escapeUrl()</a>
@@ -299,7 +299,7 @@
 <a href="#vh-maskphone">maskPhone()</a>
 <a href="#vh-slugify">slugify()</a>
 <a href="#vh-money">money()</a>
-        <a href="#vh-uuid">uuid()</a>
+<a href="#vh-uuid">uuid()</a>
 <div class="sb-cat">System Helpers</div>
 <div class="sb-subcat">Response &amp; Debug</div>
 <a href="#sh-apiresponse">apiResponse()</a>
@@ -336,7 +336,7 @@
 <a href="#sh-intid">intId()</a>
 <a href="#sh-bigintid">bigintId()</a>
 <a href="#sh-stringer">stringer()</a>
-        <a href="#sh-otpcoder">OTP Coder</a>
+<a href="#sh-otpcoder">OTP Coder</a>
 <div class="sb-cat">API Security</div>
 <a href="#api-methods">HTTP Method Control</a>
 <a href="#api-cors">CORS</a>
@@ -345,17 +345,17 @@
 <a href="#workflow">Full Workflow</a>
 </nav>
 </aside>
-<!-- MAIN CONTENT -->
+MAIN CONTENT
 <main class="content">
-<!-- ====== GİRİŞ ====== -->
+====== LOGIN ======
 <header id="page-header">
-<h1>ArtiFrame <span>Documentation</span></h1>
+<h1>ArtiFrame<span>Documentation</span></h1>
 <p class="lead">Framework for scalable native PHP projects managed with zero external dependencies, strict rules and a powerful CLI. No dependencies, a lightweight and fast ecosystem free from composer package soup, allowing you to focus on your business logic.</p>
 </header>
-<!-- ====== GİRİŞ & FELSEFE ====== -->
+====== INTRODUCTION &amp; PHILOSOPHY ======
 <section id="giris">
 <h2>Introduction &amp; Philosophy</h2>
-<p>ArtiFrame, <strong>"Convention over Configuration"</strong> It is based on the principle of (Rules Before Configuration). The power of a framework comes not from the richness of the tools it offers, but from the consistency of the order it establishes.</p>
+<p>ArtiFrame,<strong>"Convention over Configuration"</strong>It is based on the principle of (Rules Before Configuration). The power of a framework comes not from the richness of the tools it offers, but from the consistency of the order it establishes.</p>
 <div class="grid-2">
 <div class="card highlight">
 <h3>Zero Overhead</h3>
@@ -367,32 +367,30 @@
 </div>
 <div class="card highlight">
 <h3>Strict Rule Set</h3>
-<p>A junior developer who just joined the project, <code class="ic">data-js</code> Understands the architecture and directory structure in minutes. Team compatibility is guaranteed at the framework level.</p>
+<p>A junior developer who just joined the project,<code class="ic">data-js</code>Understands the architecture and directory structure in minutes. Team compatibility is guaranteed at the framework level.</p>
 </div>
 <div class="card highlight">
 <h3>CLI Priority</h3>
-<p>There is no need to create view, API, class files manually. The CLI generates stub files, links assets, and keeps the project consistent.</p>
+<p>There is no need to create view, API, class files manually. The CLI generates stub files, establishes asset links, and keeps the project consistent.</p>
 </div>
 </div>
 <div class="alert a-info">
-<strong>💡 Addiction Philosophy:</strong> When creating a new project, world-standard composer packages such as phpmailer, redis, ramsey/uuid come installed. However, the ArtiFrame core does not depend on them. You can delete it whenever you want, download your own packages, and rewrite your functions according to your own architecture. ArtiFrame preserves your architectural freedom while reducing external dependency to zero.
-        </div>
+<strong>💡 Addiction Philosophy:</strong>When creating a new project, world-standard composer packages such as phpmailer, redis, ramsey/uuid come installed. However, the ArtiFrame core does not depend on them. You can delete it whenever you want, download your own packages, and rewrite your functions according to your own architecture. ArtiFrame preserves your architectural freedom while reducing external dependency to zero.</div>
 <div class="alert a-info">
-<strong>ℹ️ AGPLv3 License:</strong> ArtiFrame is open source. Derivative works you produce may be freely used, provided that the source code remains open. The copyright notice cannot be removed.
-        </div>
+<strong>ℹ️ AGPLv3 License:</strong>ArtiFrame is open source. Derivative works you produce may be freely used, provided that the source code remains open. The copyright notice cannot be removed.</div>
 </section>
-<!-- ====== LİSANS VE KULLANIM ====== -->
+====== LICENSE AND USE ======
 <section id="lisans">
 <h2>License and Terms of Use</h2>
 <p>ArtiFrame is an open source framework with AGPLv3 license. However, flexible usage scenarios have been designed so that developers can commercialize their projects and sell them as closed source.</p>
 <div class="grid-2">
 <div class="card highlight" style="border-left-color: var(--green);">
 <h3>🗽 Özgür Ticaret (End User Projects)</h3>
-<p>In your customers' websites, B2B in-house panels, E-Commerce infrastructures or any SaaS/PaaS project that serves the end user. <strong>you are free</strong> You can hide your code, sell it and copyright it.</p>
+<p>In your customers' websites, B2B in-house panels, E-Commerce infrastructures or any SaaS/PaaS project that serves the end user.<strong>you are free</strong>You can hide your code, sell it and copyright it.</p>
 </div>
 <div class="card highlight" style="border-left-color: var(--yellow);">
 <h3>🔄 Fork and New Framework</h3>
-<p>ArtiFrame's core files (<code>bin/</code> And <code>app/</code>) If you are producing a new framework, CMS infrastructure or coding tool for yourself or others, you can also use this new product. <strong>Open Source</strong> You have to publish it as .</p>
+<p>ArtiFrame's core files (<code>bin/</code>And<code>app/</code>) If you are producing a new framework, CMS infrastructure or coding tool for yourself or others, you can also use this new product.<strong>Open Source</strong>You have to publish it as .</p>
 </div>
 <div class="card highlight" style="border-left-color: var(--red); grid-column: span 2;">
 <h3>⚖️ Legal Enforcement and Violation Situation</h3>
@@ -406,11 +404,11 @@
 <button class="tab-btn active" onclick="switchTab('tab-enduser', this)" style="white-space: nowrap; padding: 10px 20px; background: #00c88c; color: #000; font-weight: 600; border: none; border-radius: 5px; cursor: pointer;">End User Project</button>
 <button class="tab-btn" onclick="switchTab('tab-core', this)" style="white-space: nowrap; padding: 10px 20px; background: #1c2128; color: #fff; border: 1px solid #30363d; border-radius: 5px; cursor: pointer;">Core Change (Framework/CMS)</button>
 </div>
-<!-- Tab 1 -->
+tab 1
 <div class="tab-content" id="tab-enduser" style="display: block;">
 <div class="card highlight" style="border-left-color: var(--green);">
 <h3>✅ You are completely free</h3>
-<p>If you use ArtiFrame infrastructure in your customers' websites, B2B in-house panels, E-Commerce infrastructures or SaaS projects <strong>You are not subject to any licensing restrictions.</strong></p>
+<p>If you use ArtiFrame infrastructure in your customers' websites, B2B in-house panels, E-Commerce infrastructures or SaaS projects<strong>You are not subject to any licensing restrictions.</strong></p>
 <ul>
 <li>You can encrypt and hide your code.</li>
 <li>You can sell your project at any price you want.</li>
@@ -418,11 +416,10 @@
 </ul>
 </div>
 </div>
-<!-- Tab 2 -->
+tab 2
 <div class="tab-content" id="tab-core" style="display: none;">
 <div class="alert a-info">
-<strong>ℹ️ Kernel Modification:</strong> ArtiFrame's own source codes (<code>bin/</code> And <code>app/</code>) and change this <strong>a new framework, CMS or coding tool</strong> If you are using as , the following decision tree applies:
-                </div>
+<strong>ℹ️ Kernel Modification:</strong>ArtiFrame's own source codes (<code>bin/</code>And<code>app/</code>) and change this<strong>a new framework, CMS or coding tool</strong>If you are using as , the following decision tree applies:</div>
 <div class="card" style="padding: 0; overflow-x: auto; background: #0d1117; border-radius: 10px;">
 <canvas height="520" id="licenseCanvasCore" style="min-width: 800px; display: block;" width="1200"></canvas>
 </div>
@@ -444,13 +441,13 @@
                 btn.style.border = 'none';
             }
         </script>
-        <h3 style="margin-top: 30px;">Additional Commands</h3>
-        <p><strong>List Tables:</strong> To see all available table templates and their descriptions:</p>
-        <pre><code>artiframe&gt; <span class="fn">table</span> <span class="st">list</span></code></pre>
-        <p><strong>Preview Table Content:</strong> To inspect the SQL content in the terminal before adding it to the <code>schema.sql</code> file, you can append the <code>check</code> parameter:</p>
-        <pre><code>artiframe&gt; <span class="fn">table:</span><span class="st">users</span> <span class="st">check</span></code></pre>
-    </section>
-<!-- ====== KURULUM ====== -->
+<h3 style="margin-top: 30px;">Additional Commands</h3>
+<p><strong>Listing Tables:</strong>To see all available table templates and descriptions:</p>
+<pre><code>artiframe&gt; <span class="fn">table</span> <span class="st">list</span></code></pre>
+<p><strong>Previewing Table Content:</strong>a painting<code>schema.sql</code>at the end of the command to examine the SQL content in the terminal before adding it to the file.<code>check</code>You can add the parameter:</p>
+<pre><code>artiframe&gt; <span class="fn">table:</span><span class="st">users</span> <span class="st">check</span></code></pre>
+</section>
+====== INSTALLATION ======
 <section id="kurulum">
 <h2>Setup</h2>
 <p>ArtiFrame CLI is installed as a global PHP tool. Installed once, used in every project.</p>
@@ -460,7 +457,7 @@ npm install -g @artilingo/artiframe-cli
 <span class="cm"># Verify installation</span>
 artiframe</code></pre>
 <h3>2. Interactive Shell</h3>
-<p>To the terminal only <code class="ic">artiframe</code> Type it and press Enter. CLI does not close; An interactive shell opens, constantly listening for commands:</p>
+<p>To the terminal only<code class="ic">artiframe</code>Type it and press Enter. CLI does not close; An interactive shell opens, constantly listening for commands:</p>
 <pre><code>==================================================
         ArtiFrame CLI Interactive Shell v1.0.0
 ==================================================
@@ -468,67 +465,116 @@ Type 'help' for commands, or 'exit' to quit.
 artiframe&gt; </code></pre>
 <h3>3. Start a New Project</h3>
 <pre><code>artiframe&gt; new benim-projem</code></pre>
-<p>this command <code class="ic">benim-projem/</code> directory and copies the entire skeleton structure into it: <code class="ic">app/</code>, <code class="ic">bin/</code>, <code class="ic">config/</code>, <code class="ic">public/</code>, <code class="ic">src/</code>, <code class="ic">.env.example</code> and first <code class="ic">index.php</code> page.</p>
+<p>this command<code class="ic">benim-projem/</code>directory and copies the entire skeleton structure into it:<code class="ic">app/</code>, <code class="ic">bin/</code>, <code class="ic">config/</code>, <code class="ic">public/</code>, <code class="ic">src/</code>, <code class="ic">.env.example</code>and first<code class="ic">index.php</code>page.</p>
 <h3>4. Environment Settings</h3>
 <pre><code>cp .env.example .env</code></pre>
-<p><code class="ic">.env</code> Open your file and fill in the database and application information. This file never goes into version control.</p>
+<p><code class="ic">.env</code>Open your file and fill in the database and application information. This file never goes into version control.</p>
 <div class="alert a-warn">
-<strong>⚠️ Web Server Setting:</strong> Apache/Nginx's document root <code class="ic">/public/</code> redirect to folder. Other directories should never be open to the outside.
-        </div>
+<strong>⚠️ Web Server Setting:</strong>Apache/Nginx's document root<code class="ic">/public/</code>redirect to folder. Other directories should never be open to the outside.</div>
 </section>
-<!-- ====== DİZİN YAPISI ====== -->
+====== DIRECTORY STRUCTURE ======
 <section id="dizin">
 <h2>Directory Structure</h2>
 <p>The architecture created when the project was started; Provides clear separation of responsibilities (SoC).</p>
 <div class="tree">
 <span class="dir">project-name/</span>
-├── <span class="dir">app/</span> <span class="note"># Infrastructure layer</span>
-│ ├── <span class="file">ViewControl.php</span> <span class="note"># View (HTML page) bootstrapper</span>
-│ ├── <span class="file">ApiControl.php</span> <span class="note"># API endpoint bootstrapper</span>
-│ ├── <span class="file">database.php</span> <span class="note"># PDO based database connection</span>
-│ ├── <span class="file">DotEnv.php</span> <span class="note"># .env reader</span>
-│ └── <span class="file">R2Manager.php</span> <span class="note"># Cloudflare R2 file manager</span>
+├── <span class="dir">app/</span> <span class="note"># Infrastructure layer</span>│ ├──<span class="file">ViewControl.php</span> <span class="note"># View (HTML page) bootstrapper</span>│ ├──<span class="file">ApiControl.php</span> <span class="note"># API endpoint bootstrapper</span>│ ├──<span class="file">database.php</span> <span class="note"># PDO based database connection</span>│ └──<span class="file">DotEnv.php</span> <span class="note"># .env reader</span>
 │
-├── <span class="dir warn">thousand/</span> <span class="note"># ⚠️ Core system — do not edit directly</span>
-│ ├── <span class="file">SystemMethod.php</span> <span class="note"># API/Backend global helpers</span>
-│ ├── <span class="file">ViewMethod.php</span> <span class="note"># View/Frontend global helpers</span>
-│ └── <span class="dir">stubs/</span> <span class="note"># Template files used by CLI</span>
-│ ├── view.stub
+├── <span class="dir warn">thousand/</span> <span class="note"># ⚠️ Core system — do not edit directly</span>│ ├──<span class="file">SystemMethod.php</span> <span class="note"># API/Backend global helpers</span>│ ├──<span class="file">ViewMethod.php</span> <span class="note"># View/Frontend global helpers</span>│ └──<span class="dir">stubs/</span> <span class="note"># Template files used by CLI</span>│ ├── view.stub
 │ ├── api-standard.stub
 │ ├── api-switch-case.stub
 │ └── class.stub
 │
-├── <span class="dir">config/</span> <span class="note"># Configuration files</span>
-│ └── <span class="file">app-version.php</span> <span class="note"># APP_VERSION and APP_ENV constants</span>
+├──<span class="dir">config/</span> <span class="note"># Configuration files</span>│ └──<span class="file">app-version.php</span> <span class="note"># APP_VERSION and APP_ENV constants</span>
 │
-├── <span class="dir">public/</span> <span class="note"># ← The only open directory of the web server</span>
-│ ├── <span class="dir safe">assets/</span>
-│ │ ├── <span class="dir">css/</span> <span class="note"># View specific CSS files</span>
-│ │ └── <span class="dir">js/</span> <span class="note"># View specific JS files</span>
-│   ├── <span class="dir">includes/</span> <span class="note"># Paylaşılan bileşenler</span>
-│ │ ├── head.php
-│ │ ├── header.php
-│ │ └── footer.php
-│ ├── <span class="dir">api/</span> <span class="note"># API endpoint dosyaları</span>
-│ └── <span class="file">index.php</span> <span class="note"># Homepage</span>
+├── <span class="dir">public/</span> <span class="note"># ← The only open directory of the web server</span>│ ├──<span class="dir safe">assets/</span>│ │ ├──<span class="dir">css/</span> <span class="note"># View specific CSS files</span>│ │ └──<span class="dir">js/</span> <span class="note"># View specific JS files</span>│ ├──<span class="dir">includes/</span> <span class="note"># Shared components</span>│ │ ├── head.php
+│ ├──<span class="file">head.php</span>│ ├──<span class="file">header.php</span>│ └──<span class="file">footer.php</span>│ ├──<span class="dir">api/</span> <span class="note"># API endpoint files</span>│ └──<span class="file">index.php</span> <span class="note"># Home page</span>
 │
 ├── <span class="dir">src/</span> <span class="note"># Business logic and classes</span>
-├── <span class="file">.env</span> <span class="note"># Ortam değişkenleri (git'e girmiyor)</span>
+├── <span class="file">.env</span> <span class="note"># Environment variables (not included in git)</span>
 ├── <span class="file">.env.example</span> <span class="note"># Template — goes into git</span>
-└── <span class="file">kilavuz.html</span> <span class="note"># This document</span>
+└── <span class="file">guide.html</span> <span class="note"># This document</span>
 </div>
 <div class="alert a-danger">
-<strong>🚫 Do not touch the bin/ directory:</strong> <code class="ic">bin/</code> The files inside are the core of the framework. Project-specific business logic is not added here. Classes and services you will add <code class="ic">src/</code> Under infrastructure components <code class="ic">app/</code> is located below.
-        </div>
+<strong>🚫 Do not touch the bin/ directory:</strong> <code class="ic">bin/</code>The files inside are the core of the framework. Project-specific business logic is not added here. Classes and services you will add<code class="ic">src/</code>Under infrastructure components<code class="ic">app/</code>is located below.</div>
 </section>
-<!-- ====== BOOTSTRAPPER ====== -->
+====== V2.0 ROUTING &amp; ARCHITECTURE ======
+<section id="v2-routing">
+<h2>Zero-Config Routing &amp; v2.0.0 Innovations<span class="tag b-cli">NEW</span></h2>
+<p class="lead">With ArtiFrame v2.0.0, the core structure of the framework has gained a much lighter, faster and developer-friendly "Zero-Config" file-based routing architecture.</p>
+<h3>1. File-Based Automatic Routing (routeLink)</h3>
+<p>Unlike traditional frameworks, ArtiFrame allows individual configuration for each route (e.g.<code>web.php</code>It doesn't want you to add a route to it. All requests<code>public/index.php</code>in the file<strong>to a single Gateway</strong>falls and<code>routeLink()</code>It is magically managed through the method.</p>
+<div class="card highlight">
+<h4>How Does It Work?</h4>
+<p>If from browser<code>/kategori/elektronik/15</code>If the address is entered, the system<code>DOCUMENT_ROOT</code>Searches the directory from bottom to top for the longest matching PHP file:</p>
+<ol>
+<li><code>/kategori/elektronik/15.php</code>(Not found)</li>
+<li><code>/kategori/elektronik.php</code>(Not Found)</li>
+<li><code>/kategori.php</code>(Found!)</li>
+</ol>
+<p>When running the matching file, the remaining URL fragments are automatically<code>$_GET</code>converted to parameters:</p>
+<pre><code>$_GET['params'] = ['elektronik', '15'];
+$_GET['param1'] = 'elektronik';
+$_GET['param2'] = '15';</code></pre>
+</div>
+<div class="alert a-info">
+<strong>💡 Backward Compatibility (ID):</strong>In order not to break the habits of old versions<code>$_GET['param1']</code>Always<code>$_GET['id']</code>It is also synchronized into . Thus, directly on the detail pages<code>$_GET['id']</code>you can use</div>
+<div class="card">
+<h4>Link (a) How Should Labels Be?</h4>
+<p>In the new routing system, old style query string parameters (<code>?id=...&amp;token=...</code>) in its place<strong>Clean URL</strong>structure is used. In this way, your links will be both more readable and SEO friendly.</p>
+<pre><code><span class="cm">&lt;!-- ❌ OLD BUILDING (Should not be used) --&gt;</span>
+&lt;a href="user.php?id=123456&amp;token=123j54m23k"&gt;Profili Gör&lt;/a&gt;
+
+<span class="cm">&lt;!-- ✅ NEW STRUCTURE (ArtiFrame Standard) --&gt;</span>
+&lt;a href="/user/123456/123j54m23k"&gt;Profili Gör&lt;/a&gt;</code></pre>
+<p>In the new structure above, accessing the data on the relevant page is quite simple:</p>
+<pre><code><span class="cm">// in public/user.php:</span>
+$userId = sanitizeInt($_GET['param1']); <span class="cm">// 123456 (or $_GET['id'])</span>
+$token = sanitizeString($_GET['param2']); <span class="cm">// 123j54m23k</span></code></pre>
+</div>
+<h3>2. Global Helpers</h3>
+<p>In older versions<code>\Bin\SystemMethod::generateToken()</code>or<code>\Bin\ViewMethod::display()</code>Long namespace calls like this were required. With v2.0.0, all of these functions are available in global namespace (<code>namespace { }</code>) was included.</p>
+<p>Now you can call it from anywhere in your application just like this:</p>
+<pre><code>$token = generateToken();
+echo display($user['name']);
+echo csrfField();</code></pre>
+<h3>3. Structural Changes (Breaking Changes)</h3>
+<div class="alert a-success">
+<strong>🕊️ No More Refactor Fear:</strong>Unlike other frameworks, you will not experience "refactor" crises that last for days in your projects when ArtiFrame core updates are released.<code>artiframe new</code>As soon as you say, all the core files of that version are copied to your project. New versions released (e.g. v3, v4) will never break your existing projects; It continues to work stably for years, regardless of the requirements of the version installed in the project.</div>
+<div class="alert a-danger">
+<strong>⚠️ Important:</strong>In your old projects<code>public/index.php</code>a welcome page contained HTML. As of v2.0.0<code>index.php</code>It is just a Router file. Your old homepage design is now the default<code>public/landing.php</code>It is offered via. (When an empty URL arrives, the system defaults to<code>landing.php</code>redirects to the file).</div>
+<p>Also in new projects<code>artiframe new</code>so that the system can automatically fallback when you run it.<code>public/404.php</code>And<code>public/503.php</code>error pages are produced.</p>
+<div class="card">
+<h4>Smart API Error Management</h4>
+<p>If 404 (Page Not Found) or 503 (Maintenance Mode) errors<strong>to API endpoint</strong>(for example<code>/api/user/get</code>) comes; Instead of showing an HTML page to the HTTP client (mobile application, frontend), the system sets the status code and automatically creates a standard<strong>JSON error</strong>returns. This ensures that your API can always respond JSON without crashing.</p>
+<pre><code>{
+  "status": "error",
+  "message": "API Endpoint Not Found",
+  "data": []
+}</code></pre>
+<div class="alert a-warning" style="margin-top: 15px;">
+<strong>💡 Note: Frontend Error Trapping</strong><br/>The error code (404, 503, etc.) is not included in the JSON data, but directly in the standard<strong>In HTTP Network Response (Status Code)</strong>rotary. This way, you can catch errors at the network layer without having to parse the JSON content:</div>
+<pre><code><span class="cm">// Fetch API Example:</span>
+fetch('/api/user/get').then(response =&gt; {
+    if (!response.ok) {
+        console.error("HTTP Hatası:", response.status); <span class="cm">// 404 or 503</span>
+    }
+});
+
+<span class="cm">// Axios Example:</span>
+axios.get('/api/user/get').catch(error =&gt; {
+    console.error("HTTP Hatası:", error.response.status); <span class="cm">// 404 or 503</span>
+});</code></pre>
+</div>
+</section>
+====== BOOTSTRAPPER ======
 <section id="bootstrapper">
-<h2>Bootstrapper Architecture <span class="tag b-core">Kritik</span></h2>
-<p>ArtiFrame uses two completely independent bootstrappers. This architecture <strong>HTML header problems and security vulnerabilities</strong> radically prevents it.</p>
+<h2>Bootstrapper Architecture<span class="tag b-core">Critical</span></h2>
+<p>ArtiFrame uses two completely independent bootstrappers. This architecture<strong>HTML header problems and security vulnerabilities</strong>radically prevents it.</p>
 <div class="grid-2">
 <div class="card highlight">
-<h3><span class="badge b-view">View</span> ViewControl.php</h3>
-<p>It is used for HTML pages (view files). Session starts, <code class="ic">ViewMethod</code>'u yükler.</p>
+<h3><span class="badge b-view">view</span>ViewControl.php</h3>
+<p>It is used for HTML pages (view files). Session starts,<code class="ic">ViewMethod</code>Installs .</p>
 <pre><code><span class="cm">// public/profile.php — TO THE TOP, before printing HTML</span>
 <span class="kw">&lt;?php</span>
 <span class="fn">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>]
@@ -539,8 +585,8 @@ artiframe&gt; </code></pre>
 ...</code></pre>
 </div>
 <div class="card highlight">
-<h3><span class="badge b-api">API</span> ApiControl.php</h3>
-<p>Used for API endpoint files. Sets JSON header, performs HTTP method control, <code class="ic">SystemMethod</code>Installs .</p>
+<h3><span class="badge b-api">API</span>ApiControl.php</h3>
+<p>API is used for endpoint files. Sets JSON header, performs HTTP method control,<code class="ic">SystemMethod</code>Installs .</p>
 <pre><code><span class="cm">// public/api/user/getir.php</span>
 <span class="kw">&lt;?php</span>
 <span class="cm">// $allowedMethods MUST be defined before require</span>
@@ -551,15 +597,14 @@ artiframe&gt; </code></pre>
 </div>
 </div>
 <div class="alert a-danger">
-<strong>🚫 ViewControl and ApiControl are never mixed:</strong> If ViewControl is required to an API file, HTML header may be returned instead of JSON header and the entire API response will be corrupted. If ApiControl is required on an HTML page, the session will not start and the page will break.
-        </div>
+<strong>🚫 ViewControl and ApiControl are never mixed:</strong>If ViewControl is required to an API file, HTML header may be returned instead of JSON header and the entire API response will be corrupted. If ApiControl is required on an HTML page, the session will not start and the page will break.</div>
 </section>
-<!-- ====== KURALLAR ====== -->
+====== RULES ======
 <section id="kurallar">
-<h2>Rule Set <span class="tag b-core">Standart</span></h2>
+<h2>Rule Set<span class="tag b-core">Standard</span></h2>
 <div class="card">
-<h3>Rule 1: data-js Architecture <span class="badge b-sec">Kritik</span></h3>
-<p>JavaScript events are never <code class="ic">class</code> or <code class="ic">id</code> cannot be listened to over it. These are visual/style identities. All JS interactions <code class="ic">data-js</code> It is managed by the attribute. JavaScript never crashes when CSS deletes a class.</p>
+<h3>Rule 1: data-js Architecture<span class="badge b-sec">Critical</span></h3>
+<p>JavaScript events are never<code class="ic">class</code>or<code class="ic">id</code>cannot be listened to over it. These are visual/style identities. All JS interactions<code class="ic">data-js</code>It is managed by the attribute. JavaScript never crashes when CSS deletes a class.</p>
 <pre><code><span class="cm">&lt;!-- ❌ Anti-Pattern — not supported --&gt;</span>
 &lt;button id="submitBtn" class="btn"&gt;Gönder&lt;/button&gt;
 <span class="cm">// JS: document.getElementById('submitBtn').addEventListener(...)</span>
@@ -569,7 +614,7 @@ artiframe&gt; </code></pre>
 </div>
 <div class="card">
 <h3>Rule 2: Theme Architecture</h3>
-<p>Dark/Light mode and themes, <code class="ic">&lt;html&gt;</code> of the label <code class="ic">data-theme</code> And <code class="ic">data-mode</code> It is managed through its attributes. Body classes are not used.</p>
+<p>Dark/Light mode and themes,<code class="ic">&lt;html&gt;</code>of the label<code class="ic">data-theme</code>And<code class="ic">data-mode</code>It is managed through its attributes. Body classes are not used.</p>
 <pre><code><span class="cm">&lt;!-- HTML opening tag from view.stub template --&gt;</span>
 &lt;html lang="tr" data-theme="default" data-mode="light"&gt;
 <span class="cm">/* theme definition in app.css */</span>
@@ -584,11 +629,11 @@ html[data-theme="default"][data-mode="light"] {
 </div>
 <div class="card">
 <h3>Rule 3: Secure Data Flow</h3>
-<p>Every data coming from the database is processed before being pushed to the DOM. <code class="ic">display()</code> It is wrapped with. Every data coming to the API is processed before it is processed. <code class="ic">sanitizeString()</code> or <code class="ic">sanitizeInt()</code> It is cleaned with .</p>
+<p>Every data coming from the database is processed before being pushed to the DOM.<code class="ic">display()</code>It is wrapped with. Every data coming to the API is processed before it is processed.<code class="ic">sanitizeString()</code>or<code class="ic">sanitizeInt()</code>It is cleaned with .</p>
 </div>
 <div class="card">
 <h3>Rule 4: Error Handling with APP_ENV</h3>
-<p><code class="ic">.env</code> in the file <code class="ic">APP_ENV</code> The value determines error visibility. In Production, no error message is shown to the user.</p>
+<p><code class="ic">.env</code>in the file<code class="ic">APP_ENV</code>The value determines error visibility. In Production, no error message is shown to the user.</p>
 <pre><code><span class="cm">//config/app-version.php</span>
 define(<span class="st">'APP_ENV'</span>, (int)<span class="var">$_ENV</span>[<span class="st">'APP_ENV'</span>]); <span class="cm">// 1=Debug, 0=Production</span>
 <span class="kw">if</span> (APP_ENV === <span class="nu">1</span>) {
@@ -599,22 +644,22 @@ define(<span class="st">'APP_ENV'</span>, (int)<span class="var">$_ENV</span>[<s
 }</code></pre>
 </div>
 </section>
-<!-- ====== CLI GİRİŞ ====== -->
+====== CLI LOGIN ======
 <section id="cli-giris">
 <h2>CLI Ecosystem</h2>
-<p>ArtiFrame CLI to terminal <code class="ic">artiframe</code> Opens an interactive shell when typed. All commands run within this shell. Commands can also be run one time.</p>
+<p>ArtiFrame CLI to terminal<code class="ic">artiframe</code>Opens an interactive shell when typed. All commands run within this shell. Commands can also be run one time.</p>
 <pre><code><span class="cm"># Interactive mode (recommended)</span>
 artiframe
 artiframe&gt; make:view admin/kullanicilar.php
 <span class="cm"># One-time mode</span>
 artiframe make:view admin/kullanicilar.php</code></pre>
 </section>
-<!-- new -->
+new
 <section id="cli-new">
-<h2><code>new</code> <span class="tag b-cli">CLI Komutu</span></h2>
-<p>Creates a new ArtiFrame project. When this command is run, an interactive wizard is launched and your project <code>composer.json</code> It asks you for the basic information required for its configuration (package name, author, license type, etc.). Once all files are copied, dependencies are installed automatically.</p>
+<h2><code>new</code> <span class="tag b-cli">CLI Command</span></h2>
+<p>Creates a new ArtiFrame project. When this command is run, an interactive wizard is launched and your project<code>composer.json</code>It asks you for the basic information required for its configuration (package name, author, license type, etc.). Once all files are copied, dependencies are installed automatically.</p>
 <pre><code>artiframe&gt; <span class="fn">new</span> <span class="st">my-project</span>
-<span class="cm">  ╔═════════════════════════ ═════════════════════════╗
+<span class="cm">╔═════════════════════════ ═════════════════════════╗
   ║ ArtiFrame Project Builder ║
   ╚═════════════════════════ ═════════════════════════╝
   Project: my-project
@@ -625,7 +670,7 @@ artiframe make:view admin/kullanicilar.php</code></pre>
   <span class="kw">?</span> Author homepage <span class="st">[https://artilingo.com]</span>: 
   <span class="kw">?</span> Type (project, library, composer-plugin) <span class="st">[project]</span>: 
   <span class="kw">?</span> License (AGPL-3.0-or-later, MIT, Apache-2.0, GPL-2.0-or-later, GPL-3.0-or-later, BSD-2-Clause, BSD-3-Clause, ISC, proprietary, none) <span class="st">[AGPL-3.0-or-later]</span>: 
-<span class="cm">  ┌──────────────────────── ─────────────────────────┐
+<span class="cm">┌──────────────────────── ─────────────────────────┐
   │ 📂 Phase 1/4 — Copying... │
   │ Files to be Processed: 42 Pieces │
   └──────────────────────── ─────────────────────────┘
@@ -644,7 +689,7 @@ artiframe make:view admin/kullanicilar.php</code></pre>
   │ 📦 Phase 4/4 — Installing Dependencies (Composer)│
   └──────────────────────── ─────────────────────────┘</span>
 <span class="cm">Installing dependencies from lock file (including require-dev)...</span>
-<span class="cm">  ╔═════════════════════════ ═════════════════════════╗
+<span class="cm">╔═════════════════════════ ═════════════════════════╗
   ║ Congratulations! The project has been created successfully.         ║
   ╚═════════════════════════ ═════════════════════════╝</span>
   📂 benim-projem/
@@ -661,23 +706,35 @@ artiframe make:view admin/kullanicilar.php</code></pre>
   │
   Sonraki Adım: Lütfen .env dosyasındaki ortam değişkenlerini yapılandırın.
 </code></pre>
-<p>Once the project is created, ArtiFrame CLI runs it for you. <strong>automatically opens a new terminal window</strong>, goes to that directory and restarts the tool focused on that project. You can close the old terminal window.</p>
+<p>Once the project is created, ArtiFrame CLI runs it for you.<strong>automatically opens a new terminal window</strong>, goes to that directory and restarts the tool focused on that project. You can close the old terminal window.</p>
 <p>Skeletal structure created:</p>
-<div class="tree" style="font-size:0.82rem; line-height:1.7">
-project-name/
+<div class="tree" style="font-size:0.82rem; line-height:1.7">project-name/
 ├── app/ (ViewControl.php, ApiControl.php, Database.php, DotEnv.php)
 ├── bin/ (SystemMethod.php, ViewMethod.php, stubs/)
 ├── config/ (app-version.php)
 ├── public/ (index.php, assets/, includes/, api/)
 ├── src/
 ├── .env.example
-└── guide.html
-        </div>
+└── guide.html</div>
 </section>
-<!-- make:view -->
+upgrade
+<section id="cli-upgrade">
+<h2><code>upgrade</code> <span class="tag b-cli">CLI Command</span></h2>
+<p>It allows you to safely integrate new features in the ArtiFrame CLI tool that you have updated globally via NPM into your existing project.</p>
+<pre><code>artiframe&gt; <span class="fn">upgrade</span></code></pre>
+<ul style="margin-left: 20px; margin-bottom: 15px; line-height: 1.6;">
+<li>Only<code>app/</code>And<code>bin/</code>with core folders<code>src/Service/</code>Updates the fixed service classes (if any) under it.</li>
+<li>Where your business logic is located<code>src/</code>, <code>public/</code>And<code>config/</code>Definitely in your directories<strong>untouchable</strong>(so your project won't be damaged).</li>
+<li><strong>Firewall:</strong>If your project is v1.x and<code>public/index.php</code>If your file does not fit the new router structure, it will give an error and ask you for the name of your existing index.php.<code>landing.php</code>It asks you to change it to .</li>
+<li><strong>Modification Notice:</strong>if before<code>bin/</code>If you have manually changed the core functions under<strong>enter</strong>It asks for manual confirmation (backup warning) with the button.</li>
+<li><strong>Smart Change Report (Diff):</strong>When the update is finished, it prints to the terminal a detailed report of the newly added or modified (updated) files in your project.</li>
+<li><strong>Function Level Analysis:</strong>If the updated file is a<code>.php</code>The file compares the methods in the old and new file. If a new function is added, the report<code>[YENİ FONKSİYON] ad()</code>It directs you to read the documentation with a special warning.</li>
+</ul>
+</section>
+make:view
 <section id="cli-view">
-<h2><code>make:view</code> <span class="tag b-cli">CLI Komutu</span></h2>
-<p>Creates a new page (view) file and its specific CSS/JS assets. Assets are automatically linked to the page and <code class="ic">?v=APP_VERSION</code> Cache-busting is applied with .</p>
+<h2><code>make:view</code> <span class="tag b-cli">CLI Command</span></h2>
+<p>Creates a new page (view) file and its custom CSS/JS assets. Assets are automatically linked to the page and<code class="ic">?v=APP_VERSION</code>Cache-busting is applied with .</p>
 <pre><code>artiframe&gt; <span class="fn">make:view</span> <span class="st">admin/users.php</span></code></pre>
 <p>Created files:</p>
 <pre><code><span class="cm">✔ public/admin/users.php</span>
@@ -685,12 +742,12 @@ project-name/
 <span class="cm">✔ public/assets/js/admin/users.js</span></code></pre>
 <p>At the beginning of the created view file, ViewControl is required, head/header/footer includes are added, and CSS/JS links are connected with cache-busting.</p>
 </section>
-<!-- make:api -->
+make:api
 <section id="cli-api">
-<h2><code>make:api</code> <span class="tag b-cli">CLI Komutu</span></h2>
-<p>It creates an API endpoint file by choosing one of two different templates. With every new API file <code class="ic">$allowedMethods</code> variable and <code class="ic">ApiControl.php</code> It comes with require ready.</p>
+<h2><code>make:api</code> <span class="tag b-cli">CLI Command</span></h2>
+<p>It creates an API endpoint file by choosing one of two different templates. With every new API file<code class="ic">$allowedMethods</code>variable and<code class="ic">ApiControl.php</code>It comes with require ready.</p>
 <div class="card">
-<h3><span class="badge b-api">standart</span> — Single Action API</h3>
+<h3><span class="badge b-api">standard</span>— Single Action API</h3>
 <p>For endpoints that do a single job (login, send, delete). Business logic is written directly.</p>
 <pre><code>artiframe&gt; <span class="fn">make:api</span> <span class="st">standard</span> <span class="st">api/auth/login.php</span></code></pre>
 <pre><code><span class="kw">&lt;?php</span>
@@ -701,8 +758,8 @@ project-name/
 <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'success'</span>], <span class="nu">200</span>);</code></pre>
 </div>
 <div class="card">
-<h3><span class="badge b-api">switch-case</span> — Multi-Action API</h3>
-<p>A structure that manages CRUD operations for a module in a single endpoint. <code class="ic">action</code> The parameter determines which operation will be performed.</p>
+<h3><span class="badge b-api">switch-case</span>— Multi-Action API</h3>
+<p>A structure that manages CRUD operations for a module in a single endpoint.<code class="ic">action</code>The parameter determines which operation will be performed.</p>
 <pre><code>artiframe&gt; <span class="fn">make:api</span> <span class="st">switch-case</span> <span class="st">api/user/admin.php</span></code></pre>
 <pre><code><span class="kw">&lt;?php</span>
 <span class="var">$allowedMethods</span> = [<span class="st">'POST'</span>];
@@ -724,31 +781,31 @@ project-name/
 }</code></pre>
 </div>
 </section>
-<!-- make:class -->
+make:class
 <section id="cli-class">
-<h2><code>make:class</code> <span class="tag b-cli">CLI Komutu</span></h2>
-<p>It creates a new PHP class file with the namespace and class boilerplate ready. The namespace is determined automatically according to the class path. If <strong>app/</strong> And <strong>src/</strong> outside (for example <strong>private/</strong>) if a directory is used, the CLI tool runs in the background <code>composer dump-autoload</code> automatically executes the script.</p>
+<h2><code>make:class</code> <span class="tag b-cli">CLI Command</span></h2>
+<p>It creates a new PHP class file with the namespace and class boilerplate ready. The namespace is determined automatically according to the class path. If<strong>app/</strong>And<strong>src/</strong>outside (for example<strong>private/</strong>) if a directory is used, the CLI tool runs in the background<code>composer dump-autoload</code>automatically executes the script.</p>
 <pre><code>artiframe&gt; <span class="fn">make:class</span> <span class="st">src/Service/EmailService.php</span></code></pre>
 <p>If the class directory is not specified, the command returns an error:</p>
 <pre><code>artiframe&gt; <span class="fn">make:class</span>
 ❌ Hata: Sınıfın oluşturulacağı dizin belirtilmeli! (örn: /app veya /src)
 Example: /src/Service/PaymentService</code></pre>
 </section>
-    <!-- table: -->
-    <section id="cli-table">
-        <h2><code>table:</code> <span class="tag b-cli">CLI Command</span></h2>
-        <p>Allows you to quickly append standard and relational database tables to your project's <code>schema.sql</code> file. The templates are read from the global <code>stubs/sql.stub</code> file.</p>
-        <pre><code>artiframe&gt; <span class="fn">table:</span><span class="st">users</span></code></pre>
-        <p>Currently supported standard tables:</p>
-                <div class="table-tabs-container" style="margin-top: 20px;">
-            <div class="tabs-header" style="display: flex; gap: 10px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 5px;">
-                <button class="table-tab-btn active" onclick="switchTableTab('tab-users', this)" style="white-space: nowrap; padding: 10px 20px; background: #00c88c; color: #000; font-weight: 600; border: none; border-radius: 5px; cursor: pointer;">users</button>
-                <button class="table-tab-btn" onclick="switchTableTab('tab-sessions', this)" style="white-space: nowrap; padding: 10px 20px; background: #1c2128; color: #fff; border: 1px solid #30363d; border-radius: 5px; cursor: pointer;">user_sessions</button>
-                <button class="table-tab-btn" onclick="switchTableTab('tab-prefs', this)" style="white-space: nowrap; padding: 10px 20px; background: #1c2128; color: #fff; border: 1px solid #30363d; border-radius: 5px; cursor: pointer;">user_preferences</button>
-            </div>
-            <!-- Tab: users -->
-            <div id="tab-users" class="table-tab-content" style="display: block;">
-                <pre><code><span class="kw">CREATE TABLE `users` (
+table:
+<section id="cli-table">
+<h2><code>table:</code> <span class="tag b-cli">CLI Command</span></h2>
+<p>in your project<code>schema.sql</code>It allows you to quickly add standard and relational database tables to the file. Templates global<code>stubs/sql.stub</code>is read from the file.</p>
+<pre><code>artiframe&gt; <span class="fn">table:</span><span class="st">users</span></code></pre>
+<p>Currently supported standard tables:</p>
+<div class="table-tabs-container" style="margin-top: 20px;">
+<div class="tabs-header" style="display: flex; gap: 10px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 5px;">
+<button class="table-tab-btn active" onclick="switchTableTab('tab-users', this)" style="white-space: nowrap; padding: 10px 20px; background: #00c88c; color: #000; font-weight: 600; border: none; border-radius: 5px; cursor: pointer;">users</button>
+<button class="table-tab-btn" onclick="switchTableTab('tab-sessions', this)" style="white-space: nowrap; padding: 10px 20px; background: #1c2128; color: #fff; border: 1px solid #30363d; border-radius: 5px; cursor: pointer;">user_sessions</button>
+<button class="table-tab-btn" onclick="switchTableTab('tab-prefs', this)" style="white-space: nowrap; padding: 10px 20px; background: #1c2128; color: #fff; border: 1px solid #30363d; border-radius: 5px; cursor: pointer;">user_preferences</button>
+</div>
+Tab: users
+<div class="table-tab-content" id="tab-users" style="display: block;">
+<pre><code><span class="kw">CREATE TABLE `users` (
   `id` binary(16) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -760,10 +817,10 @@ Example: /src/Service/PaymentService</code></pre>
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</span></code></pre>
-            </div>
-            <!-- Tab: user_sessions -->
-            <div id="tab-sessions" class="table-tab-content" style="display: none;">
-                <pre><code><span class="kw">CREATE TABLE `user_sessions` (
+</div>
+Tab: user_sessions
+<div class="table-tab-content" id="tab-sessions" style="display: none;">
+<pre><code><span class="kw">CREATE TABLE `user_sessions` (
   `id` binary(16) NOT NULL,
   `user_id` binary(16) NOT NULL,
   `token` varchar(255) NOT NULL,
@@ -776,10 +833,10 @@ Example: /src/Service/PaymentService</code></pre>
   KEY `user_id` (`user_id`),
   CONSTRAINT `fk_user_sessions_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</span></code></pre>
-            </div>
-            <!-- Tab: user_preferences -->
-            <div id="tab-prefs" class="table-tab-content" style="display: none;">
-                <pre><code><span class="kw">CREATE TABLE `user_preferences` (
+</div>
+Tab: user_preferences
+<div class="table-tab-content" id="tab-prefs" style="display: none;">
+<pre><code><span class="kw">CREATE TABLE `user_preferences` (
   `id` binary(16) NOT NULL,
   `user_id` binary(16) NOT NULL,
   `language` varchar(10) NOT NULL DEFAULT 'tr',
@@ -792,9 +849,9 @@ Example: /src/Service/PaymentService</code></pre>
   UNIQUE KEY `user_id` (`user_id`),
   CONSTRAINT `fk_user_prefs_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</span></code></pre>
-            </div>
-        </div>
-        <script>
+</div>
+</div>
+<script>
             function switchTableTab(tabId, btn) {
                 const container = btn.closest('.table-tabs-container');
                 container.querySelectorAll('.table-tab-content').forEach(el => el.style.display = 'none');
@@ -811,35 +868,36 @@ Example: /src/Service/PaymentService</code></pre>
                 btn.style.border = 'none';
             }
         </script>
-        <h3 style="margin-top: 30px;">Additional Commands</h3>
-        <p><strong>List Tables:</strong> To see all available table templates and their descriptions:</p>
-        <pre><code>artiframe&gt; <span class="fn">table</span> <span class="st">list</span></code></pre>
-        <p><strong>Preview Table Content:</strong> To inspect the SQL content in the terminal before adding it to the <code>schema.sql</code> file, you can append the <code>check</code> parameter:</p>
-        <pre><code>artiframe&gt; <span class="fn">table:</span><span class="st">users</span> <span class="st">check</span></code></pre>
-    </section>
-    <!-- cli v -->
+<h3 style="margin-top: 30px;">Additional Commands</h3>
+<p><strong>Listing Tables:</strong>To see all available table templates and descriptions:</p>
+<pre><code>artiframe&gt; <span class="fn">table</span> <span class="st">list</span></code></pre>
+<p><strong>Previewing Table Content:</strong>a painting<code>schema.sql</code>at the end of the command to examine the SQL content in the terminal before adding it to the file.<code>check</code>You can add the parameter:</p>
+<pre><code>artiframe&gt; <span class="fn">table:</span><span class="st">users</span> <span class="st">check</span></code></pre>
+</section>
+upgrade
+cli v
 <section id="cli-cliv">
-<h2><code>cli v</code> (or <code>cli version</code>) <span class="tag b-cli">CLI Komutu</span></h2>
-<p>ArtiFrame CLI controls its own (global) version of the tool. Not only shows the current version, <strong>NPM Registry</strong> It also checks whether the most up-to-date version is available. If there is a new version, it can update itself globally with one click (y/n).<code>npm install -g @artilingo/artiframe-cli@latest</code>).</p>
+<h2><code>cli v</code>(or<code>cli version</code>) <span class="tag b-cli">CLI Command</span></h2>
+<p>ArtiFrame CLI controls its own (global) version of the tool. Not only shows the current version,<strong>NPM Registry</strong>It also checks whether the most up-to-date version is available. If there is a new version, it can update itself globally with one click (y/n).<code>npm install -g @artilingo/artiframe-cli@latest</code>).</p>
 <pre><code>artiframe&gt; <span class="fn">cli v</span>
-<span class="cm">  Current Version: v1.0.0
+<span class="cm">Current Version: v1.0.0
   Current Version: v1.0.1
   A new update is available! v1.0.0 → v1.0.1
   Would you like to update now? (y/n)</span> <span class="st">y</span>
-<span class="cm">  Updating...
+<span class="cm">Updating...
   ✅ CLI updated successfully!</span></code></pre>
 </section>
-<!-- show -->
+show
 <section id="cli-show">
-<h2><code>show</code> <span class="tag b-cli">CLI Komutu</span></h2>
+<h2><code>show</code> <span class="tag b-cli">CLI Command</span></h2>
 <p>It displays which working directory the CLI is currently in. Useful for navigation.</p>
 <pre><code>artiframe&gt; <span class="fn">show</span>
   📍  Mevcut Çalışma Dizini:
       C:\projeler\benim_projem</code></pre>
 </section>
-<!-- list -->
+list
 <section id="cli-list">
-<h2><code>list</code> <span class="tag b-cli">CLI Komutu</span></h2>
+<h2><code>list</code> <span class="tag b-cli">CLI Command</span></h2>
 <p>It lists the files and folders in the current directory in a tree structure in order of priority. Shows the number of items inside folders and the sizes of files.</p>
 <pre><code>artiframe&gt; <span class="fn">list</span>
   📂 benim_projem/
@@ -848,9 +906,9 @@ Example: /src/Service/PaymentService</code></pre>
   │  ├── 📄 composer.json  [1.2 KB]
   │  └── 📄 README.md  [4.5 KB]</code></pre>
 </section>
-<!-- go -->
+go
 <section id="cli-go">
-<h2><code>go</code> <span class="tag b-cli">CLI Komutu</span></h2>
+<h2><code>go</code> <span class="tag b-cli">CLI Command</span></h2>
 <p>It allows you to navigate between directories while in the CLI's interactive shell. It doesn't have a permanent effect at the operating system level, but it does change your working directory as long as the CLI remains open.</p>
 <pre><code>artiframe&gt; <span class="fn">go</span> <span class="st">public</span>
   ✅  Dizin başarıyla değiştirildi.
@@ -859,13 +917,13 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
   ✅  Dizin başarıyla değiştirildi.
       C:\projeler\benim_projem</code></pre>
 </section>
-<!-- remove -->
+remove
 <section id="cli-remove">
-<h2><code>remove</code> <span class="tag b-cli">CLI Komutu</span></h2>
-<p>Safely deletes a specified file. <code>make</code> It works opposite to the commands and analyzes the dependencies in the project and gives warnings before deletion:</p>
+<h2><code>remove</code> <span class="tag b-cli">CLI Command</span></h2>
+<p>Safely deletes a specified file.<code>make</code>It works opposite to the commands and analyzes the dependencies in the project and gives warnings before deletion:</p>
 <ul>
-<li><strong>If View is Deleted:</strong> if file <code>public/</code> and CSS/JS files linked to this file <code>public/assets</code> If there are, it will ask you if you want to clean them too.</li>
-<li><strong>If Class is Deleted:</strong> if file <code>src/</code> or <code>app/</code> if below, <code>public/api/</code> scans the directory. It warns you by printing the API ends and line numbers in which the class you deleted is used, but it does not delete the APIs automatically (for security reasons, you must manually edit the relevant APIs).</li>
+<li><strong>If View is Deleted:</strong>if file<code>public/</code>and CSS/JS files linked to this file<code>public/assets</code>If there are, it will ask you if you want to clean them too.</li>
+<li><strong>If Class is Deleted:</strong>if file<code>src/</code>or<code>app/</code>if below,<code>public/api/</code>scans the directory. It warns you by printing the API ends and line numbers in which the class you deleted is used, but it does not delete the APIs automatically (for security reasons, you must manually edit the relevant APIs).</li>
 </ul>
 <pre><code>artiframe&gt; <span class="fn">remove</span> <span class="st">src/Auth/UserManager.php</span>
 ⚠️  Bu dosyayı KÖKTEN silmek üzeresiniz. Emin misiniz? C:\...\src\Auth\UserManager.php [y/N]: y
@@ -875,10 +933,10 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
 📌 Yukarıdaki API dosyalarındaki ilgili satırları kendiniz düzenlemeli veya silmelisiniz.
 ✅ Dosya başarıyla silindi: C:\...\src\Auth\UserManager.php</code></pre>
 </section>
-<!-- version -->
+version
 <section id="cli-version">
-<h2><code>version</code> <span class="tag b-cli">CLI Komutu</span></h2>
-<p><code class="ic">config/app-version.php</code> It updates the version number in it according to semantic versioning (SemVer) rules. Version format: <strong>MAJOR.MINOR.PATCH</strong></p>
+<h2><code>version</code> <span class="tag b-cli">CLI Command</span></h2>
+<p><code class="ic">config/app-version.php</code>It updates the version number in it according to semantic versioning (SemVer) rules. Version format:<strong>MAJOR.MINOR.PATCH</strong></p>
 <table class="sig-table">
 <thead>
 <tr><th>command</th><th>Explanation</th><th>Example</th></tr>
@@ -895,67 +953,70 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
 <pre><code>artiframe&gt; <span class="fn">version</span> upgrade minor
 <span class="cm">✔ Updated to Version 1.2.0 → 1.3.0.</span></code></pre>
 </section>
-    <!-- mode -->
-    <section id="cli-mode">
-        <h2><code>mode</code> <span class="tag b-cli">CLI Command</span></h2>
-        <p>Allows you to change the project's operating mode (Development or Production) with a single command. This saves you from the hassle of manually opening and editing the <code>config/app-version.php</code> file.</p>
-        <pre><code>artiframe&gt; <span class="fn">mode</span> <span class="st">1</span>
-  ✅ Switched from Prod to Debug mode.</code></pre>
-        <p>You can use the <code>0</code> parameter to switch to the production release:</p>
-        <pre><code>artiframe&gt; <span class="fn">mode</span> <span class="st">0</span></code></pre>
-    </section>
-    <!-- serve -->
+mode
+<section id="cli-mode">
+<h2><code>mode</code> <span class="tag b-cli">CLI Command</span></h2>
+<p>It allows you to change the project's working mode (Development or Live) with a single command. This command can be manually<code>config/app-version.php</code>It saves you the trouble of opening and editing the file.</p>
+<pre><code>artiframe&gt; <span class="fn">mode</span> <span class="st">1</span>
+  ✅ Prod modundan Debug moduna geçiş yapıldı.</code></pre>
+<p>To switch to the live version<code>0</code>You can use the parameter:</p>
+<pre><code>artiframe&gt; <span class="fn">mode</span> <span class="st">0</span></code></pre>
+</section>
+serve
 <section id="cli-serve">
-<h2><code>serve</code> <span class="tag b-cli">CLI Komutu</span></h2>
-<p>Starts a local development server (localhost) to test the project. It launches your project in seconds and automatically opens it in your browser, without the need to install an additional web server (XAMPP, Nginx, etc.).</p>
+<h2><code>serve</code> <span class="tag b-cli">CLI Command</span></h2>
+<p>To test the project, it starts a local development server and opens it to the local network (Local Network) via 0.0.0.0 (all network interfaces). It launches your project in seconds without the need to install an additional web server (XAMPP, Nginx, etc.), automatically opens the localhost tab on your own computer and prints the connection IP for other devices on the network (phone / tablet) on the screen.</p>
 <pre><code>artiframe&gt; <span class="fn">serve</span>
-  🚀  Geliştirme sunucusu başlatılıyor: http://localhost:8000
-      Durdurmak için CTRL+C tuşlarına basın.</code></pre>
+  🚀  Geliştirme sunucusu başlatıldı: 0.0.0.0:8000
+      Durdurmak için CTRL+C tuşlarına basın.
+
+      Local:   http://localhost:8000
+      Network: http://192.168.1.34:8000</code></pre>
 <p>You can specify a different port number if you want:</p>
 <pre><code>artiframe&gt; <span class="fn">serve</span> <span class="st">8080</span></code></pre>
 </section>
-<!-- auth -->
+auth
 <section id="cli-auth">
 <h2><code>auth</code> <span class="tag b-cli">CLI Command</span></h2>
-<p>Authenticates the CLI with your GitHub account using OAuth Device Flow. This is required before you can submit suggestions or bug reports.</p>
+<p>Issue authorizes the CLI with your GitHub account (via OAuth Device Flow) to be able to send suggestions and bug reports.</p>
 <pre><code>artiframe&gt; <span class="fn">auth</span></code></pre>
-<p>This command will display a user code and open your browser to the GitHub device activation page. Once authorized, it securely stores your token.</p>
+<p>This command prints a user code and opens the GitHub authorization page in your browser. Once the authorization is confirmed, the token is securely stored.</p>
 </section>
-<!-- suggest -->
+suggest
 <section id="cli-suggest">
 <h2><code>suggest</code> <span class="tag b-cli">CLI Command</span></h2>
-<p>Submit a feature request, bug report, or a helper suggestion directly from your terminal. Requires authentication via the <code>auth</code> command.</p>
+<p>It allows you to submit feature requests, bug reports, or suggestions directly to GitHub without leaving the terminal. before<code>auth</code>It is mandatory to log in with the command.</p>
 <pre><code>artiframe&gt; <span class="fn">suggest</span></code></pre>
-<p>You will be prompted interactively to select a category, write a title, and provide a detailed description. The suggestion is then published as an issue on the official ArtiFrame repository.</p>
+<p>The script interactively prompts you to select a category, write a title, and enter a detailed description. Once completed, it is published as an Issue in the official ArtiFrame repository.</p>
 </section>
-<!-- issues -->
+issues
 <section id="cli-issues">
 <h2><code>issues</code> <span class="tag b-cli">CLI Command</span></h2>
-<p>List your submitted issues and read their comments directly from your terminal. Requires authentication via the <code>auth</code> command.</p>
+<p>List the issues you've submitted and read their comments directly from your terminal.<code>auth</code>It requires logging in with the command.</p>
 <pre><code>artiframe&gt; <span class="fn">issues</span> [id]</code></pre>
-<p>Run <code>issues</code> to see a list of your issues. Run <code>issues 4</code> to see details and comments for issue #4.</p>
+<p>To see a list of your issues<code>issues</code>run it. To see the details and comments of issue number 4<code>issues 4</code>run it.</p>
 </section>
-<!-- add -->
+add
 <section id="cli-add">
-<h2><code>add</code> <span class="tag b-cli">CLI Komutu</span></h2>
-<p>It is the most powerful command that allows you to include external modules or ready-made integrations in your project. Classical <code>composer require</code> Going beyond the process, it creates automatic service classes (stubs) for some modules and <code>.env</code> It automatically makes the necessary definitions for your files.</p>
+<h2><code>add</code> <span class="tag b-cli">CLI Command</span></h2>
+<p>It is the most powerful command that allows you to include external modules or ready-made integrations in your project. Classical<code>composer require</code>Going beyond the process, it creates automatic service classes (stubs) for some modules and<code>.env</code>It automatically makes the necessary definitions for your files.</p>
 <pre><code>artiframe&gt; <span class="fn">add</span> <span class="st">package_short_name</span></code></pre>
 <h3>1. Integrated Packages (Class Dependent)</h3>
-<p>When these packages are installed, a service class is automatically created and <code>.env</code> Connection keys are added to your file. Listed below are the locations of these packages and the classes they create:</p>
+<p>When these packages are installed, a service class is automatically created and<code>.env</code>Connection keys are added to your file. These packages and the locations of the classes they create are listed below:</p>
 <div class="table-wrapper">
 <table class="sig-table">
 <thead>
 <tr><th>command</th><th>Composer Package</th><th>Generated Class File</th></tr>
 </thead>
 <tbody>
-                    <tr><td><code>add phpmailer</code></td><td>phpmailer/phpmailer</td><td><span class="tag b-core">src/Service/Mailer.php</span></td></tr>
-                    <tr><td><code>add iyzico</code></td><td>iyzipay/iyzipay-php</td><td><span class="tag b-core">src/Service/Iyzico.php</span></td></tr>
+<tr><td><code>add phpmailer</code></td><td>phpmailer/phpmailer</td><td><span class="tag b-core">src/Service/Mailer.php</span></td></tr>
+<tr><td><code>add iyzico</code></td><td>iyzipay/iyzipay-php</td><td><span class="tag b-core">src/Service/Iyzico.php</span></td></tr>
 <tr><td><code>add stripe</code></td><td>stripe/stripe-php</td><td><span class="tag b-core">src/Service/Stripe.php</span></td></tr>
-                    <tr><td><code>add qrcode</code></td><td>endroid/qr-code</td><td><span class="tag b-core">src/Service/QrCode.php</span></td></tr>
-                    <tr><td><code>add jwt</code></td><td>firebase/php-jwt</td><td><span class="tag b-core">src/Auth/JwtAuth.php</span></td></tr>
+<tr><td><code>add qrcode</code></td><td>endroid/qr-code</td><td><span class="tag b-core">src/Service/QrCode.php</span></td></tr>
+<tr><td><code>add jwt</code></td><td>firebase/php-jwt</td><td><span class="tag b-core">src/Auth/JwtAuth.php</span></td></tr>
 <tr><td><code>add image</code></td><td>intervention/image</td><td><span class="tag b-core">src/Service/ImageProcessor.php</span></td></tr>
 <tr><td><code>add s3</code></td><td>aws/aws-sdk-php</td><td><span class="tag b-core">src/Service/S3Storage.php</span></td></tr>
-<tr><td><code>add sentry</code></td><td>sentry/sentry</td><td><span class="tag b-core">config/sentry.php</span></td></tr>
+<tr><td><code>add sentry</code></td><td>sentry/sentry</td><td><span class="tag b-core">src/Service/Sentry.php</span></td></tr>
 <tr><td><code>add redis</code></td><td>predis/predis</td><td><span class="tag b-core">src/Service/RedisCache.php</span></td></tr>
 <tr><td><code>add pusher</code></td><td>pusher/pusher-php-server</td><td><span class="tag b-core">src/Service/Pusher.php</span></td></tr>
 <tr><td><code>add twilio</code></td><td>twilio/sdk</td><td><span class="tag b-core">src/Service/Twilio.php</span></td></tr>
@@ -970,7 +1031,6 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
 <tr><th>command</th><th>Composer Package</th></tr>
 </thead>
 <tbody>
-<tr><td><code>add phpmailer</code></td><td>phpmailer/phpmailer</td></tr>
 <tr><td><code>add mpdf</code></td><td>mpdf/mpdf</td></tr>
 <tr><td><code>add dompdf</code></td><td>dompdf/dompdf</td></tr>
 <tr><td><code>add spreadsheet</code></td><td>phpoffice/phpspreadsheet</td></tr>
@@ -982,88 +1042,87 @@ artiframe&gt; <span class="fn">go</span> <span class="st">back</span>
 </table>
 </div>
 <div class="alert a-info">
-<strong>ℹ️ Tip:</strong> To see the entire list of installed or supported just open the terminal <code>add list</code> you can write. You can find the code usage of the modules in the "Integrated Services" menu on the right.
-        </div>
+<strong>ℹ️ Tip:</strong>To see the entire list of installed or supported just open the terminal<code>add list</code>you can write. You can find the code usage of the modules in the "Integrated Services" menu on the right.</div>
 </section>
-<!-- ====== ENTEGRE SERVİSLER ====== -->
+====== INTEGRATED SERVICES ======
 <section id="entegre-servisler">
-<h2>Integrated Services (Wrapper) <span class="tag b-core">Stubs</span></h2>
-<p>Instead of using popular packages directly, ArtiFrame <strong>pre-configured Wrapper</strong> It offers classes for your use.</p>
-                                <div class="card" id="svc-qrcode">
-            <h2>QR Code</h2>
-            <div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Wrapper Class:</strong> When you run the <code>add qrcode</code> command, the <code>endroid/qr-code</code> library is installed and the <code>src/Service/QrCode.php</code> wrapper class is created.</div>
-            <p>A modern and fluent class that hides the complex object instantiation (Builder/Writer) processes of the Endroid QR Code library, allowing you to generate a QR code and embed a logo in a single line.</p>
-            <h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Methods and Usage</h3>
-            <ul style="line-height: 1.6; margin-bottom: 20px;">
-                <li><code>->generate('Metin')</code> : Starts the chain by setting the text or URL to be converted to a QR code.</li>
-                <li><code>->size(300)</code> : Sets the width/height of the QR code in pixels (e.g. 300).</li>
-                <li><code>->margin(10)</code> : Sets the white margin around the QR code.</li>
-                <li><code>->color('#000000', '#ffffff')</code> : Sets the foreground (lines) and background colors as HEX codes (e.g. <code>#000000, #ffffff</code>).</li>
-                <li><code>->logo('/path/logo.png', 50, true)</code> : Embeds an image (logo) right in the center of the QR code. Takes the physical path, size, and whether to punch out the background.</li>
-                <li><code>->format('png')</code> : Sets the output format. <code>png</code> or <code>svg</code> are supported. Default: png.</li>
-                <li><code>->save('/path/save.png')</code> : Saves the generated QR code to a physical file on the server.</li>
-                <li><code>->base64()</code> : Returns the QR code as a base64 string so you can use it directly in an HTML <code>&lt;img src="..."&gt;</code> tag.</li>
-                <li><code>->output()</code> : Outputs the QR code directly to the browser with the appropriate HTTP headers.</li>
-            </ul>
-            <h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Usage Examples</h3>
-            <pre><code><span class="kw">use</span> <span class="var">App\Service\QrCode</span>;
-<span class="cm">// Örnek 1: Ekrana HTML Img olarak basma</span>
+<h2>Integrated Services (Wrapper)<span class="tag b-core">stubs</span></h2>
+<p>Instead of using popular packages directly, ArtiFrame<strong>pre-configured Wrapper</strong>It offers classes for your use.</p>
+<div class="card" id="svc-qrcode">
+<h2>QR Code</h2>
+<div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Immersive Class:</strong> <code>add qrcode</code>when you run the command<code>endroid/qr-code</code>library is loaded and<code>src/Service/QrCode.php</code>The wrapper class is created.</div>
+<p>It is a modern and fluent class that hides the difficult object production (Builder/Writer) processes of the Endroid QR Code library, where you can create a QR code in a single line and embed a logo in it.</p>
+<h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Methods and Uses</h3>
+<ul style="line-height: 1.6; margin-bottom: 20px;">
+<li><code>-&gt;generate('Metin')</code>: Specifies the text or URL to be converted into a QR code and starts the chain.</li>
+<li><code>-&gt;size(300)</code>: Determines the width/height of the QR code in pixels (eg: 300).</li>
+<li><code>-&gt;margin(10)</code>: Determines the white space around the QR code.</li>
+<li><code>-&gt;color('#000000', '#ffffff')</code>: Specifies the Foreground (lines) and Background colors as HEX code. (eg:<code>#000000, #ffffff</code>).</li>
+<li><code>-&gt;logo('/path/logo.png', 50, true)</code>: Embeds an image (logo) in the middle of the QR code. Retrieves the physical path to the logo, its size, and whether its background will be punched out.</li>
+<li><code>-&gt;format('png')</code>: Determines the output format.<code>png</code>or<code>svg</code>is supported. Default: png.</li>
+<li><code>-&gt;save('/path/save.png')</code>: Saves the created QR code to a physical file on the server.</li>
+<li><code>-&gt;base64()</code>: QR code HTML<code>&lt;img src="..."&gt;</code>It returns it as a base64 string so you can use it directly within the tag.</li>
+<li><code>-&gt;output()</code>: Prints the QR code directly to the browser with appropriate HTTP headers.</li>
+</ul>
+<h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Usage Examples</h3>
+<pre><code><span class="kw">use</span> <span class="var">App\Service\QrCode</span>;
+<span class="cm">// Example 1: Printing HTML Img to the screen</span>
 <span class="var">$base64</span> = <span class="var">QrCode</span>::generate(<span class="st">'https://artiframe.dev'</span>)
-    -&gt;<span class="fn">size</span>(400)
+    -&gt;<span class="fn">you</span>(400)
     -&gt;<span class="fn">logo</span>(<span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/assets/logo.png'</span>)
     -&gt;<span class="fn">base64</span>();
 <span class="kw">echo</span> <span class="st">'&lt;img src="'</span> . <span class="var">$base64</span> . <span class="st">'" alt="QR"&gt;'</span>;
-<span class="cm">// Örnek 2: Fiziksel PNG Olarak Kaydetme</span>
-<span class="var">QrCode</span>::generate(<span class="st">'VCARD Bilgileri'</span>)
+<span class="cm">// Example 2: Saving as Physical PNG</span>
+<span class="var">QrCode</span>::generate(<span class="st">'VCARD Information'</span>)
     -&gt;<span class="fn">color</span>(<span class="st">'#ff0000'</span>, <span class="st">'#ffffff'</span>)
-    -&gt;<span class="fn">save</span>(<span class="st">'/temp/kullanici_karti.png'</span>);
-<span class="cm">// Örnek 3: API Endpoint olarak resmi tarayıcıya basma</span>
+    -&gt;<span class="fn">save</span>(<span class="st">'/temp/user_card.png'</span>);
+<span class="cm">// Example 3: Pushing image to browser as API Endpoint</span>
 <span class="var">QrCode</span>::generate(<span class="st">'https://artilingo.com'</span>)-&gt;<span class="fn">output</span>();</code></pre>
-        </div>
-        <div class="card" id="svc-phpmailer">
-            <h2>PHPMailer (Mail)</h2>
-            <div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Automatic .env Setup:</strong> When you run the <code>add phpmailer</code> command, SMTP settings are automatically added to your <code>.env</code> file and the <code>src/Service/Mailer.php</code> class is created.</div>
-            <p>A much more modern, fluent, and secure (CRLF protected) Wrapper class working on top of the PHPMailer library. All methods provided by the class are chainable.</p>
-            <h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Methods and Usage</h3>
-            <ul style="line-height: 1.6; margin-bottom: 20px;">
-                <li><code>->to('mail@adres.com', 'İsim')</code> : Sets who the email will be sent to.</li>
-                <li><code>->cc('mail@adres.com')</code> : Adds Carbon Copy recipients.</li>
-                <li><code>->bcc('mail@adres.com')</code> : Adds Blind Carbon Copy recipients. Primary recipients cannot see these addresses.</li>
-                <li><code>->subject('Konu')</code> : Sets the subject (title) of the email.</li>
-                <li><code>->attach('/path/fatura.pdf', 'Isim.pdf')</code> : Adds a physical file from the server (or temp) as an attachment into the email.</li>
-                <li><code>->embedImage('/path/logo.png', 'logo_cid')</code> : Embeds an image into the email to be used in HTML (<code>&lt;img src="cid:logo_cid"&gt;</code>).</li>
-                <li><code>->html('HTML Kodu')</code> : Sets the HTML content of the email. Automatically creates a plain text (AltBody) version for security.</li>
-                <li><code>->text('Düz Metin')</code> : Used if you want to send the email strictly as plain text.</li>
-                <li><code>->send()</code> : Completes all chained operations and sends the email via SMTP. Throws an Exception if there is an error.</li>
-            </ul>
-            <h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Advanced Example: PHP Template (View) and Dynamic File Attachment</h3>
-            <p>If you do not want to write the HTML content of the email directly in strings like spaghetti code, you can use <code>ob_start()</code> to include an external PHP template file (containing variables) and attach a dynamically generated PDF directly to the email:</p>
-            <pre><code><span class="kw">use</span> <span class="var">App\Service\Mailer</span>;
+</div>
+<div class="card" id="svc-phpmailer">
+<h2>PHPMailer (Mail)</h2>
+<div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Automatic .env Installation:</strong> <code>add phpmailer</code>SMTP settings when you run the command<code>.env</code>automatically added to your file and<code>src/Service/Mailer.php</code>class is created.</div>
+<p>It is a much more modern, fluent and secure (CRLF protected) Wrapper class that runs on the PHPMailer library. All methods offered by the class are chainable.</p>
+<h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Methods and Uses</h3>
+<ul style="line-height: 1.6; margin-bottom: 20px;">
+<li><code>-&gt;to('mail@adres.com', 'İsim')</code>: Determines who the e-mail will be sent to.</li>
+<li><code>-&gt;cc('mail@adres.com')</code>: Adds Information (Carbon Copy) recipients.</li>
+<li><code>-&gt;bcc('mail@adres.com')</code>: Adds Blind Carbon Copy recipients. Primary recipients cannot see these addresses.</li>
+<li><code>-&gt;subject('Konu')</code>: Determines the title (subject) of the e-mail.</li>
+<li><code>-&gt;attach('/path/fatura.pdf', 'Isim.pdf')</code>: It puts a physical file on the server (or temp) into the e-mail as an attachment.</li>
+<li><code>-&gt;embedImage('/path/logo.png', 'logo_cid')</code>: To be used in HTML within e-mail (<code>&lt;img src="cid:logo_cid"&gt;</code>) embeds images.</li>
+<li><code>-&gt;html('HTML Kodu')</code>: Sets the HTML content of the email. Automatically creates plain text (AltBody) version for security.</li>
+<li><code>-&gt;text('Düz Metin')</code>: Used if you want to send the e-mail only in plain text.</li>
+<li><code>-&gt;send()</code>: Completes all transactions in the chain and sends the e-mail via SMTP. If there is an error, it throws an Exception.</li>
+</ul>
+<h3 style="margin-top:20px; margin-bottom:10px; font-size: 1.1em; color: var(--text-color);">Advanced Example: PHP Template (View) and Dynamic File Submission</h3>
+<p>If you do not want to write the HTML content of the email into a string like spaghetti code,<code>ob_start()</code>You can import an external PHP template file (with variables inside) and embed a system-generated PDF directly into the email using:</p>
+<pre><code><span class="kw">use</span> <span class="var">App\Service\Mailer</span>;
 <span class="cm">// 1. Your dynamic data</span>
-<span class="var">$siparisNo</span> = <span class="st">'#90210'</span>;
-<span class="var">$pdfDosyasi</span> = <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/temp/fatura_90210.pdf'</span>;
-<span class="cm">// 2. Loading HTML Template externally (Output Buffering)</span>
+<span class="var">$orderNo</span> = <span class="st">'#90210'</span>;
+<span class="var">$pdfFile</span> = <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/temp/invoice_90210.pdf'</span>;
+<span class="cm">// 2. Loading the HTML Template from outside (Output Buffering)</span>
 <span class="fn">ob_start</span>();
-<span class="kw">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/views/email/siparis.php'</span>;
-<span class="var">$htmlIcerik</span> = <span class="fn">ob_get_clean</span>();
-<span class="cm">// 3. Sending the Mail</span>
+<span class="kw">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/views/email/order.php'</span>;
+<span class="var">$htmlContent</span> = <span class="fn">ob_get_clean</span>();
+<span class="cm">// 3. Sending the Email</span>
 <span class="var">Mailer</span>::create()
-    -&gt;<span class="fn">to</span>(<span class="st">'musteri@mail.com'</span>, <span class="st">'Ahmet Yılmaz'</span>)
-    -&gt;<span class="fn">bcc</span>(<span class="st">'arsiv@sirket.com'</span>) <span class="cm">// Customer cannot see this</span>
-    -&gt;<span class="fn">subject</span>(<span class="st">'Siparişiniz Onaylandı: '</span> . <span class="var">$siparisNo</span>)
-    -&gt;<span class="fn">html</span>(<span class="var">$htmlIcerik</span>)
-    -&gt;<span class="fn">attach</span>(<span class="var">$pdfDosyasi</span>, <span class="st">'Siparis_Faturasi.pdf'</span>)
+    -&gt;<span class="fn">to</span>(<span class="st">'custeri@mail.com'</span>, <span class="st">'Ahmet Yilmaz'</span>)
+    -&gt;<span class="fn">bcc</span>(<span class="st">'archive@company.com'</span>) <span class="cm">// Client cannot see this</span>
+    -&gt;<span class="fn">subject</span>(<span class="st">'Your Order Confirmed:'</span> . <span class="var">$orderNo</span>)
+    -&gt;<span class="fn">html</span>(<span class="var">$htmlContent</span>)
+    -&gt;<span class="fn">attach</span>(<span class="var">$pdfFile</span>, <span class="st">'Order_Invoice.pdf'</span>)
     -&gt;<span class="fn">send</span>();</code></pre>
-        </div>
-        <div class="card" id="svc-iyzico">
-<h2>Iyzico <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></h2>
-<div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Membership &amp; API Keys:</strong> To use Iyzico payment infrastructure <a href="https://www.iyzico.com" style="color: var(--green); font-weight: bold;" target="_blank">iyzico.com</a> (live) or <a href="https://sandbox-merchants.iyzipay.com/" style="color: var(--green); font-weight: bold;" target="_blank">sandbox.iyzipay.com</a> You need to create a seller account via (test) and get your API/Secret keys.</div>
+</div>
+<div class="card" id="svc-iyzico">
+<h2>Iyzico<span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></h2>
+<div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Membership &amp; API Keys:</strong>To use Iyzico payment infrastructure<a href="https://www.iyzico.com" style="color: var(--green); font-weight: bold;" target="_blank">iyzico.com</a>(live) or<a href="https://sandbox-merchants.iyzipay.com/" style="color: var(--green); font-weight: bold;" target="_blank">sandbox.iyzipay.com</a>You need to create a seller account via (test) and get your API/Secret keys.</div>
 <div class="code-badge" style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; font-family: monospace;">
 <strong>Class Location:</strong> <code style="color: #4ade80;">src/Service/Iyzico.php</code>
 </div>
 <p style="margin-bottom: 15px; font-size: 0.95em; color: #a1a1aa;">Iyzico Payment Service<br/>Provides a clean wrapper around the iyzipay-php SDK for payment processing,<br/>3D Secure flows, refunds, cancellations, card vault, and marketplace sub-merchants.<br/>Required environment variables:<br/>IYZICO_API_KEY — Your iyzico API key<br/>IYZICO_SECRET_KEY — Your iyzico secret key<br/>IYZICO_BASE_URL — API base URL (https://sandbox-api.iyzipay.com or https://api.iyzipay.com)</p>
 <div class="alert a-info" style="margin-bottom: 20px;">
-<strong>ℹ️ Standard Return:</strong> All methods <code>['status' =&gt; 'success|error', 'message' =&gt; '...', 'data' =&gt; [...]]</code> Converts a standard string in the format (with exceptions). <strong>in the array returned in the "Expected Return" section below. <code>data</code> The detailed structure of the key is shown.</strong>
+<strong>ℹ️ Standard Return:</strong>All methods<code>['status' =&gt; 'success|error', 'message' =&gt; '...', 'data' =&gt; [...]]</code>Converts a standard string in the format (with exceptions).<strong>in the array returned in the "Expected Return" section below.<code>data</code>The detailed structure of the key is shown.</strong>
 </div>
 <h3>Methods and Usage Examples</h3>
 <div class="accordion-group">
@@ -1449,14 +1508,14 @@ if ($response['status'] === 'success') {
 </div>
 </div>
 <div class="card" id="svc-stripe">
-<h2>Stripe <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></h2>
-<div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Membership &amp; API Keys:</strong> To use the Stripe global payment infrastructure <a href="https://stripe.com" style="color: var(--green); font-weight: bold;" target="_blank">stripe.com</a> You must create an account via and obtain your Public and Secret keys from the developer panel.</div>
+<h2>Stripe<span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></h2>
+<div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Membership &amp; API Keys:</strong>To use the Stripe global payment infrastructure<a href="https://stripe.com" style="color: var(--green); font-weight: bold;" target="_blank">stripe.com</a>You must create an account via and obtain your Public and Secret keys from the developer panel.</div>
 <div class="code-badge" style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; font-family: monospace;">
 <strong>Class Location:</strong> <code style="color: #4ade80;">src/Service/Stripe.php</code>
 </div>
 <p style="margin-bottom: 15px; font-size: 0.95em; color: #a1a1aa;">Stripe Payment Service<br/>Provides a clean wrapper around the stripe-php SDK for payment processing,<br/>customer management, subscriptions, product creation, and webhook handling.<br/>Required environment variables:<br/>STRIPE_SECRET_KEY — Your Stripe secret API key<br/>STRIPE_PUBLISHABLE_KEY — Your Stripe publishable key (for front-end reference)<br/>STRIPE_WEBHOOK_SECRET — Webhook endpoint signing secret</p>
 <div class="alert a-info" style="margin-bottom: 20px;">
-<strong>ℹ️ Standard Return:</strong> All methods <code>['status' =&gt; 'success|error', 'message' =&gt; '...', 'data' =&gt; [...]]</code> Converts a standard string in the format (with exceptions). <strong>in the array returned in the "Expected Return" section below. <code>data</code> The detailed structure of the key is shown.</strong>
+<strong>ℹ️ Standard Return:</strong>All methods<code>['status' =&gt; 'success|error', 'message' =&gt; '...', 'data' =&gt; [...]]</code>Converts a standard string in the format (with exceptions).<strong>in the array returned in the "Expected Return" section below.<code>data</code>The detailed structure of the key is shown.</strong>
 </div>
 <h3>Methods and Usage Examples</h3>
 <div class="accordion-group">
@@ -1774,7 +1833,7 @@ if ($response['status'] === 'success') {
 </div>
 <p style="margin-bottom: 15px; font-size: 0.95em; color: #a1a1aa;">JWT Authentication Service<br/>Provides a clean wrapper around firebase/php-jwt for token generation,<br/>verification, refresh, and HTTP middleware integration.<br/>Required environment variables:<br/>JWT_SECRET_KEY — Secret key used for signing and verifying tokens<br/>JWT_ALGORITHM — Signing algorithm (e.g. HS256, HS384, HS512)<br/>JWT_EXPIRY — Default token lifetime in seconds (e.g. 3600)</p>
 <div class="alert a-info" style="margin-bottom: 20px;">
-<strong>ℹ️ Standard Return:</strong> All methods <code>['status' =&gt; 'success|error', 'message' =&gt; '...', 'data' =&gt; [...]]</code> Converts a standard string in the format (with exceptions). <strong>in the array returned in the "Expected Return" section below. <code>data</code> The detailed structure of the key is shown.</strong>
+<strong>ℹ️ Standard Return:</strong>All methods<code>['status' =&gt; 'success|error', 'message' =&gt; '...', 'data' =&gt; [...]]</code>Converts a standard string in the format (with exceptions).<strong>in the array returned in the "Expected Return" section below.<code>data</code>The detailed structure of the key is shown.</strong>
 </div>
 <h3>Methods and Usage Examples</h3>
 <div class="accordion-group">
@@ -2022,7 +2081,7 @@ if ($response['status'] === 'success') {
 </div>
 <p style="margin-bottom: 15px; font-size: 0.95em; color: #a1a1aa;">ImageProcessor — Wrapper for Intervention Image v3.<br/>Provides simple methods for common image operations such as<br/>resizing, cropping, watermarking, format conversion, and compression.<br/>Required ENV variables:<br/>IMAGE_DRIVER — "gd" or "imagick" (default: gd)<br/>IMAGE_QUALITY — Default JPEG/WebP quality 1-100 (default: 80)</p>
 <div class="alert a-info" style="margin-bottom: 20px;">
-<strong>ℹ️ Standard Return:</strong> All methods <code>['status' =&gt; 'success|error', 'message' =&gt; '...', 'data' =&gt; [...]]</code> Converts a standard string in the format (with exceptions). <strong>in the array returned in the "Expected Return" section below. <code>data</code> The detailed structure of the key is shown.</strong>
+<strong>ℹ️ Standard Return:</strong>All methods<code>['status' =&gt; 'success|error', 'message' =&gt; '...', 'data' =&gt; [...]]</code>Converts a standard string in the format (with exceptions).<strong>in the array returned in the "Expected Return" section below.<code>data</code>The detailed structure of the key is shown.</strong>
 </div>
 <h3>Methods and Usage Examples</h3>
 <div class="accordion-group">
@@ -2308,14 +2367,14 @@ true</code></pre>
 </div>
 </div>
 <div class="card" id="svc-s3">
-<h2>AWS S3 <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></h2>
-<div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Membership &amp; API Keys:</strong> To use S3 Bucket <a href="https://aws.amazon.com/s3/" style="color: var(--green); font-weight: bold;" target="_blank">aws.amazon.com/s3</a> You must open an AWS account via , create a Bucket and obtain an Access Key and Secret Key with programmatic access permission via IAM.</div>
+<h2>AWS S3<span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></h2>
+<div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Membership &amp; API Keys:</strong>To use S3 Bucket<a href="https://aws.amazon.com/s3/" style="color: var(--green); font-weight: bold;" target="_blank">aws.amazon.com/s3</a>You must open an AWS account via , create a Bucket and obtain an Access Key and Secret Key with programmatic access permission via IAM.</div>
 <div class="code-badge" style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; font-family: monospace;">
 <strong>Class Location:</strong> <code style="color: #4ade80;">src/Service/S3Storage.php</code>
 </div>
 <p style="margin-bottom: 15px; font-size: 0.95em; color: #a1a1aa;">S3Storage — Wrapper for AWS S3 SDK.<br/>Provides simple methods for uploading, downloading, deleting, listing,<br/>and managing files on Amazon S3, MinIO, DigitalOcean Spaces, or any<br/>S3-compatible object storage.<br/>Required ENV variables:<br/>AWS_ACCESS_KEY_ID — IAM access key<br/>AWS_SECRET_ACCESS_KEY — IAM secret key<br/>AWS_DEFAULT_REGION — e.g. "eu-central-1"<br/>AWS_BUCKET — Default bucket name<br/>Optional ENV variables:<br/>AWS_ENDPOINT — Custom endpoint URL (MinIO, Spaces, etc.)</p>
 <div class="alert a-info" style="margin-bottom: 20px;">
-<strong>ℹ️ Standard Return:</strong> All methods <code>['status' =&gt; 'success|error', 'message' =&gt; '...', 'data' =&gt; [...]]</code> Converts a standard string in the format (with exceptions). <strong>in the array returned in the "Expected Return" section below. <code>data</code> The detailed structure of the key is shown.</strong>
+<strong>ℹ️ Standard Return:</strong>All methods<code>['status' =&gt; 'success|error', 'message' =&gt; '...', 'data' =&gt; [...]]</code>Converts a standard string in the format (with exceptions).<strong>in the array returned in the "Expected Return" section below.<code>data</code>The detailed structure of the key is shown.</strong>
 </div>
 <h3>Methods and Usage Examples</h3>
 <div class="accordion-group">
@@ -2444,7 +2503,7 @@ true</code></pre>
 <div style="display: flex; flex-direction: column; gap: 15px; box-sizing: border-box; width: 100%; max-width: 100%;">
 <div style="flex: 1; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Parameter Structure:</h4>
-<pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #a78bfa; border: 1px solid rgba(255,255,255,0.05); margin: 0; box-sizing: border-box; max-width: 100%;"><code>@param  array<string> $remotePaths List of object keys to delete.</string></code></pre>
+<pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #a78bfa; border: 1px solid rgba(255,255,255,0.05); margin: 0; box-sizing: border-box; max-width: 100%;"><code>@param  array<string>$remotePaths List of object keys to delete.</string></code></pre>
 </div>
 <div style="display: flex; flex-wrap: wrap; gap: 15px; box-sizing: border-box; width: 100%;">
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
@@ -2470,7 +2529,7 @@ true</code></pre>
 <p style="color: #d1d5db; margin-bottom: 15px; word-wrap: break-word;">Get the public URL for an object.</p>
 <div style="display: flex; flex-direction: column; gap: 15px; box-sizing: border-box; width: 100%; max-width: 100%;">
 <div style="flex: 1; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-<h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Parametre Yapısı:</h4>
+<h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Parameter Structure:</h4>
 <pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #a78bfa; border: 1px solid rgba(255,255,255,0.05); margin: 0; box-sizing: border-box; max-width: 100%;"><code>@param  string $remotePath Object key in the bucket.</code></pre>
 </div>
 <div style="display: flex; flex-wrap: wrap; gap: 15px; box-sizing: border-box; width: 100%;">
@@ -2667,7 +2726,7 @@ if ($response['status'] === 'success') {
 </div>
 <p style="margin-bottom: 15px; font-size: 0.95em; color: #a1a1aa;">Redis Cache Service<br/>Provides a clean, simple interface for Redis caching operations<br/>using the predis/predis SDK. All configuration is read from $_ENV.<br/>Required environment variables:<br/>REDIS_HOST — Redis server hostname (default: 127.0.0.1)<br/>REDIS_PORT — Redis server port (default: 6379)<br/>REDIS_PASSWORD — Redis authentication password (default: null)<br/>REDIS_DATABASE — Redis database index (default: 0)</p>
 <div class="alert a-info" style="margin-bottom: 20px;">
-<strong>ℹ️ Standard Return:</strong> All methods <code>['status' =&gt; 'success|error', 'message' =&gt; '...', 'data' =&gt; [...]]</code> Converts a standard string in the format (with exceptions). <strong>in the array returned in the "Expected Return" section below. <code>data</code> The detailed structure of the key is shown.</strong>
+<strong>ℹ️ Standard Return:</strong>All methods<code>['status' =&gt; 'success|error', 'message' =&gt; '...', 'data' =&gt; [...]]</code>Converts a standard string in the format (with exceptions).<strong>in the array returned in the "Expected Return" section below.<code>data</code>The detailed structure of the key is shown.</strong>
 </div>
 <h3>Methods and Usage Examples</h3>
 <div class="accordion-group">
@@ -3096,14 +3155,14 @@ true</code></pre>
 </div>
 </div>
 <div class="card" id="svc-pusher">
-<h2>pusher <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></h2>
-<div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Membership &amp; API Keys:</strong> To communicate in real time via WebSocket <a href="https://pusher.com" style="color: var(--green); font-weight: bold;" target="_blank">pusher.com</a> You should create a free Channels application via and get your App ID, Key and Secret information.</div>
+<h2>pusher<span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></h2>
+<div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Membership &amp; API Keys:</strong>To communicate in real time via WebSocket<a href="https://pusher.com" style="color: var(--green); font-weight: bold;" target="_blank">pusher.com</a>You should create a free Channels application via and get your App ID, Key and Secret information.</div>
 <div class="code-badge" style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; font-family: monospace;">
 <strong>Class Location:</strong> <code style="color: #4ade80;">src/Service/Pusher.php</code>
 </div>
 <p style="margin-bottom: 15px; font-size: 0.95em; color: #a1a1aa;">Pusher Realtime Service<br/>Provides a clean interface for Pusher Channels — broadcasting events,<br/>authenticating private/presence channels, and querying channel state.<br/>Uses the pusher/pusher-php-server SDK. All configuration from $_ENV.<br/>Required environment variables:<br/>PUSHER_APP_ID — Your Pusher application ID<br/>PUSHER_APP_KEY — Your Pusher application key<br/>PUSHER_APP_SECRET — Your Pusher application secret<br/>PUSHER_CLUSTER — Pusher cluster region (e.g., 'eu', 'us2', 'ap1')</p>
 <div class="alert a-info" style="margin-bottom: 20px;">
-<strong>ℹ️ Standard Return:</strong> All methods <code>['status' =&gt; 'success|error', 'message' =&gt; '...', 'data' =&gt; [...]]</code> Converts a standard string in the format (with exceptions). <strong>in the array returned in the "Expected Return" section below. <code>data</code> The detailed structure of the key is shown.</strong>
+<strong>ℹ️ Standard Return:</strong>All methods<code>['status' =&gt; 'success|error', 'message' =&gt; '...', 'data' =&gt; [...]]</code>Converts a standard string in the format (with exceptions).<strong>in the array returned in the "Expected Return" section below.<code>data</code>The detailed structure of the key is shown.</strong>
 </div>
 <h3>Methods and Usage Examples</h3>
 <div class="accordion-group">
@@ -3315,14 +3374,14 @@ if ($response['status'] === 'success') {
 </div>
 </div>
 <div class="card" id="svc-twilio">
-<h2>Twitter <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></h2>
-<div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Membership &amp; API Keys:</strong> To send SMS and WhatsApp messages <a href="https://www.twilio.com" style="color: var(--green); font-weight: bold;" target="_blank">twilio.com</a> You must open an account on , rent an available phone number and get your Account SID and Auth Token information from the panel.</div>
+<h2>Twitter<span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></h2>
+<div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Membership &amp; API Keys:</strong>To send SMS and WhatsApp messages<a href="https://www.twilio.com" style="color: var(--green); font-weight: bold;" target="_blank">twilio.com</a>You must open an account on , rent an available phone number and get your Account SID and Auth Token information from the panel.</div>
 <div class="code-badge" style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; font-family: monospace;">
 <strong>Class Location:</strong> <code style="color: #4ade80;">src/Service/Twilio.php</code>
 </div>
 <p style="margin-bottom: 15px; font-size: 0.95em; color: #a1a1aa;">Twilio Communications Service<br/>Provides a simplified interface for Twilio's messaging, voice,<br/>and verification APIs using the twilio/sdk. All configuration<br/>is read from $_ENV.<br/>Required environment variables:<br/>TWILIO_SID — Your Twilio Account SID<br/>TWILIO_AUTH_TOKEN — Your Twilio Auth Token<br/>TWILIO_FROM_NUMBER — Default "from" phone number (E.164 format, e.g., +15551234567)<br/>Optional environment variables:<br/>TWILIO_VERIFY_SID — Verify Service SID (required for verifyStart/verifyCheck)</p>
 <div class="alert a-info" style="margin-bottom: 20px;">
-<strong>ℹ️ Standard Return:</strong> All methods <code>['status' =&gt; 'success|error', 'message' =&gt; '...', 'data' =&gt; [...]]</code> Converts a standard string in the format (with exceptions). <strong>in the array returned in the "Expected Return" section below. <code>data</code> The detailed structure of the key is shown.</strong>
+<strong>ℹ️ Standard Return:</strong>All methods<code>['status' =&gt; 'success|error', 'message' =&gt; '...', 'data' =&gt; [...]]</code>Converts a standard string in the format (with exceptions).<strong>in the array returned in the "Expected Return" section below.<code>data</code>The detailed structure of the key is shown.</strong>
 </div>
 <h3>Methods and Usage Examples</h3>
 <div class="accordion-group">
@@ -3390,7 +3449,7 @@ if ($response['status'] === 'success') {
 <details class="accordion" style="margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 5px; background: rgba(0,0,0,0.1); box-sizing: border-box; max-width: 100%;">
 <summary style="cursor: pointer; padding: 10px; font-weight: bold; background: rgba(255,255,255,0.05); color: #fff; border-radius: 4px; box-sizing: border-box; max-width: 100%; word-break: break-all;"><code style="background: transparent; color: #60a5fa; font-size: 1.1em; white-space: pre-wrap; word-break: break-all;">call(string $to, string $twimlUrl)</code></summary>
 <div class="accordion-content" style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.05); box-sizing: border-box; max-width: 100%; overflow-x: hidden;">
-<p style="color: #d1d5db; margin-bottom: 15px; word-wrap: break-word;">Initiate a voice call. Places an outbound call to the specified number. The call behavior is defined by the TwiML document at the given URL. The TwiML URL should return instructions like <say>, <play>, <gather>, etc.</gather></play></say></p>
+<p style="color: #d1d5db; margin-bottom: 15px; word-wrap: break-word;">Initiate a voice call. Places an outbound call to the specified number. The call behavior is defined by the TwiML document at the given URL. The TwiML URL should return instructions like<say>, <play>, <gather>, etc.</gather></play></say></p>
 <div style="display: flex; flex-direction: column; gap: 15px; box-sizing: border-box; width: 100%; max-width: 100%;">
 <div style="flex: 1; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Parameter Structure:</h4>
@@ -3573,81 +3632,25 @@ if ($response['status'] === 'success') {
 </div>
 </div>
 <div class="card" id="svc-sentry">
-<h2>sentry <span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></h2>
-<div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Membership &amp; API Keys:</strong> To enable error and performance tracking <a href="https://sentry.io" style="color: var(--green); font-weight: bold;" target="_blank">sentry.io</a> You must create your free account via , add a PHP project and copy the DSN (Client Key) address given to you.</div>
+<h2>sentry<span class="tag b-core" style="padding: 1px 5px; margin-left: 2px; font-weight: bold;" title="Paid/Licensed Service">$</span></h2>
+<div class="alert a-info" style="margin-top: 10px; padding: 10px 15px; font-size: 0.85em;"><strong>📌 Membership &amp; API Keys:</strong>To enable error and performance tracking<a href="https://sentry.io" style="color: var(--green); font-weight: bold;" target="_blank">sentry.io</a>You must create your free account via , add a PHP project and copy the DSN (Client Key) address given to you.</div>
 <div class="code-badge" style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; font-family: monospace;">
-<strong>Class Location:</strong> <code style="color: #4ade80;">config/sentry.php</code>
+<strong>Class Location:</strong> <code style="color: #4ade80;">src/Service/Sentry.php</code>
 </div>
-<p style="margin-bottom: 15px; font-size: 0.95em; color: #a1a1aa;"></p>
+<p style="margin-bottom: 15px; font-size: 0.95em; color: #a1a1aa;">It allows you to collect errors and warnings in your project in a central log system. At the start of your application (e.g.<code>ApiControl.php</code>or<code>ViewControl.php</code>It is recommended to start in .</p>
 <div class="alert a-info" style="margin-bottom: 20px;">
-<strong>ℹ️ Standard Return:</strong> All methods <code>['status' =&gt; 'success|error', 'message' =&gt; '...', 'data' =&gt; [...]]</code> Converts a standard string in the format (with exceptions). <strong>in the array returned in the "Expected Return" section below. <code>data</code> The detailed structure of the key is shown.</strong>
-</div>
+<strong>ℹ️ Static Class:</strong>This service class is used directly with static methods, you do not need to create a new instance.</div>
 <h3>Methods and Usage Examples</h3>
 <div class="accordion-group">
 <details class="accordion" style="margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 5px; background: rgba(0,0,0,0.1); box-sizing: border-box; max-width: 100%;">
-<summary style="cursor: pointer; padding: 10px; font-weight: bold; background: rgba(255,255,255,0.05); color: #fff; border-radius: 4px; box-sizing: border-box; max-width: 100%; word-break: break-all;"><code style="background: transparent; color: #60a5fa; font-size: 1.1em; white-space: pre-wrap; word-break: break-all;">captureError(\Throwable $e)</code></summary>
+<summary style="cursor: pointer; padding: 10px; font-weight: bold; background: rgba(255,255,255,0.05); color: #fff; border-radius: 4px; box-sizing: border-box; max-width: 100%; word-break: break-all;"><code style="background: transparent; color: #60a5fa; font-size: 1.1em; white-space: pre-wrap; word-break: break-all;">init()</code></summary>
 <div class="accordion-content" style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.05); box-sizing: border-box; max-width: 100%; overflow-x: hidden;">
-<p style="color: #d1d5db; margin-bottom: 15px; word-wrap: break-word;">Sentry Error Tracking Configuration Initializes the Sentry SDK for error reporting and provides helper functions for capturing exceptions and messages. Required ENV variables: SENTRY_DSN — Sentry Data Source Name (project DSN from sentry.io) Optional ENV variables: APP_ENV — "0" for production, "1" for development (default: 0) APP_VERSION — Application version string, used as Sentry release tag Usage: require_once __DIR__ . '/sentry.php'; // Capture an exception try { ... } catch (\Throwable $e) { $eventId = captureError($e);</p>
+<p style="color: #d1d5db; margin-bottom: 15px; word-wrap: break-word;">Initializes the Sentry SDK based on environment variables. It must be called once at the very beginning of the application.</p>
 <div style="display: flex; flex-direction: column; gap: 15px; box-sizing: border-box; width: 100%; max-width: 100%;">
-<div style="flex: 1; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-<h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Parameter Structure:</h4>
-<pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #a78bfa; border: 1px solid rgba(255,255,255,0.05); margin: 0; box-sizing: border-box; max-width: 100%;"><code>}
-// Capture an informational message
-captureMessage('Deployment completed', 'info');
-/
-// ---------------------------------------------------------------
-//  Guard — only initialize when a DSN is available
-// ---------------------------------------------------------------
-if (empty($_ENV['SENTRY_DSN'])) {
-/**
-No-op fallback when Sentry is not configured.
-@param  \Throwable $e The exception (ignored).</code></pre>
-</div>
 <div style="display: flex; flex-wrap: wrap; gap: 15px; box-sizing: border-box; width: 100%;">
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
-<pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$sentry = new \Service\sentry();
-$response = $sentry-&gt;captureError($e);
-if ($response['status'] === 'success') {
-    // Başarılı
-}</code></pre>
-</div>
-<div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-<h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Expected Return ($response['data']):</h4>
-<pre style="background: rgba(69,26,3,0.4); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #facc15; border: 1px solid rgba(250,204,21,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>[
-    'id'      =&gt; '...',
-    'success' =&gt; true
-]</code></pre>
-</div>
-</div>
-</div>
-</div>
-</details>
-<details class="accordion" style="margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 5px; background: rgba(0,0,0,0.1); box-sizing: border-box; max-width: 100%;">
-<summary style="cursor: pointer; padding: 10px; font-weight: bold; background: rgba(255,255,255,0.05); color: #fff; border-radius: 4px; box-sizing: border-box; max-width: 100%; word-break: break-all;"><code style="background: transparent; color: #60a5fa; font-size: 1.1em; white-space: pre-wrap; word-break: break-all;">captureMessage(string $message, string $level = 'info')</code></summary>
-<div class="accordion-content" style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.05); box-sizing: border-box; max-width: 100%; overflow-x: hidden;">
-<p style="color: #d1d5db; margin-bottom: 15px; word-wrap: break-word;">No-op fallback when Sentry is not configured.</p>
-<div style="display: flex; flex-direction: column; gap: 15px; box-sizing: border-box; width: 100%; max-width: 100%;">
-<div style="flex: 1; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-<h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Parameter Structure:</h4>
-<pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #a78bfa; border: 1px solid rgba(255,255,255,0.05); margin: 0; box-sizing: border-box; max-width: 100%;"><code>@param  string $message The message (ignored).
-@param  string $level   Severity level (ignored).</code></pre>
-</div>
-<div style="display: flex; flex-wrap: wrap; gap: 15px; box-sizing: border-box; width: 100%;">
-<div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-<h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
-<pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$sentry = new \Service\sentry();
-$response = $sentry-&gt;captureMessage($message);
-if ($response['status'] === 'success') {
-    // Başarılı
-}</code></pre>
-</div>
-<div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-<h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Expected Return ($response['data']):</h4>
-<pre style="background: rgba(69,26,3,0.4); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #facc15; border: 1px solid rgba(250,204,21,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>[
-    'id'      =&gt; '...',
-    'success' =&gt; true
-]</code></pre>
+<pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>\Src\Service\Sentry::init();</code></pre>
 </div>
 </div>
 </div>
@@ -3656,34 +3659,20 @@ if ($response['status'] === 'success') {
 <details class="accordion" style="margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 5px; background: rgba(0,0,0,0.1); box-sizing: border-box; max-width: 100%;">
 <summary style="cursor: pointer; padding: 10px; font-weight: bold; background: rgba(255,255,255,0.05); color: #fff; border-radius: 4px; box-sizing: border-box; max-width: 100%; word-break: break-all;"><code style="background: transparent; color: #60a5fa; font-size: 1.1em; white-space: pre-wrap; word-break: break-all;">captureError(\Throwable $e)</code></summary>
 <div class="accordion-content" style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.05); box-sizing: border-box; max-width: 100%; overflow-x: hidden;">
-<p style="color: #d1d5db; margin-bottom: 15px; word-wrap: break-word;">$isProduction = ($_ENV['APP_ENV'] ?? '0') === '0'; /** @var string Human-readable environment name for Sentry */ $environment = $isProduction ? 'production': 'development'; /** Sample rate: 1.0 — capture 100 % of events in production 0.0 — capture nothing in development (use captureError/captureMessage explicitly) / $sampleRate = $isProduction ? 1.0 : 0.0; // ------------------------------------------------------------------------------- // Sentry initialization // ------------------------------------------------------------------------------- $options = [ 'dsn' =&gt; $_ENV['SENTRY_DSN'], 'environment' =&gt; $environment, 'sample_rate' =&gt; $sampleRate, ]; // Attach release version when available if (!empty($_ENV['APP_VERSION'])) { $options['release'] = $_ENV['APP_VERSION'];</p>
+<p style="color: #d1d5db; margin-bottom: 15px; word-wrap: break-word;">Sends a caught Exception or Throwable object to Sentry.</p>
 <div style="display: flex; flex-direction: column; gap: 15px; box-sizing: border-box; width: 100%; max-width: 100%;">
-<div style="flex: 1; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-<h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Parameter Structure:</h4>
-<pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #a78bfa; border: 1px solid rgba(255,255,255,0.05); margin: 0; box-sizing: border-box; max-width: 100%;"><code>}
-\Sentry\init($options);
-// ---------------------------------------------------------------
-//  Helper functions
-// ---------------------------------------------------------------
-/**
-Capture a Throwable and send it to Sentry.
-@param  \Throwable $e The exception or error to report.</code></pre>
-</div>
 <div style="display: flex; flex-wrap: wrap; gap: 15px; box-sizing: border-box; width: 100%;">
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
-<pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$sentry = new \Service\sentry();
-$response = $sentry-&gt;captureError($e);
-if ($response['status'] === 'success') {
-    // Başarılı
+<pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>try {
+    // Hata yapabilecek işlemler...
+} catch (\Throwable $e) {
+    $eventId = \Src\Service\Sentry::captureError($e);
 }</code></pre>
 </div>
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-<h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Expected Return ($response['data']):</h4>
-<pre style="background: rgba(69,26,3,0.4); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #facc15; border: 1px solid rgba(250,204,21,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>[
-    'id'      =&gt; '...',
-    'success' =&gt; true
-]</code></pre>
+<h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Expected Return (string|null):</h4>
+<pre style="background: rgba(69,26,3,0.4); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #facc15; border: 1px solid rgba(250,204,21,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>"dfb9370...b86" // Sentry Olay ID'si</code></pre>
 </div>
 </div>
 </div>
@@ -3692,28 +3681,12 @@ if ($response['status'] === 'success') {
 <details class="accordion" style="margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 5px; background: rgba(0,0,0,0.1); box-sizing: border-box; max-width: 100%;">
 <summary style="cursor: pointer; padding: 10px; font-weight: bold; background: rgba(255,255,255,0.05); color: #fff; border-radius: 4px; box-sizing: border-box; max-width: 100%; word-break: break-all;"><code style="background: transparent; color: #60a5fa; font-size: 1.1em; white-space: pre-wrap; word-break: break-all;">captureMessage(string $message, string $level = 'info')</code></summary>
 <div class="accordion-content" style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.05); box-sizing: border-box; max-width: 100%; overflow-x: hidden;">
-<p style="color: #d1d5db; margin-bottom: 15px; word-wrap: break-word;">Capture a plain-text message and send it to Sentry. Supported severity levels: fatal, error, warning, info, debug.</p>
+<p style="color: #d1d5db; margin-bottom: 15px; word-wrap: break-word;">Sends a specified text to Sentry as an information/warning message. Valid levels:<code>fatal</code>, <code>error</code>, <code>warning</code>, <code>info</code>, <code>debug</code>.</p>
 <div style="display: flex; flex-direction: column; gap: 15px; box-sizing: border-box; width: 100%; max-width: 100%;">
-<div style="flex: 1; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-<h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Parameter Structure:</h4>
-<pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #a78bfa; border: 1px solid rgba(255,255,255,0.05); margin: 0; box-sizing: border-box; max-width: 100%;"><code>@param  string $message Human-readable message to log.
-@param  string $level   Sentry severity level (default: info).</code></pre>
-</div>
 <div style="display: flex; flex-wrap: wrap; gap: 15px; box-sizing: border-box; width: 100%;">
 <div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
 <h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Example Usage:</h4>
-<pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$sentry = new \Service\sentry();
-$response = $sentry-&gt;captureMessage($message);
-if ($response['status'] === 'success') {
-    // Başarılı
-}</code></pre>
-</div>
-<div style="flex: 1; min-width: 250px; max-width: 100%; box-sizing: border-box; overflow: hidden;">
-<h4 style="margin-bottom: 8px; font-size: 0.9em; color: #9ca3af;">Expected Return ($response['data']):</h4>
-<pre style="background: rgba(69,26,3,0.4); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #facc15; border: 1px solid rgba(250,204,21,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>[
-    'id'      =&gt; '...',
-    'success' =&gt; true
-]</code></pre>
+<pre style="background: rgba(15,23,42,0.6); padding: 10px; border-radius: 4px; font-size: 0.85em; overflow-x: auto; color: #34d399; border: 1px solid rgba(52,211,153,0.2); margin: 0; height: 100%; box-sizing: border-box; max-width: 100%;"><code>$eventId = \Src\Service\Sentry::captureMessage('Sipariş başarıyla tamamlandı.', 'info');</code></pre>
 </div>
 </div>
 </div>
@@ -3722,23 +3695,21 @@ if ($response['status'] === 'success') {
 </div>
 </div>
 </section>
-<!-- ====== VIEW HELPERS ====== -->
+====== VIEW HELPERS ======
 <section id="vh-display">
-<h2>ViewHelpers— <code>display()</code> <span class="tag b-view">ViewMethod</span></h2>
-<p>When printing data from the database or user input to the DOM <strong>mandatory XSS protection</strong> implements. Instead of throwing an error on null or empty values, the default value is returned.</p>
+<h2>ViewHelpers—<code>display()</code> <span class="tag b-view">ViewMethod</span></h2>
+<p>When printing data from the database or user input to the DOM<strong>mandatory XSS protection</strong>implements. Instead of throwing an error on null or empty values, the default value is returned.</p>
 <span class="ret">string display(mixed $data, string $default = '')</span>
 <div class="alert a-info" style="margin-top: 10px; margin-bottom: 24px; padding: 12px 20px;">
-<strong>💡 Tip: <code>$default</code> Usage</strong><br/>
-            Second parameter (<code>$default</code>) is the rescue text that will be printed on the screen when the data coming from the database is empty (null, false, empty string). For example, for a user whose name data is not entered <code>display($isim, 'İsimsiz')</code> If you use it, your page will present meaningful content instead of ugly whitespace.
-        </div>
+<strong>💡 Tip:<code>$default</code>Usage</strong><br/>Second parameter (<code>$default</code>) is the rescue text that will be printed on the screen when the data coming from the database is empty (null, false, empty string). For example, for a user whose name data is not entered<code>display($isim, 'İsimsiz')</code>If you use it, your page will present meaningful content instead of ugly whitespace.</div>
 <pre><code><span class="cm">&lt;!-- ❌ Insecure — Creates an XSS vulnerability --&gt;</span>
 &lt;h1&gt;&lt;?= <span class="var">$user</span>[<span class="st">'name'</span>] ?&gt;&lt;/h1&gt;
 <span class="cm">&lt;!-- ✅ Safe Use of ArtiFrame --&gt;</span>
 &lt;h1&gt;&lt;?= <span class="fn">display</span>(<span class="var">$user</span>[<span class="st">'name'</span>], <span class="st">'Anonymous User'</span>) ?&gt;&lt;/h1&gt;</code></pre>
 </section>
 <section id="vh-escapeurl">
-<h2>ViewHelpers— <code>escapeUrl()</code> <span class="tag b-view">ViewMethod</span></h2>
-<p>Links received from users (e.g. profile websites) <code>&lt;a href="..."&gt;</code> or <code>&lt;img src="..."&gt;</code> It is used when pressing inside. <code>javascript:alert(1)</code> It prevents code execution over the connection by rendering dangerous payloads such as (Stored XSS) harmless.</p>
+<h2>ViewHelpers—<code>escapeUrl()</code> <span class="tag b-view">ViewMethod</span></h2>
+<p>Links received from users (e.g. profile websites)<code>&lt;a href="..."&gt;</code>or<code>&lt;img src="..."&gt;</code>It is used when pressing inside.<code>javascript:alert(1)</code>It prevents code execution over the connection by rendering dangerous payloads such as (Stored XSS) harmless.</p>
 <span class="ret">string escapeUrl(string $url)</span>
 <pre><code><span class="cm">&lt;!-- ❌ Insecure — JS code may be leaked via URL --&gt;</span>
 &lt;a href="&lt;?= <span class="var">$user</span>[<span class="st">'website'</span>] ?&gt;"&gt;Siteyi Ziyaret Et&lt;/a&gt;
@@ -3746,10 +3717,10 @@ if ($response['status'] === 'success') {
 &lt;a href="&lt;?= <span class="fn">escapeUrl</span>(<span class="var">$user</span>[<span class="st">'website'</span>]) ?&gt;"&gt;Siteyi Ziyaret Et&lt;/a&gt;</code></pre>
 </section>
 <section id="vh-csrf">
-<h2>ViewHelpers— <code>csrfField()</code> <span class="tag b-view">ViewMethod</span></h2>
-<p>Adds a hidden token field to HTML forms against CSRF attacks. <strong>It is mandatory to use it on every page containing a POST form.</strong></p>
+<h2>ViewHelpers—<code>csrfField()</code> <span class="tag b-view">ViewMethod</span></h2>
+<p>Adds a hidden token field to HTML forms against CSRF attacks.<strong>It is mandatory to use it on every page containing a POST form.</strong></p>
 <span class="ret">string csrfField()</span>
-<p>This method automatically prints the following HTML output into your form: <code>&lt;input type="hidden" name="csrf_token" value="..."&gt;</code>. If you do not want to use the method, you can use this hidden input as its value. <code>display()</code> You can also add it manually by wrapping it with .</p>
+<p>This method automatically prints the following HTML output into your form:<code>&lt;input type="hidden" name="csrf_token" value="..."&gt;</code>. If you do not want to use the method, you can use this hidden input as its value.<code>display()</code>You can also add it manually by wrapping it with .</p>
 <pre><code><span class="cm">&lt;!-- Frontend (HTML) --&gt;</span>
 &lt;form data-js="kaydet-form"&gt;
     &lt;?= <span class="fn">csrfField</span>() ?&gt; <span class="cm">&lt;!-- Automatically generates hidden input --&gt;</span>
@@ -3771,8 +3742,8 @@ if ($response['status'] === 'success') {
 });</code></pre>
 </section>
 <section id="vh-dates">
-<h2>View Helpers — Date Functions <span class="tag b-view">ViewMethod</span></h2>
-<p>in database <code class="ic">Y-m-d H:i:s</code> Processes date strings or UNIX timestamp values ​​in format. All textual output by language (<code class="ic">tr</code>, <code class="ic">en</code>, <code class="ic">de</code>, <code class="ic">fr</code>, <code class="ic">es</code>) is localized.</p>
+<h2>View Helpers — Date Functions<span class="tag b-view">ViewMethod</span></h2>
+<p>in database<code class="ic">Y-m-d H:i:s</code>Processes date strings or UNIX timestamp values ​​in format. All textual output by language (<code class="ic">tr</code>, <code class="ic">en</code>, <code class="ic">de</code>, <code class="ic">fr</code>, <code class="ic">es</code>) is localized.</p>
 <table class="sig-table">
 <thead><tr><th>Function</th><th>Output Example</th><th>Explanation</th></tr></thead>
 <tbody>
@@ -3788,10 +3759,10 @@ if ($response['status'] === 'success') {
 </tbody>
 </table>
 <div class="alert a-info" style="margin-top: 0; margin-bottom: 24px;">
-<strong>💡 Understanding Parameters: <code>$format</code> And <code>$lang</code></strong>
+<strong>💡 Understanding Parameters:<code>$format</code>And<code>$lang</code></strong>
 <ul style="margin-top: 10px; margin-bottom: 0;">
-<li style="margin-bottom: 8px;"><strong><code>$format</code> (Format):</strong> Only <code>formatDate()</code> It is used with the function. It accepts standard PHP date letters. (For example: <code>'d/m/Y'</code> ➔ 24/07/2026, or <code>'H:i'</code> ➔ 15:30). It allows you to create your own date pattern when other ready-made functions (day, year, etc.) are insufficient.</li>
-<li style="margin-bottom: 0;"><strong><code>$lang</code> (Language):</strong> It is used in functions that contain text (month name, word "before") in their output. If you leave this parameter empty, the system <strong>by default <code>'tr'</code> (Turkish)</strong> it works. If you are doing a multilingual project, enter the language code (<code>tr, en, de, fr, es</code>) is enough to enter. (Ex: <code>timeAgo($tarih, 'en')</code> ➔ 5 minutes ago)</li>
+<li style="margin-bottom: 8px;"><strong><code>$format</code>(Format):</strong>Only<code>formatDate()</code>It is used with the function. It accepts standard PHP date letters. (For example:<code>'d/m/Y'</code>➔ 24/07/2026, or<code>'H:i'</code>➔ 15:30). It allows you to create your own date pattern when other ready-made functions (day, year, etc.) are insufficient.</li>
+<li style="margin-bottom: 0;"><strong><code>$lang</code>(Language):</strong>It is used in functions that contain text (month name, word "before") in their output. If you leave this parameter empty, the system<strong>by default<code>'tr'</code>(Turkish)</strong>it works. If you are doing a multilingual project, enter the language code (<code>tr, en, de, fr, es</code>) is enough to enter. (Ex:<code>timeAgo($tarih, 'en')</code>➔ 5 minutes ago)</li>
 </ul>
 </div>
 <pre><code><span class="cm">&lt;!-- Assume it is a UNIX timestamp retrieved with the time() function --&gt;</span>
@@ -3806,44 +3777,44 @@ if ($response['status'] === 'success') {
 <span class="cm">&lt;!-- Output: vor 5 Minutes --&gt;</span></code></pre>
 </section>
 <section id="vh-truncate">
-<h2>ViewHelpers— <code>truncate()</code> <span class="tag b-view">ViewMethod</span></h2>
+<h2>ViewHelpers—<code>truncate()</code> <span class="tag b-view">ViewMethod</span></h2>
 <span class="ret">string truncate(string $text, int $length = 100, string $append = '...')</span>
 <p>It trims long texts to the desired character limit without cutting the last word and adds the specified suffix at the end.</p>
 <pre><code>&lt;p&gt;&lt;?= <span class="fn">truncate</span>(<span class="var">$post</span>[<span class="st">'contents'</span>], <span class="nu">160</span>, <span class="st">'...'</span>) ?&gt;&lt;/p&gt;</code></pre>
 </section>
 <section id="vh-activeclass">
-<h2>ViewHelpers— <code>activeClass()</code> <span class="tag b-view">ViewMethod</span></h2>
+<h2>ViewHelpers—<code>activeClass()</code> <span class="tag b-view">ViewMethod</span></h2>
 <span class="ret">string activeClass(string $currentPath, string $targetPath, string $className = 'active')</span>
 <p>If the current page and the checked menu link match, it returns the CSS class. Perfect for navbar.</p>
 <pre><code>&lt;li class="&lt;?= <span class="fn">activeClass</span>(<span class="var">$current_url</span>, <span class="st">'/communication'</span>, <span class="st">'current-page'</span>) ?&gt;"&gt;</code></pre>
 </section>
 <section id="vh-formatsize">
-<h2>ViewHelpers— <code>formatSize()</code> <span class="tag b-view">ViewMethod</span></h2>
+<h2>ViewHelpers—<code>formatSize()</code> <span class="tag b-view">ViewMethod</span></h2>
 <span class="ret">string formatSize(int $bytes)</span>
 <p>Converts the given file size in bytes to B, KB, MB, GB units using logarithmic calculation.</p>
 <pre><code>&lt;span&gt;&lt;?= <span class="fn">formatSize</span>(<span class="nu">10485760</span>) ?&gt;&lt;/span&gt; <span class="cm">&lt;!-- 10.00 MB --&gt;</span></code></pre>
 </section>
 <section id="vh-maskemail">
-<h2>ViewHelpers— <code>maskEmail()</code> <span class="tag b-view">ViewMethod</span></h2>
+<h2>ViewHelpers—<code>maskEmail()</code> <span class="tag b-view">ViewMethod</span></h2>
 <span class="ret">string maskEmail(?string $email)</span>
 <p>Masks e-mail addresses in accordance with KVKK / GDPR compliance. Stars from the first letter to the @ sign.</p>
 <pre><code>&lt;td&gt;&lt;?= <span class="fn">maskEmail</span>(<span class="st">'utku@artilingo.com'</span>) ?&gt;&lt;/td&gt; <span class="cm">&lt;!-- u***@artilingo.com --&gt;</span></code></pre>
 </section>
 <section id="vh-maskphone">
-<h2>ViewHelpers— <code>maskPhone()</code> <span class="tag b-view">ViewMethod</span></h2>
+<h2>ViewHelpers—<code>maskPhone()</code> <span class="tag b-view">ViewMethod</span></h2>
 <span class="ret">string maskPhone(string $phone)</span>
 <p>Advanced phone number masking. It prevents data breaches by completely hiding critical digits.</p>
 <pre><code>&lt;td&gt;&lt;?= <span class="fn">maskPhone</span>(<span class="st">'05551234567'</span>) ?&gt;&lt;/td&gt; <span class="cm">&lt;!-- 0555 *** ** 67 --&gt;</span></code></pre>
 </section>
 <section id="vh-slugify">
-<h2>ViewHelpers— <code>slugify()</code> <span class="tag b-view">ViewMethod</span></h2>
+<h2>ViewHelpers—<code>slugify()</code> <span class="tag b-view">ViewMethod</span></h2>
 <span class="ret">string slugify(string ...$texts)</span>
 <p>URL friendly SEO link builder. There is no parameter limit (Variadic). You can write the output directly into href.</p>
 <pre><code>&lt;a href="/yazi/&lt;?= <span class="fn">slugify</span>(<span class="var">$kat</span>, <span class="var">$title</span>) ?&gt;"&gt;Oku&lt;/a&gt; <span class="cm">&lt;!-- /text/technology/artificial-intelligence --&gt;</span></code></pre>
 </section>
 <section id="vh-money">
-<h2>ViewHelpers— <code>money()</code> <span class="tag b-view">ViewMethod</span></h2>
-<p>Formats the amount with the currency symbol. The currency code (ISO) automatically determines symbol placement. Default currency <code class="ic">usd</code>is.</p>
+<h2>ViewHelpers—<code>money()</code> <span class="tag b-view">ViewMethod</span></h2>
+<p>Formats the amount with the currency symbol. The currency code (ISO) automatically determines symbol placement. Default currency<code class="ic">usd</code>is.</p>
 <span class="ret">string money(float $amount, string $currency = 'usd')</span>
 <table class="sig-table">
 <thead><tr><th>Code</th><th>Output</th><th>Currency</th></tr></thead>
@@ -3865,19 +3836,19 @@ if ($response['status'] === 'success') {
 &lt;span&gt;&lt;?= <span class="fn">money</span>(<span class="var">$product</span>[<span class="st">'price'</span>], <span class="st">'usd'</span>) ?&gt;&lt;/span&gt;
 <span class="cm">&lt;!-- Output: $1,250.00 --&gt;</span></code></pre>
 </section>
-    <section id="vh-uuid">
-        <h2>View Helpers - <code>uuid()</code> <span class="tag b-view">ViewMethod</span></h2>
-        <p>Converts a 16-byte binary UUID from the database into a 36-character format and prints it to the screen with XSS protection.</p>
-        <pre><code><span class="cm">&lt;!-- Output: 0190ed84-3f12-7a91-8bc4-91823741abcd --&gt;</span>
-&lt;div&gt;<span class="kw">&lt;?=</span> <span class="fn">uuid</span>(<span class="var">$pull</span>[<span class="st">'id'</span>]) <span class="kw">?&gt;</span>&lt;/div&gt;</code></pre>
-    </section>
-<!-- ====== SYSTEM HELPERS ====== -->
+<section id="vh-uuid">
+<h2>ViewHelpers -<code>uuid()</code> <span class="tag b-view">ViewMethod</span></h2>
+<p>It converts the 16-byte binary UUID data coming from the database into 36-character format and prints it on the screen with XSS protection.</p>
+<pre><code><span class="cm">&lt;!-- Output: 0190ed84-3f12-7a91-8bc4-91823741abcd --&gt;</span>
+&lt;div&gt;<span class="kw">&lt;?=</span> <span class="fn">uuid</span>(<span class="var">$pull</span>[<span class="st">'ID'</span>]) <span class="kw">?&gt;</span>&lt;/div&gt;</code></pre>
+</section>
+====== SYSTEM HELPERS ======
 <section id="sh-apiresponse">
-<h2>System Helpers— <code>apiResponse()</code> <span class="tag b-api">SystemMethod</span></h2>
-<p>This function is used between Frontend (JS/Mobile) and Backend (PHP) of your application. <strong>It is the constitution of communication.</strong> Keys in the JSON data returned as Response <code>status</code>, <code>message</code> And <code>data</code> aspect <strong>is absolutely fixed (must be in English)</strong>.</p>
+<h2>System Helpers—<code>apiResponse()</code> <span class="tag b-api">SystemMethod</span></h2>
+<p>This function allows you to connect your application's Frontend (JS/Mobile) to Backend (PHP).<strong>It is the constitution of communication.</strong>Keys in the JSON data returned as Response<code>status</code>, <code>message</code>And<code>data</code>aspect<strong>is absolutely fixed (must be in English)</strong>.</p>
 <span class="ret">void apiResponse(string $status, string $message, array $data = [], \Throwable $exception = null)</span>
-<p style="margin-top: 15px;"><strong>Status Code (HTTP Code):</strong> On the PHP side, the first parameter <code>'success'</code> If typed, HTTP 200 is automatically returned, for everything else (eg: 'error', 'ok') 400 Bad Request is returned.</p>
-<p><strong>Live/Test Environment Sensitivity (APP_ENV):</strong> If the fourth parameter is <code>Exception</code> If you give it and your system is in Development (APP_ENV = 1) mode, it will crush the message you wrote and print the SQL error/line number on the screen as it is. If in live (APP_ENV = 0) mode, it hides errors and shows only the clear message you typed.</p>
+<p style="margin-top: 15px;"><strong>Status Code (HTTP Code):</strong>On the PHP side, the first parameter<code>'success'</code>If typed, HTTP 200 is automatically returned, for everything else (eg: 'error', 'ok') 400 Bad Request is returned.</p>
+<p><strong>Live/Test Environment Sensitivity (APP_ENV):</strong>If the fourth parameter is<code>Exception</code>If you give it and your system is in Development (APP_ENV = 1) mode, it will crush the message you wrote and print the SQL error/line number on the screen as it is. If in live (APP_ENV = 0) mode, it hides errors and shows only the clear message you typed.</p>
 <h3>PHP (Backend) Submission</h3>
 <pre><code><span class="cm">// 1. Standard Shipping</span>
 <span class="fn">apiResponse</span>(<span class="st">'success'</span>, <span class="st">'The operation completed successfully.'</span>, [<span class="st">'ID'</span> =&gt; <span class="nu">1453</span>]);
@@ -3902,8 +3873,8 @@ if ($response['status'] === 'success') {
   });</code></pre>
 </section>
 <section id="sh-json">
-<h2>System Helpers— <code>jsonResponse()</code> <span class="tag b-api">SystemMethod</span></h2>
-<p>It sets the JSON header, returns the HTTP status code, and securely prints the output with json_encode, then terminates the script. <strong>All API responses must be given through this function.</strong></p>
+<h2>System Helpers—<code>jsonResponse()</code> <span class="tag b-api">SystemMethod</span></h2>
+<p>It sets the JSON header, returns the HTTP status code, and securely prints the output with json_encode, then terminates the script.<strong>All API responses must be given through this function.</strong></p>
 <span class="ret">void jsonResponse(array $data, int $statusCode = 200)</span>
 <pre><code><span class="cm">// Successful response</span>
 <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'success'</span>, <span class="st">'data'</span> =&gt; <span class="var">$user</span>], <span class="nu">200</span>);
@@ -3911,65 +3882,65 @@ if ($response['status'] === 'success') {
 <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'error'</span>, <span class="st">'message'</span> =&gt; <span class="st">'Unauthorized access.'</span>], <span class="nu">401</span>);</code></pre>
 </section>
 <section id="sh-dd">
-<h2>System Helpers— <code>dd()</code> <span class="tag b-api">SystemMethod</span></h2>
-<p>Dump &amp; Die. During the development phase, the variables were displayed on the screen in a dark mode, readable and stylish way. <code>&lt;pre&gt;</code> tag and stops the execution of the code at that line (exit). It can take unlimited parameters (Variadic).</p>
+<h2>System Helpers—<code>dd()</code> <span class="tag b-api">SystemMethod</span></h2>
+<p>Dump &amp; Die. During the development phase, the variables were displayed on the screen in a dark mode, readable and stylish way.<code>&lt;pre&gt;</code>tag and stops the execution of the code at that line (exit). It can take unlimited parameters (Variadic).</p>
 <span class="ret">void dd(mixed ...$vars)</span>
 <pre><code><span class="fn">dd</span>(<span class="var">$_POST</span>, <span class="var">$user_id</span>); 
 <span class="cm">// Prints the values ​​to the screen and stops the system.</span></code></pre>
 </section>
-<!-- ====== ID GENERATION & UTILITIES ====== -->
+====== ID GENERATION &amp; UTILITIES ======
 <section id="id-generation-utilities">
 </section>
 <section id="sh-redirect">
-<h2>System Helpers— <code>redirect()</code> <span class="tag b-api">SystemMethod</span></h2>
+<h2>System Helpers—<code>redirect()</code> <span class="tag b-api">SystemMethod</span></h2>
 <span class="ret">void redirect(string $url)</span>
-<p>to the desired page <code>header("Location: ...")</code> It instantly redirects and stops working with (<code>exit</code>).</p>
+<p>to the desired page<code>header("Location: ...")</code>It instantly redirects and stops working with (<code>exit</code>).</p>
 <pre><code><span class="kw">if</span> (!<span class="var">$isLoggedIn</span>) {
     <span class="fn">redirect</span>(<span class="st">'/login'</span>);
 }</code></pre>
 </section>
-    <section id="sh-generatecsrf">
-<h2>System Helpers— <code>generateCsrf()</code> <span class="tag b-api">SystemMethod</span></h2>
-<p>It generates a brand new session-based secure CSRF token, 32 bytes long. To add as hidden input to forms <code>csrfField()</code> It is recommended to use (View Helper).</p>
+<section id="sh-generatecsrf">
+<h2>System Helpers—<code>generateCsrf()</code> <span class="tag b-api">SystemMethod</span></h2>
+<p>It generates a brand new session-based secure CSRF token, 32 bytes long. To add as hidden input to forms<code>csrfField()</code>It is recommended to use (View Helper).</p>
 <span class="ret">string generateCsrf()</span>
 <pre><code><span class="kw">if</span> (<span class="var">$_SESSION</span>[<span class="st">'user'</span>]) {
     <span class="fn">generateCsrf</span>(); <span class="cm">// CSRF is generated when the session is started</span>
 }</code></pre>
 </section>
 <section id="sh-csrf">
-<h2>System Helpers— <code>verifyCsrf()</code> <span class="tag b-api">SystemMethod</span></h2>
-<p>Verifies that the incoming POST request comes from a legitimate form. into the form <code class="ic">csrfField()</code> Returns false if not added or if the token is invalid.</p>
+<h2>System Helpers—<code>verifyCsrf()</code> <span class="tag b-api">SystemMethod</span></h2>
+<p>Verifies that the incoming POST request comes from a legitimate form. into the form<code class="ic">csrfField()</code>Returns false if not added or if the token is invalid.</p>
 <span class="ret">bool verifyCsrf(string $token)</span>
 <pre><code><span class="kw">if</span> (!<span class="fn">verifyCsrf</span>(<span class="var">$_POST</span>[<span class="st">'csrf_token'</span>] ?? <span class="st">''</span>)) {
     <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'error'</span>, <span class="st">'message'</span> =&gt; <span class="st">'Invalid CSRF token.'</span>], <span class="nu">403</span>);
 }</code></pre>
 </section>
 <section id="sh-sanitizeint">
-<h2>System Helpers— <code>sanitizeInt()</code> <span class="tag b-api">SystemMethod</span></h2>
+<h2>System Helpers—<code>sanitizeInt()</code> <span class="tag b-api">SystemMethod</span></h2>
 <span class="ret">int sanitizeInt(mixed $value)</span>
-<p>It blows away all the letters, symbols and commas in it, <strong>just integer</strong> leaves the numbers. Used for ID or limits (database int values).</p>
+<p>It blows away all the letters, symbols and commas in it,<strong>just integer</strong>leaves the numbers. Used for ID or limits (database int values).</p>
 <pre><code><span class="var">$id</span> = <span class="fn">sanitizeInt</span>(<span class="var">$_GET</span>[<span class="st">'ID'</span>] ?? <span class="nu">0</span>);</code></pre>
 </section>
 <section id="sh-sanitizefloat">
-<h2>System Helpers— <code>sanitizeFloat()</code> <span class="tag b-api">SystemMethod</span></h2>
+<h2>System Helpers—<code>sanitizeFloat()</code> <span class="tag b-api">SystemMethod</span></h2>
 <span class="ret">float sanitizeFloat(mixed $value)</span>
-<p>Clears everything except fractional (decimal) numbers. It is safe to use for monetary amounts, ratio calculations or metrics.</p>
+<p>Clears all except fractional (decimal) numbers. It is safe to use for monetary amounts, ratio calculations or metrics.</p>
 <pre><code><span class="var">$price</span> = <span class="fn">sanitizeFloat</span>(<span class="var">$_POST</span>[<span class="st">'price'</span>]);</code></pre>
 </section>
 <section id="sh-sanitizestring">
-<h2>System Helpers— <code>sanitizeString()</code> <span class="tag b-api">SystemMethod</span></h2>
+<h2>System Helpers—<code>sanitizeString()</code> <span class="tag b-api">SystemMethod</span></h2>
 <span class="ret">string sanitizeString(string $value)</span>
-<p>To prevent XSS and similar attacks, all <strong>HTML and PHP tags (<code>&lt;script&gt;</code>, <code>&lt;iframe&gt;</code> etc.) destroys</strong>. It must be used before saving String to the database.</p>
+<p>To prevent XSS and similar attacks, all<strong>HTML and PHP tags (<code>&lt;script&gt;</code>, <code>&lt;iframe&gt;</code>etc.) destroys</strong>. It must be used before saving String to the database.</p>
 <pre><code><span class="var">$name</span> = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'name'</span>]);</code></pre>
 </section>
 <section id="sh-sanitizeemail">
-<h2>System Helpers— <code>sanitizeEmail()</code> <span class="tag b-api">SystemMethod</span></h2>
+<h2>System Helpers—<code>sanitizeEmail()</code> <span class="tag b-api">SystemMethod</span></h2>
 <span class="ret">string sanitizeEmail(string $email)</span>
-<p>It filters out all invalid and dangerous characters that do not comply with the email format. (Attention: It only clears the correctness of the format. <code>verifyEmail()</code> You should check with ).</p>
+<p>It filters out all invalid and dangerous characters that do not comply with the email format. (Attention: It only clears the correctness of the format.<code>verifyEmail()</code>You should check with ).</p>
 <pre><code><span class="var">$email</span> = <span class="fn">sanitizeEmail</span>(<span class="var">$_POST</span>[<span class="st">'e-mail'</span>] ?? <span class="st">''</span>);</code></pre>
 </section>
 <section id="sh-ispost">
-<h2>System Helpers— <code>isPost()</code> <span class="tag b-api">SystemMethod</span></h2>
+<h2>System Helpers—<code>isPost()</code> <span class="tag b-api">SystemMethod</span></h2>
 <span class="ret">bool isPost()</span>
 <p>It verifies whether the incoming request (HTTP Request) is made with the POST method. It is used to prevent direct access to the page, especially in form submissions.</p>
 <pre><code><span class="kw">if</span> (<span class="fn">isPost</span>()) {
@@ -3977,7 +3948,7 @@ if ($response['status'] === 'success') {
 }</code></pre>
 </section>
 <section id="sh-isget">
-<h2>System Helpers— <code>isGet()</code> <span class="tag b-api">SystemMethod</span></h2>
+<h2>System Helpers—<code>isGet()</code> <span class="tag b-api">SystemMethod</span></h2>
 <span class="ret">bool isGet()</span>
 <p>It verifies whether the incoming request is made with the GET method. It is used only for control purposes when reading parameters or viewing pages via URL.</p>
 <pre><code><span class="kw">if</span> (<span class="fn">isGet</span>()) {
@@ -3985,7 +3956,7 @@ if ($response['status'] === 'success') {
 }</code></pre>
 </section>
 <section id="sh-isput">
-<h2>System Helpers— <code>isPut()</code> <span class="tag b-api">SystemMethod</span></h2>
+<h2>System Helpers—<code>isPut()</code> <span class="tag b-api">SystemMethod</span></h2>
 <span class="ret">bool isPut()</span>
 <p>It verifies that the incoming request is made with the PUT method. It is generally preferred for data update operations in REST API architectures.</p>
 <pre><code><span class="kw">if</span> (<span class="fn">isPut</span>()) {
@@ -3993,7 +3964,7 @@ if ($response['status'] === 'success') {
 }</code></pre>
 </section>
 <section id="sh-isdelete">
-<h2>System Helpers— <code>isDelete()</code> <span class="tag b-api">SystemMethod</span></h2>
+<h2>System Helpers—<code>isDelete()</code> <span class="tag b-api">SystemMethod</span></h2>
 <span class="ret">bool isDelete()</span>
 <p>It verifies that the incoming request was made with the DELETE method. It is used to protect deletion routes in REST APIs.</p>
 <pre><code><span class="kw">if</span> (<span class="fn">isDelete</span>()) {
@@ -4001,21 +3972,21 @@ if ($response['status'] === 'success') {
 }</code></pre>
 </section>
 <section id="sh-isajax">
-<h2>System Helpers— <code>isAjax()</code> <span class="tag b-api">SystemMethod</span></h2>
+<h2>System Helpers—<code>isAjax()</code> <span class="tag b-api">SystemMethod</span></h2>
 <span class="ret">bool isAjax()</span>
-<p>Your incoming request <code>XMLHttpRequest</code> Checks whether it is done via (AJAX) or modern Fetch API (<code>HTTP_X_REQUESTED_WITH</code> looks at the header value).</p>
+<p>Your incoming request<code>XMLHttpRequest</code>Checks whether it is done via (AJAX) or modern Fetch API (<code>HTTP_X_REQUESTED_WITH</code>looks at the header value).</p>
 <pre><code><span class="kw">if</span> (!<span class="fn">isAjax</span>()) {
     <span class="fn">redirect</span>(<span class="st">'/mistake'</span>); <span class="cm">// Only allow AJAX</span>
 }</code></pre>
 </section>
 <section id="sh-getclientip">
-<h2>System Helpers— <code>getClientIp()</code> <span class="tag b-api">SystemMethod</span></h2>
+<h2>System Helpers—<code>getClientIp()</code> <span class="tag b-api">SystemMethod</span></h2>
 <span class="ret">string getClientIp()</span>
 <p>Detects the user's real IP address. Cloudflare (<code>HTTP_CF_CONNECTING_IP</code>), Proxy (<code>HTTP_X_FORWARDED_FOR</code>) and standard (<code>REMOTE_ADDR</code>) resolves all connections automatically.</p>
 <pre><code><span class="var">$ip</span> = <span class="fn">getClientIp</span>(); <span class="cm">// Ex: 192.168.1.1</span></code></pre>
 </section>
 <section id="sh-verifyemail">
-<h2>System Helpers— <code>verifyEmail()</code> <span class="tag b-api">SystemMethod</span></h2>
+<h2>System Helpers—<code>verifyEmail()</code> <span class="tag b-api">SystemMethod</span></h2>
 <p>It verifies whether the given email address is actually a valid email address based on DNS or format.</p>
 <span class="ret">bool verifyEmail(string $email)</span>
 <pre><code><span class="kw">if</span> (!<span class="fn">verifyEmail</span>(<span class="var">$_POST</span>[<span class="st">'email'</span>])) {
@@ -4023,44 +3994,42 @@ if ($response['status'] === 'success') {
 }</code></pre>
 </section>
 <section id="sh-generatetoken">
-<h2>System Helpers— <code>generateToken()</code> <span class="tag b-api">SystemMethod</span></h2>
+<h2>System Helpers—<code>generateToken()</code> <span class="tag b-api">SystemMethod</span></h2>
 <span class="ret">string generateToken(int $length = 32)</span>
-<p>Generates a cryptographically secure, random token (Ex: Password reset, API Key). <strong>Note: Each 1 byte entered produces 2 characters (hex) of output.</strong> The default length of 32 bytes returns a string that is exactly 64 characters long.</p>
+<p>Generates a cryptographically secure, random token (Ex: Password reset, API Key).<strong>Note: Each 1 byte entered produces 2 characters (hex) of output.</strong>The default length of 32 bytes returns a string that is exactly 64 characters long.</p>
 <pre><code><span class="var">$token</span> = <span class="fn">generateToken</span>(<span class="nu">16</span>); <span class="cm">// 32 character token</span></code></pre>
 </section>
 <section id="sh-hashpassword">
-<h2>System Helpers— <code>hashPassword()</code> <span class="tag b-api">SystemMethod</span></h2>
+<h2>System Helpers—<code>hashPassword()</code> <span class="tag b-api">SystemMethod</span></h2>
 <span class="ret">string hashPassword(?string $password)</span>
-<p>PHP's built-in <code>password_hash</code> It securely hashes passwords with the bcrypt algorithm using the method. <strong>Null Check:</strong> If the parameter is empty or <code>null</code> If it does, it throws an Exception to avoid violating security.</p>
+<p>PHP's built-in<code>password_hash</code>It securely hashes passwords with the bcrypt algorithm using the method.<strong>Null Check:</strong>If the parameter is empty or<code>null</code>If it does, it throws an Exception to avoid violating security.</p>
 <pre><code><span class="var">$hashed</span> = <span class="fn">hashPassword</span>(<span class="var">$_POST</span>[<span class="st">'password'</span>]);</code></pre>
 </section>
 <section id="sh-verifypassword">
-<h2>System Helpers— <code>verifyPassword()</code> <span class="tag b-api">SystemMethod</span></h2>
+<h2>System Helpers—<code>verifyPassword()</code> <span class="tag b-api">SystemMethod</span></h2>
 <span class="ret">bool verifyPassword(?string $password, ?string $hash)</span>
-<p>It compares the plaintext password entered by the user with the hash in the database. <strong>Null Check:</strong> Either the password or hash is empty or <code>null</code> directly without any action <code>false</code> rotary.</p>
+<p>It compares the plaintext password entered by the user with the hash in the database.<strong>Null Check:</strong>Either the password or hash is empty or<code>null</code>directly without any action<code>false</code>rotary.</p>
 <pre><code><span class="kw">if</span> (<span class="fn">verifyPassword</span>(<span class="var">$_POST</span>[<span class="st">'password'</span>], <span class="var">$user</span>[<span class="st">'password'</span>])) {
     <span class="cm">// Login successful</span>
 }</code></pre>
 </section>
 <section id="sh-slugify">
-<h2>System Helpers— <code>slugify()</code> <span class="tag b-api">SystemMethod</span></h2>
+<h2>System Helpers—<code>slugify()</code> <span class="tag b-api">SystemMethod</span></h2>
 <p>When registering to the database on the backend side, it automatically generates SEO-friendly URL/Slug from fields such as title or name. It takes unlimited parameters (Variadic).</p>
 <span class="ret">string slugify(string ...$texts)</span>
 <pre><code><span class="var">$slug</span> = <span class="fn">slugify</span>(<span class="var">$_POST</span>[<span class="st">'title'</span>]); <span class="cm">// 'my-beautiful-writing'</span></code></pre>
 </section>
 <section id="sh-arrayonly">
-<h2>System Helpers— <code>arrayOnly()</code> <span class="tag b-api">SystemMethod</span></h2>
-<p>A large data set (e.g. <code>$_POST</code>) filters only the data with the specified keys (whitelist). It is used just before database registration operations to prevent mass-assignment security vulnerabilities.</p>
+<h2>System Helpers—<code>arrayOnly()</code> <span class="tag b-api">SystemMethod</span></h2>
+<p>A large data set (e.g.<code>$_POST</code>) filters only the data with the specified keys (whitelist). It is used just before database registration operations to prevent mass-assignment security vulnerabilities.</p>
 <span class="ret">array arrayOnly(array $array, array $keys)</span>
 <pre><code><span class="var">$postData</span> = <span class="fn">arrayOnly</span>(<span class="var">$_POST</span>, [<span class="st">'user_name'</span>, <span class="st">'password'</span>, <span class="st">'e-mail'</span>]);
 <span class="cm">// Externally manipulated values ​​such as ID and role are automatically destroyed.</span></code></pre>
 </section>
-    <section id="sh-byteid">
-        <h2>System Helpers - <code>byteId()</code> <span class="tag b-api">SystemMethod</span></h2>
-<div class="info-box">
-            Native, high-performance and time-ordered raw 16-byte <strong>UUIDv7</strong> produces.
-        </div>
-<p>ID columns in the database <code>BINARY(16)</code> When you want to achieve huge indexing and JOIN performance by keeping it as , you create new records with this function.</p>
+<section id="sh-byteid">
+<h2>System Helpers -<code>byteId()</code> <span class="tag b-api">SystemMethod</span></h2>
+<div class="info-box">Native, high-performance and time-ordered raw 16-byte<strong>UUIDv7</strong>produces.</div>
+<p>ID columns in the database<code>BINARY(16)</code>When you want to achieve huge indexing and JOIN performance by keeping it as , you create new records with this function.</p>
 <div class="code-block">
 <div class="code-header">
 <span class="code-lang">PHP</span>
@@ -4071,12 +4040,10 @@ if ($response['status'] === 'success') {
 <span class="var">$db</span>-&gt;<span class="fn">prepare</span>(<span class="st">"INSERT INTO users (id, name) VALUES (?, ?)"</span>)-&gt;<span class="fn">execute</span>([<span class="var">$rawId</span>, <span class="st">'Triumph'</span>]);</code></pre>
 </div>
 </section>
-    <section id="sh-makeid">
-        <h2>System Helpers - <code>makeId()</code> <span class="tag b-api">SystemMethod</span></h2>
-<div class="info-box">
-            Native, standard 36 characters <strong>UUIDv7</strong> produces the string.
-        </div>
-<p>in database <code>CHAR(36)</code> or <code>VARCHAR(36)</code> If you are going to use it and do not want to deal with raw binary data, you can generate UUID directly in string format with this function.</p>
+<section id="sh-makeid">
+<h2>System Helpers -<code>makeId()</code> <span class="tag b-api">SystemMethod</span></h2>
+<div class="info-box">Native, standard 36 characters<strong>UUIDv7</strong>produces the string.</div>
+<p>in database<code>CHAR(36)</code>or<code>VARCHAR(36)</code>If you are going to use it and do not want to deal with raw binary data, you can generate UUID directly in string format with this function.</p>
 <div class="code-block">
 <div class="code-header">
 <span class="code-lang">PHP</span>
@@ -4086,12 +4053,10 @@ if ($response['status'] === 'success') {
 <span class="cm">// Sample Output: 0190ed84-3f12-7a91-8bc4-91823741abcd</span></code></pre>
 </div>
 </section>
-    <section id="sh-formatid">
-        <h2>System Helpers - <code>formatId()</code> <span class="tag b-api">SystemMethod</span></h2>
-<div class="info-box">
-            Converts raw 16-byte binary UUIDs to a standard 36-character string.
-        </div>
-<p>What you pulled from the database <code>BINARY(16)</code> It puts the data into a readable format before sending it to the interface (API/JSON).</p>
+<section id="sh-formatid">
+<h2>System Helpers -<code>formatId()</code> <span class="tag b-api">SystemMethod</span></h2>
+<div class="info-box">Converts raw 16-byte binary UUIDs to a standard 36-character string.</div>
+<p>What you pulled from the database<code>BINARY(16)</code>It puts the data into a readable format before sending it to the interface (API/JSON).</p>
 <div class="code-block">
 <div class="code-header">
 <span class="code-lang">PHP</span>
@@ -4102,11 +4067,9 @@ if ($response['status'] === 'success') {
 <span class="cm">// Sample Output: 0190ed84-3f12-7a91-8bc4-91823741abcd</span></code></pre>
 </div>
 </section>
-    <section id="sh-intid">
-        <h2>System Helpers - <code>intId()</code> <span class="tag b-api">SystemMethod</span></h2>
-<div class="info-box">
-            Safe, random <code>INT</code> Generates ID. (Max 9 Digits)
-        </div>
+<section id="sh-intid">
+<h2>System Helpers -<code>intId()</code> <span class="tag b-api">SystemMethod</span></h2>
+<div class="info-box">Safe, random<code>INT</code>Generates ID. (Max 9 Digits)</div>
 <p>It is the traditional Integer generator that you can use if you do not want to give up traditional database performance.</p>
 <div class="code-block">
 <div class="code-header">
@@ -4116,11 +4079,9 @@ if ($response['status'] === 'success') {
 <span class="cm">// Sample Output: 49201834</span></code></pre>
 </div>
 </section>
-    <section id="sh-bigintid">
-        <h2>System Helpers - <code>bigintId()</code> <span class="tag b-api">SystemMethod</span></h2>
-<div class="info-box">
-            Safe, random <code>BIGINT</code> Generates ID. (Default 15 digits - safe limit for JS)
-        </div>
+<section id="sh-bigintid">
+<h2>System Helpers -<code>bigintId()</code> <span class="tag b-api">SystemMethod</span></h2>
+<div class="info-box">Safe, random<code>BIGINT</code>Generates ID. (Default 15 digits - safe limit for JS)</div>
 <p>If you are going to use huge numerical IDs like Snowflake (Twitter), this function will save your life. If you want larger than 15 digits, you can import it as a string to prevent data loss.</p>
 <div class="code-block">
 <div class="code-header">
@@ -4130,12 +4091,10 @@ if ($response['status'] === 'success') {
 <span class="var">$massiveId</span> = <span class="fn">bigintId</span>(18, <span class="kw">true</span>); <span class="cm">// returns 18 digit STRING (JS safe)</span></code></pre>
 </div>
 </section>
-    <section id="sh-stringer">
-        <h2>System Helpers - <code>stringer()</code> <span class="tag b-api">SystemMethod</span></h2>
-<div class="info-box">
-            Wraps values ​​into strings to protect against Javascript's huge number (BIGINT) insensitivity.
-        </div>
-<p>It protects numeric (BigInt etc.) variables larger than 15 digits from Javascript's rounding errors (Precision Loss) when printing them to the DOM in the View layer.</p>
+<section id="sh-stringer">
+<h2>System Helpers -<code>stringer()</code> <span class="tag b-api">SystemMethod</span></h2>
+<div class="info-box">Wraps values ​​into strings to protect against Javascript's huge number (BIGINT) insensitivity.</div>
+<p>It protects numeric (BigInt, etc.) variables larger than 15 digits from Javascript's rounding errors (Precision Loss) when printing them to the DOM in the View layer.</p>
 <div class="code-block">
 <div class="code-header">
 <span class="code-lang">HTML/PHP</span>
@@ -4143,56 +4102,54 @@ if ($response['status'] === 'success') {
 <pre><code><span class="cm">&lt;!-- We wrap it with a stringer to prevent JS from corrupting it --&gt;</span>
 &lt;button data-id=<span class="st">"&lt;?=</span> <span class="fn">Stringer</span>(<span class="var">$data</span>[<span class="st">'ID'</span>]) <span class="st">?&gt;"</span>&gt;Sil&lt;/button&gt;</code></pre>
 </div>
-    <section id="sh-otpcoder">
-        <h2>System Helpers - OTP Coder <span class="tag b-api">SystemMethod</span></h2>
-        <div class="info-box">Generates random, cryptographically secure One-Time Passwords (OTP).</div>
-        <div class="code-block">
-            <pre><code><span class="cm">// 6-digit random number</span>
+<section id="sh-otpcoder">
+<h2>System Helpers - OTP Coder<span class="tag b-api">SystemMethod</span></h2>
+<div class="info-box">Generates random, cryptographically secure Authentication Codes (OTP).</div>
+<div class="code-block">
+<pre><code><span class="cm">// 6 digit random number</span>
 <span class="var">$code</span> = <span class="fn">otpInt</span>(<span class="nu">6</span>); <span class="cm">// 482910</span>
-<span class="cm">// 8-digit letters only ('c': lowercase, 'C': uppercase, 'cC': mixed)</span>
+<span class="cm">// 8 digit letter only ('c': lowercase, 'C': uppercase, 'cC': mixed)</span>
 <span class="var">$code</span> = <span class="fn">otpStr</span>(<span class="nu">8</span>, <span class="st">'C'</span>); <span class="cm">// PKLMDZRA</span>
-<span class="cm">// 6-digit alphanumeric</span>
-<span class="var">$code</span> = <span class="fn">otpMix</span>(<span class="nu">6</span>, <span class="st">'C'</span>); <span class="cm">// 9A4X2Z</span></code></pre>
-        </div>
-    </section>
-    </section>
-<!-- ====== API GÜVENLİĞİ ====== -->
+<span class="cm">// 6 digit letter+number (Alphanumeric)</span>
+<span class="var">$code</span> = <span class="fn">otpMix</span>(<span class="nu">6</span>, <span class="st">'C'</span>); <span class="cm">//9A4X2Z</span></code></pre>
+</div>
+</section>
+</section>
+====== API SECURITY ======
 <section id="api-methods">
-<h2>API — HTTP Method Control <span class="tag b-sec">ApiControl</span></h2>
-<p><code class="ic">$allowedMethods</code> array from ApiControl require <strong>before</strong> must be defined. ApiControl automatically blocks requests from disallowed methods by reading this string. <code class="ic">405 Method Not Allowed</code> He rejects it with .</p>
+<h2>API — HTTP Method Control<span class="tag b-sec">ApiControl</span></h2>
+<p><code class="ic">$allowedMethods</code>array from ApiControl require<strong>before</strong>must be defined. ApiControl automatically blocks requests from disallowed methods by reading this string.<code class="ic">405 Method Not Allowed</code>He rejects it with .</p>
 <pre><code><span class="cm">// An endpoint that accepts only GET and POST</span>
 <span class="var">$allowedMethods</span> = [<span class="st">'GET'</span>, <span class="st">'POST'</span>];
 <span class="fn">require_once</span> ... . <span class="st">'/../app/ApiControl.php'</span>;
 <span class="cm">// An endpoint that only accepts DELETE</span>
 <span class="var">$allowedMethods</span> = [<span class="st">'DELETE'</span>];
 <span class="fn">require_once</span> ... . <span class="st">'/../app/ApiControl.php'</span>;</code></pre>
-<p>Preflight <code class="ic">OPTIONS</code> automatic requests for CORS <code class="ic">200</code> returns and the script terminates — no manual intervention required.</p>
+<p>Preflight<code class="ic">OPTIONS</code>automatic requests for CORS<code class="ic">200</code>returns and the script terminates — no manual intervention required.</p>
 </section>
 <section id="api-cors">
-<h2>API—CORS <span class="tag b-api">ApiControl (Yorum Satırı)</span></h2>
-<p>If you want to allow API access from other domains or mobile applications <code class="ic">ApiControl.php</code> Activate the CORS block in it.</p>
+<h2>API—CORS<span class="tag b-api">ApiControl (Comment Line)</span></h2>
+<p>If you want to allow API access from other domains or mobile applications<code class="ic">ApiControl.php</code>Activate the CORS block in it.</p>
 <pre><code><span class="cm">// In ApiControl.php — activated by removing the comment</span>
 header(<span class="st">"Access-Control-Allow-Origin: https://your-domain.com"</span>);
 header(<span class="st">"Access-Control-Allow-Methods: GET, POST, OPTIONS"</span>);
 header(<span class="st">"Access-Control-Allow-Headers: Content-Type, Authorization"</span>);</code></pre>
 <div class="alert a-warn">
-<strong>⚠️</strong> In production environment <code class="ic">*</code> Do not use (all domains). Specify the domain address clearly.
-        </div>
+<strong>⚠️</strong>In production environment<code class="ic">*</code>Do not use (all domains). Specify the domain address clearly.</div>
 </section>
 <section id="api-rate">
-<h2>API — Rate Limiting <span class="tag b-api">ApiControl (Yorum Satırı)</span></h2>
-<p>To prevent malicious users or bots from flooding the API <code class="ic">ApiControl.php</code> You can activate the Rate Limiting block in it. Default rule: <strong>60 requests/IP in 60 seconds</strong>.</p>
+<h2>API—Rate Limiting<span class="tag b-api">ApiControl (Comment Line)</span></h2>
+<p>To prevent malicious users or bots from flooding the API<code class="ic">ApiControl.php</code>You can activate the Rate Limiting block in it. Default rule:<strong>60 requests/IP in 60 seconds</strong>.</p>
 <div class="alert a-warn" style="margin-top: 10px; margin-bottom: 20px;">
-<strong>⚠️ Redis Server Required:</strong> Rate Limiting feature <code>\Src\Service\RedisService::getInstance()</code> It works using Redis class. Before opening this code block, make sure you have set up a Redis service in your project and <code>src/Service/</code> Make sure you create a connection class under
-        </div>
+<strong>⚠️ Redis Server Required:</strong>Rate Limiting feature<code>\Src\Service\RedisService::getInstance()</code>It works using Redis class. Before opening this code block, make sure you have set up a Redis service in your project and<code>src/Service/</code>Make sure you create a connection class under</div>
 <pre><code><span class="cm">// If more than 60 requests come from the same IP in 60 seconds:</span>
 http_response_code(<span class="nu">429</span>); <span class="cm">//Too Many Requests</span>
 echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too many requests. Please wait.'</span>]);</code></pre>
 </section>
-<!-- ====== WORKFLOW ====== -->
+====== WORKFLOW ======
 <section id="workflow">
 <h2>Full Workflow: Contact Form (End-to-End)</h2>
-<p>One <strong>Contact Form</strong> Let's examine step by step how to develop the feature in ArtiFrame standards from start to finish.</p>
+<p>One<strong>Contact Form</strong>Let's examine step by step how to develop the feature in ArtiFrame standards from start to finish.</p>
 <ol class="steps">
 <li>
 <div>
@@ -4212,8 +4169,7 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
 <li>
 <div>
 <strong>Code HTML Form</strong><br/>
-<code class="ic">public/iletisim.php</code> Add the following form to the file:
-                    <pre><code>&lt;form action="/api/iletisim/gonder.php" method="POST"&gt;
+<code class="ic">public/iletisim.php</code>Add the following form to the file:<pre><code>&lt;form action="/api/iletisim/gonder.php" method="POST"&gt;
     &lt;?= <span class="fn">csrfField</span>() ?&gt;
     &lt;input type="text"  name="ad"      placeholder="Adınız"&gt;
     &lt;input type="email" name="eposta"  placeholder="E-posta"&gt;
@@ -4225,8 +4181,7 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
 <li>
 <div>
 <strong>Connect Fetch API with JavaScript</strong><br/>
-<code class="ic">public/assets/js/iletisim.js</code> to file:
-                    <pre><code>document.<span class="fn">querySelector</span>(<span class="st">'[data-js="contact-send"]'</span>).<span class="fn">addEventListener</span>(<span class="st">'click'</span>, async (e) =&gt; {
+<code class="ic">public/assets/js/iletisim.js</code>to file:<pre><code>document.<span class="fn">querySelector</span>(<span class="st">'[data-js="contact-send"]'</span>).<span class="fn">addEventListener</span>(<span class="st">'click'</span>, async (e) =&gt; {
     e.<span class="fn">preventDefault</span>();
     <span class="kw">const</span> formData = <span class="kw">new</span> <span class="fn">FormData</span>(e.target.<span class="fn">closest</span>(<span class="st">'form'</span>));
     <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">'/api/contact/sender.php'</span>, {
@@ -4241,8 +4196,7 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
 <li>
 <div>
 <strong>Complete Server Logic (Backend)</strong><br/>
-<code class="ic">public/api/iletisim/gonder.php</code> in the file:
-                    <pre><code><span class="kw">&lt;?php</span>
+<code class="ic">public/api/iletisim/gonder.php</code>in the file:<pre><code><span class="kw">&lt;?php</span>
 <span class="var">$allowedMethods</span> = [<span class="st">'POST'</span>];
 <span class="fn">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/../app/ApiControl.php'</span>;
 <span class="kw">use</span> Bin\SystemMethod;
@@ -4262,8 +4216,7 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
 </li>
 </ol>
 <div class="alert a-success">
-<strong>✅ Completed!</strong> You have created a fully secure and standards-compliant form flow with XSS protection, CSRF validation, HTTP method restriction and data-js architecture.
-        </div>
+<strong>✅ Completed!</strong>You have created a fully secure and standards-compliant form flow with XSS protection, CSRF validation, HTTP method restriction and data-js architecture.</div>
 </section>
 </main>
 <script>
@@ -4385,11 +4338,9 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
         });
     }
 </script>
-        <a href="../../public/index.html" class="btn-back-home" style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: var(--surface, #111); color: var(--text-primary, #fff); border: 1px solid var(--border, #333); padding: 10px 15px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: all 0.2s;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            Home
-        </a>
-        <style>
+<a class="btn-back-home" href="../../public/index.html" style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: var(--surface, #111); color: var(--text-primary, #fff); border: 1px solid var(--border, #333); padding: 10px 15px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: all 0.2s;">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg>Home</a>
+<style>
             .btn-back-home:hover { border-color: var(--accent, #00E599) !important; color: var(--accent, #00E599) !important; transform: translateY(-2px); }
         </style>
 </body>

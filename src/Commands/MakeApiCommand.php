@@ -38,7 +38,7 @@ class MakeApiCommand
             $target .= '.php';
         }
 
-        $projectRoot = getcwd();
+        $projectRoot = $this->safeguard->getProjectRoot();
         $apiPath     = $projectRoot . '/public/api/' . $type . '/' . $target;
 
         if (!$this->safeguard->checkTarget($apiPath)) {

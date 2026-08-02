@@ -82,7 +82,7 @@ class AddCommand
         'sentry' => [
             'composer' => 'sentry/sentry',
             'type'     => 'integrated',
-            'service'  => 'config/sentry.php',
+            'service'  => 'src/Service/Sentry.php',
             'stub'     => 'sentry.stub',
             'env'      => [
                 '# ── sentry ──────────────────────',

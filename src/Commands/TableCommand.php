@@ -69,7 +69,8 @@ class TableCommand
             return;
         }
 
-        $schemaPath = getcwd() . '/schema.sql';
+        $safeguard = new \ArtiFrame\Cli\Services\Safeguard($this->translator);
+        $schemaPath = $safeguard->getProjectRoot() . '/schema.sql';
 
         if (!file_exists($schemaPath)) {
             file_put_contents($schemaPath, "-- ArtiFrame DB Schema\n-- Created: " . date('Y-m-d') . "\n");
