@@ -643,6 +643,8 @@ REDISPHP;
         ][$lang] ?? ['file' => 'guide.html', 'installed' => 'ArtiFrame Installed Successfully!', 'guide' => 'To get started, see', 'note' => '💡 <b>Note:</b> If you want to change the homepage (landing.php) filename, you must also update the default page name in the <code>routeLink()</code> method inside <code>bin/ViewMethod.php</code>.'];
 
         $landingContent = "<?php\n"
+            . "require_once __DIR__ . '/../app/ViewControl.php';\n"
+            . "use Bin\\ViewMethod;\n\n"
             . "if (isset(\$_GET['guide'])) {\n"
             . "    header('Content-Type: text/html; charset=utf-8');\n"
             . "    readfile(__DIR__ . '/../{$docFile['file']}');\n"
@@ -724,7 +726,7 @@ REDISPHP;
         $this->tick('public/landing.php');
 
         // public/index.php - router
-        $indexContent = "<?php\n\nrequire_once __DIR__ . '/../vendor/autoload.php';\n\nforeach (glob(__DIR__ . '/../config/*.php') as \$cfg) {\n    require_once \$cfg;\n}\n\nrouteLink();\n";
+        $indexContent = "<?php\n\nrequire_once __DIR__ . '/../vendor/autoload.php';\n\nrouteLink();\n";
         file_put_contents($targetDir . '/public/index.php', $indexContent);
         $this->tick('public/index.php');
 
