@@ -724,7 +724,7 @@ REDISPHP;
         $this->tick('public/landing.php');
 
         // public/index.php - router
-        $indexContent = "<?php\n\nrequire_once __DIR__ . '/../vendor/autoload.php';\n\nrouteLink();\n";
+        $indexContent = "<?php\n\nrequire_once __DIR__ . '/../vendor/autoload.php';\n\nforeach (glob(__DIR__ . '/../config/*.php') as \$cfg) {\n    require_once \$cfg;\n}\n\nrouteLink();\n";
         file_put_contents($targetDir . '/public/index.php', $indexContent);
         $this->tick('public/index.php');
 
