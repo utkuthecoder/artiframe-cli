@@ -47,6 +47,7 @@ class RemoveCommand
             return;
         }
 
+        $targetPath = realpath($targetPath);
         $normalizedPath = str_replace('\\', '/', $targetPath);
         $isView = strpos($normalizedPath, '/public/') !== false && strpos($normalizedPath, '/public/api/') === false && strpos($normalizedPath, '/public/assets/') === false;
         $isClass = strpos($normalizedPath, '/src/') !== false || strpos($normalizedPath, '/app/') !== false;
