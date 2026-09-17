@@ -40,3 +40,18 @@ if (!fs.existsSync(defaultWorkspace)) {
     console.log('\x1b[36m%s\x1b[0m', '   Run `artiframe devops` to launch the studio!\n');
 }
 
+
+// 3. Install dependencies for studios
+const { execSync } = require('child_process');
+
+['devops-studio', 'db-studio', 'server-studio'].forEach(studio => {
+    const studioPath = path.join(__dirname, '..', studio);
+    if (fs.existsSync(studioPath)) {
+        console.log('\x1b[36m%s\x1b[0m', `📦 Installing dependencies for ${studio}...`);
+        try {
+            execSync('npm install --production', { cwd: studioPath, stdio: 'ignore' });
+        } catch (e) {
+            console.log('\x1b[31m%s\x1b[0m', `❌ Failed to install dependencies for ${studio}`);
+        }
+    }
+});
