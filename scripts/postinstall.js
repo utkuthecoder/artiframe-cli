@@ -55,3 +55,51 @@ const { execSync } = require('child_process');
         }
     }
 });
+
+// 4. Create Desktop Shortcuts for GUI
+try {
+    if (process.platform === 'linux') {
+        const appDir = path.join(os.homedir(), '.local', 'share', 'applications');
+        if (fs.existsSync(appDir)) {
+            const desktopFile = path.join(appDir, 'artiframe-devops.desktop');
+            const content = `[Desktop Entry]
+Name=ArtiFrame DevOps
+Comment=Launch ArtiFrame DevOps Studio
+Exec=artiframe devops
+Icon=utilities-terminal
+Terminal=false
+Type=Application
+Categories=Development;
+`;
+            fs.writeFileSync(desktopFile, content);
+            fs.chmodSync(desktopFile, 0o755);
+            console.log('\x1b[36m%s\x1b[0m', '✅ Application menu shortcut created (Linux).');
+        }
+    } else if (process.platform === 'win32') {
+        const { execSync } = require('child_process');
+        
+        // Create a silent VBS runner in Workspace to prevent CMD window pop-up
+        const runnerVbs = path.join(defaultWorkspace, 'run-devops.vbs');
+        const runnerCode = `Set WshShell = CreateObject("WScript.Shell")\nWshShell.Run "cmd.exe /c artiframe devops", 0, False`;
+        fs.writeFileSync(runnerVbs, runnerCode);
+        
+        // Generate the .lnk shortcut on the Desktop pointing to the silent runner
+        const desktopPath = path.join(os.homedir(), 'Desktop', 'ArtiFrame DevOps.lnk');
+        const vbsPath = path.join(os.tmpdir(), 'create_shortcut.vbs');
+        
+        const vbsCode = `
+Set ws = WScript.CreateObject("WScript.Shell")
+Set link = ws.CreateShortcut("${desktopPath}")
+link.TargetPath = "wscript.exe"
+link.Arguments = """${runnerVbs}"""
+link.Description = "ArtiFrame DevOps Studio"
+link.IconLocation = "%SystemRoot%\\System32\\SHELL32.dll,27"
+link.Save
+        `;
+        fs.writeFileSync(vbsPath, vbsCode);
+        execSync(`cscript //nologo "${vbsPath}"`);
+        console.log('\x1b[36m%s\x1b[0m', '✅ Desktop shortcut created (Windows).');
+    }
+} catch (e) {
+    console.log('\x1b[33m%s\x1b[0m', '⚠️ Could not create desktop shortcut. You can still run via terminal.');
+}
