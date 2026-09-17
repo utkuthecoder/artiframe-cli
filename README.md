@@ -4,7 +4,7 @@
 
 <br />
 
-**Zero-dependency · Native PHP · Multilingual CLI**
+**Zero-dependency · Native PHP · DevOps Studio · DB Designer · Live Server**
 
 <br />
 
@@ -27,205 +27,151 @@
 
 ## 🇹🇷 Türkçe
 
-**ArtiFrame**, sıfır dış bağımlılık felsefesiyle inşa edilmiş, native PHP için modern bir web geliştirme çerçevesidir. Composer paket karmaşasından arınmış, güvenlik öncelikli ve CLI güdümlü bir ekosistem sunar.
+**ArtiFrame 3.0**, native PHP için sadece bir framework değil, eksiksiz bir **geliştirme ekosistemidir**. Sıfır dış bağımlılık felsefesine sadık kalarak, artık içinde DevOps Studio (GUI), DB Studio (Global ER Tasarımcısı) ve Server Studio (Canlı Log Monitörü) gibi muazzam arayüzler barındırır.
 
-### Özellikler
+### Yeni v3.0 Özellikleri (The Studio Update)
 
-- 🚫 **Sıfır Bağımlılık** — Composer paketlerine ihtiyaç yok, her satır kendi kodunuz
-- 🛡️ **Güvenlik Önce** — XSS, CSRF, SQL Injection koruması varsayılan olarak yerleşik
-- ⚡ **Hızlı Kurulum** — Tek komutla eksiksiz proje iskeleti
-- 🌍 **5 Dil Desteği** — TR · EN · DE · FR · ES
-- 📐 **Katı Kural Seti** — `data-js` mimarisi, iki bootstrapper modeli, tutarlı dizin yapısı
+- 🎨 **DevOps Studio** — `artiframe devops` komutuyla açılan yerleşik masaüstü GUI. API Testleri (Inspector), Cron Tasarımcısı, Supervisor Yönetimi ve Env Optimize işlemlerini görsel olarak yönetin!
+- 🗄️ **DB Studio** — Sürükle bırak ile veritabanı şemalarınızı tasarlayın ve `db:onproject` ile doğrudan projenize entegre edin.
+- 🌐 **Server Studio** — `artiframe serve` ile projenizi anında yayına alın ve HTTP isteklerini canlı log (Gateway logger) üzerinden analiz edin.
+- 📦 **Workspace Mimarisi** — Projeleriniz artık global ve izole bir workspace dizininde (`C:\ArtiFrame` veya `~/ArtiFrame`) güvenle yaşar.
+- 🚀 **Semantik Sürüm ve Eklenti Yönetimi** — `version upgrade` ve `add <package>` gibi yerleşik paket/sürüm yöneticileriyle Composer olmadan hayatınıza devam edin.
+- 🚫 **Sıfır Bağımlılık** — Güvenlik (XSS, CSRF) ve mimari altyapı hala native PHP.
 
 ### Kurulum
 
-> PHP 8.1 veya üzeri gereklidir.
+> Node.js ve PHP 8.1+ gereklidir.
 
 ```bash
 npm install -g @artilingo/artiframe-cli
 ```
+*(Kurulum sonrasında işletim sisteminize uygun global Workspace dizini otomatik olarak oluşturulacaktır.)*
 
 ### Kullanım
 
 ```bash
-# İnteraktif kabuk açar
+# Grafik Arayüzlü Kontrol Merkezini Aç (YENİ!)
+artiframe devops
+
+# İnteraktif CLI Kabuğunu Aç
 artiframe
 
 # Yeni proje oluştur
 artiframe> new benim-projem
 
-# View oluştur
+# Veritabanını SQL olarak dışa aktar (Veri + Şema)
+artiframe> db:export within
+
+# View veya API oluştur
 artiframe> make:view admin/kullanicilar.php
-
-# API endpoint oluştur
 artiframe> make:api standart api/auth/giris.php
-
-# Sürüm güncelle
-artiframe> version upgrade minor
 ```
 
 ---
 
 ## 🇬🇧 English
 
-**ArtiFrame** is a modern web development framework for native PHP, built on a zero external dependency philosophy. It offers a security-first, CLI-driven ecosystem free from Composer package chaos.
+**ArtiFrame 3.0** is no longer just a framework for native PHP—it's a complete **development ecosystem**. Staying true to its zero external dependency philosophy, it now ships with massive graphical interfaces including DevOps Studio (GUI), DB Studio (Global ER Designer), and Server Studio (Live Log Monitor).
 
-### Features
+### New in v3.0 (The Studio Update)
 
-- 🚫 **Zero Dependencies** — No Composer packages needed, every line of code is yours
-- 🛡️ **Security First** — XSS, CSRF, SQL Injection protection built-in by default
-- ⚡ **Quick Setup** — Complete project skeleton with a single command
-- 🌍 **5 Language Support** — TR · EN · DE · FR · ES
-- 📐 **Strict Ruleset** — `data-js` architecture, dual bootstrapper model, consistent directory structure
+- 🎨 **DevOps Studio** — Built-in desktop GUI launched via `artiframe devops`. Manage API Inspections, Cron jobs, Supervisor configs, and Env optimization visually!
+- 🗄️ **DB Studio** — Drag and drop database schema designer. Sync schemas directly into your active project via `db:onproject`.
+- 🌐 **Server Studio** — Launch your project instantly with `artiframe serve` and monitor HTTP requests live via the gateway logger.
+- 📦 **Global Workspace** — Projects are now securely sandboxed in a global workspace directory (`C:\ArtiFrame` or `~/ArtiFrame`).
+- 🚀 **Version & Package Manager** — Built-in `version upgrade` and `add <package>` commands to survive without Composer.
+- 🚫 **Zero Dependencies** — Security (XSS, CSRF) and architectural foundations are still purely native PHP.
 
 ### Installation
 
-> Requires PHP 8.1 or higher.
+> Requires Node.js and PHP 8.1+.
 
 ```bash
 npm install -g @artilingo/artiframe-cli
 ```
+*(Your global Workspace directory will be automatically generated post-installation.)*
 
 ### Usage
 
 ```bash
-# Opens the interactive shell
+# Launch the Graphical Control Center (NEW!)
+artiframe devops
+
+# Open interactive CLI shell
 artiframe
 
 # Create a new project
 artiframe> new my-project
 
-# Generate a view
+# Export database to SQL (Data + Schema)
+artiframe> db:export within
+
+# Generate a view or API
 artiframe> make:view admin/users.php
-
-# Generate an API endpoint
 artiframe> make:api standart api/auth/login.php
-
-# Update version
-artiframe> version upgrade minor
 ```
 
 ---
 
 ## 🇩🇪 Deutsch
 
-**ArtiFrame** ist ein modernes Web-Entwicklungs-Framework für natives PHP, das auf einer Philosophie ohne externe Abhängigkeiten aufgebaut ist. Es bietet ein sicherheitsorientiertes, CLI-gesteuertes Ökosystem, frei von Composer-Paketchaos.
+**ArtiFrame 3.0** ist nicht mehr nur ein Framework für natives PHP – es ist ein komplettes **Entwicklungsökosystem**. Es bleibt seiner Philosophie (Null externe Abhängigkeiten) treu und wird nun mit grafischen Schnittstellen wie DevOps Studio (GUI), DB Studio (Global ER Designer) und Server Studio (Live Log Monitor) ausgeliefert.
 
-### Funktionen
+### Neu in v3.0 (Das Studio-Update)
 
-- 🚫 **Null Abhängigkeiten** — Keine Composer-Pakete erforderlich, jede Codezeile gehört Ihnen
-- 🛡️ **Sicherheit zuerst** — XSS, CSRF, SQL-Injection-Schutz standardmäßig integriert
-- ⚡ **Schnelle Einrichtung** — Vollständiges Projektskelett mit einem einzigen Befehl
-- 🌍 **5 Sprachunterstützung** — TR · EN · DE · FR · ES
-- 📐 **Striktes Regelwerk** — `data-js`-Architektur, duales Bootstrapper-Modell, konsistente Verzeichnisstruktur
+- 🎨 **DevOps Studio** — Integrierte Desktop-GUI, die über `artiframe devops` gestartet wird (API-Inspektor, Cron-Designer, Env-Optimierung).
+- 🗄️ **DB Studio** — Drag & Drop Datenbank-Schema-Designer.
+- 🌐 **Server Studio** — Überwachen Sie HTTP-Anfragen live via `artiframe serve`.
+- 📦 **Global Workspace** — Projekte leben nun sicher in einem globalen Verzeichnis (`C:\ArtiFrame` oder `~/ArtiFrame`).
 
-### Installation
-
-> Erfordert PHP 8.1 oder höher.
-
+### Installation & Verwendung
 ```bash
 npm install -g @artilingo/artiframe-cli
-```
 
-### Verwendung
-
-```bash
-# Öffnet die interaktive Shell
-artiframe
-
-# Neues Projekt erstellen
-artiframe> new mein-projekt
-
-# View erstellen
-artiframe> make:view admin/benutzer.php
-
-# API-Endpunkt erstellen
-artiframe> make:api standart api/auth/anmelden.php
-
-# Version aktualisieren
-artiframe> version upgrade minor
+# GUI Starten
+artiframe devops
 ```
 
 ---
 
 ## 🇫🇷 Français
 
-**ArtiFrame** est un framework de développement web moderne pour PHP natif, construit sur une philosophie zéro dépendance externe. Il offre un écosystème axé sur la sécurité et piloté par CLI, sans le chaos des paquets Composer.
+**ArtiFrame 3.0** n'est plus seulement un framework, c'est un **écosystème de développement** complet. Il est désormais livré avec des interfaces graphiques massives : DevOps Studio (GUI), DB Studio (Global ER Designer) et Server Studio (Live Log Monitor).
 
-### Fonctionnalités
+### Nouveautés v3.0 (La mise à jour Studio)
 
-- 🚫 **Zéro Dépendance** — Aucun paquet Composer nécessaire, chaque ligne de code vous appartient
-- 🛡️ **La Sécurité d'Abord** — Protection XSS, CSRF, injection SQL intégrée par défaut
-- ⚡ **Configuration Rapide** — Squelette de projet complet en une seule commande
-- 🌍 **Support 5 Langues** — TR · EN · DE · FR · ES
-- 📐 **Règles Strictes** — Architecture `data-js`, modèle double bootstrapper, structure de répertoires cohérente
+- 🎨 **DevOps Studio** — GUI bureau intégrée lancée via `artiframe devops`.
+- 🗄️ **DB Studio** — Concepteur de schéma de base de données par glisser-déposer.
+- 🌐 **Server Studio** — Serveur HTTP intégré avec journalisation en direct (`artiframe serve`).
+- 📦 **Espace de Travail** — Les projets sont désormais isolés dans un répertoire global (`C:\ArtiFrame` ou `~/ArtiFrame`).
 
-### Installation
-
-> Nécessite PHP 8.1 ou supérieur.
-
+### Installation & Utilisation
 ```bash
 npm install -g @artilingo/artiframe-cli
-```
 
-### Utilisation
-
-```bash
-# Ouvre le shell interactif
-artiframe
-
-# Créer un nouveau projet
-artiframe> new mon-projet
-
-# Générer une vue
-artiframe> make:view admin/utilisateurs.php
-
-# Générer un endpoint API
-artiframe> make:api standart api/auth/connexion.php
-
-# Mettre à jour la version
-artiframe> version upgrade minor
+# Lancer la GUI
+artiframe devops
 ```
 
 ---
 
 ## 🇪🇸 Español
 
-**ArtiFrame** es un framework de desarrollo web moderno para PHP nativo, construido sobre una filosofía de cero dependencias externas. Ofrece un ecosistema orientado a la seguridad y guiado por CLI, libre del caos de paquetes Composer.
+**ArtiFrame 3.0** ya no es solo un framework, es un **ecosistema de desarrollo** completo. Ahora incluye interfaces gráficas masivas: DevOps Studio (GUI), DB Studio (Global ER Designer) y Server Studio (Live Log Monitor).
 
-### Características
+### Novedades en v3.0 (La actualización Studio)
 
-- 🚫 **Cero Dependencias** — Sin paquetes Composer, cada línea de código es tuya
-- 🛡️ **Seguridad Primero** — Protección XSS, CSRF, inyección SQL integrada por defecto
-- ⚡ **Configuración Rápida** — Esqueleto de proyecto completo con un solo comando
-- 🌍 **Soporte 5 Idiomas** — TR · EN · DE · FR · ES
-- 📐 **Reglas Estrictas** — Arquitectura `data-js`, modelo dual de bootstrapper, estructura de directorios consistente
+- 🎨 **DevOps Studio** — GUI de escritorio integrada lanzada mediante `artiframe devops`.
+- 🗄️ **DB Studio** — Diseñador visual de esquemas de bases de datos.
+- 🌐 **Server Studio** — Servidor HTTP integrado con monitor en vivo (`artiframe serve`).
+- 📦 **Espacio de Trabajo** — Los proyectos ahora residen en un directorio global (`C:\ArtiFrame` o `~/ArtiFrame`).
 
-### Instalación
-
-> Requiere PHP 8.1 o superior.
-
+### Instalación y Uso
 ```bash
 npm install -g @artilingo/artiframe-cli
-```
 
-### Uso
-
-```bash
-# Abre el shell interactivo
-artiframe
-
-# Crear un nuevo proyecto
-artiframe> new mi-proyecto
-
-# Generar una vista
-artiframe> make:view admin/usuarios.php
-
-# Generar un endpoint API
-artiframe> make:api standart api/auth/login.php
-
-# Actualizar la versión
-artiframe> version upgrade minor
+# Iniciar la GUI
+artiframe devops
 ```
 
 ---
