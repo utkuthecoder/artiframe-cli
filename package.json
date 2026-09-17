@@ -1,7 +1,7 @@
 {
   "name": "@artilingo/artiframe-cli",
-  "version": "2.0.4",
-  "description": "ArtiFrame \u2014 Zero-dependency native PHP framework with a powerful multilingual CLI. Scaffold projects, generate views, APIs and classes instantly.",
+  "version": "2.0.5",
+  "description": "ArtiFrame — Zero-dependency native PHP framework with a powerful multilingual CLI. Scaffold projects, generate views, APIs and classes instantly.",
   "main": "bin/artiframe.js",
   "bin": {
     "artiframe": "bin/artiframe.js"
