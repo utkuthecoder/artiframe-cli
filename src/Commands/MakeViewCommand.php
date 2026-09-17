@@ -53,7 +53,11 @@ class MakeViewCommand
         $jsPath  = $projectRoot . '/public' . $jsRelative;
 
         // Stub path
-        $stubPath = \ARTIFRAME_CLI_ROOT . '/stubs/make/view.stub';
+        if (str_starts_with($subDir, 'auth') || str_starts_with($subDir, 'auth/')) {
+            $stubPath = \ARTIFRAME_CLI_ROOT . '/stubs/make/auth-view.stub';
+        } else {
+            $stubPath = \ARTIFRAME_CLI_ROOT . '/stubs/make/view.stub';
+        }
         if (!file_exists($stubPath)) {
             echo "❌ " . $this->translator->get('ERROR_STUB_NOT_FOUND', ['path' => $stubPath]) . PHP_EOL;
             echo $this->translator->get('ERROR_RUN_FROM_ROOT') . PHP_EOL;
@@ -79,7 +83,26 @@ class MakeViewCommand
 
         file_put_contents($viewPath, $content);
         file_put_contents($cssPath, "/* CSS for {$title} */\n");
-        file_put_contents($jsPath, "/* JS for {$title} */\n");
+        $jsContent = <<<EOT
+/* JS for {$title} */
+
+// CSRF Token (API istekleri için zorunludur)
+const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+/*
+ * Fetch API Örnek Kullanımı:
+ * 
+ * fetch('/api/standart/endpoint', {
+ *     method: 'POST',
+ *     headers: {
+ *         'Content-Type': 'application/json',
+ *         'X-CSRF-TOKEN': csrfToken
+ *     },
+ *     body: JSON.stringify({ key: 'value' })
+ * });
+ */
+EOT;
+        file_put_contents($jsPath, $jsContent . "\n");
 
         echo $this->translator->get('SUCCESS_VIEW', ['path' => $target]) . PHP_EOL;
         echo $this->translator->get('SUCCESS_CSS', ['path' => $cssRelative]) . PHP_EOL;

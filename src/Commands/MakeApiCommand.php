@@ -45,7 +45,12 @@ class MakeApiCommand
             return;
         }
 
-        $stubName = 'api-' . $type . '.stub';
+                $stubName = 'api-' . $type . '.stub';
+        
+        if (str_starts_with($target, 'auth') || str_starts_with($target, 'auth/')) {
+            $stubName = 'auth-' . $stubName;
+        }
+
         $stubPath = \ARTIFRAME_CLI_ROOT . '/stubs/make/' . $stubName;
 
         if (!file_exists($stubPath)) {

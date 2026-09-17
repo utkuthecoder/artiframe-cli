@@ -230,6 +230,28 @@ class App
                 break;
 
 
+                        case 'optimize':
+                (new \ArtiFrame\Cli\Commands\OptimizeCommand($this->translator))->execute($commandArgs);
+                break;
+                
+                        case 'db:start':
+                (new \ArtiFrame\Cli\Commands\DbStartCommand($this->translator))->execute(array_merge($commandArgs, ['--mode=offline']));
+                break;
+                
+            case 'db:onproject':
+                (new \ArtiFrame\Cli\Commands\DbStartCommand($this->translator))->execute(array_merge($commandArgs, ['--mode=live']));
+                break;
+                
+            case 'db:export':
+                (new \ArtiFrame\Cli\Commands\DbExportCommand($this->translator))->execute($commandArgs);
+                break;
+                
+            case 'devops':
+                (new \ArtiFrame\Cli\Commands\DevopsCommand($this->translator))->execute($commandArgs);
+                break;
+                
+
+
             case 'serve':
                 (new \ArtiFrame\Cli\Commands\ServeCommand($this->translator))->execute($commandArgs);
                 break;
@@ -419,6 +441,13 @@ class App
         echo "  " . $g . "issues" . $r . " " . $y . "[id]" . $r . PHP_EOL;
         echo "  " . $d . "│" . $r . "   " . $t->get('HELP_ISSUES_DESC') . PHP_EOL;
         echo "  " . $d . "└── " . $r . "Example: " . $lg . "issues" . $r . " or " . $lg . "issues 4" . $r . PHP_EOL;
+        echo PHP_EOL;
+
+        // db:export
+        echo "  " . $g . "db:export" . $r . " " . $y . "<within|without>" . $r . PHP_EOL;
+        echo "  " . $d . "│" . $r . "   Veritabanını SQL dosyası olarak dışa aktarır." . PHP_EOL;
+        echo "  " . $d . "├── " . $r . "Example: " . $lg . "db:export within" . $r . $d . "  (Yapı ve Veriler)" . $r . PHP_EOL;
+        echo "  " . $d . "└── " . $r . "Example: " . $lg . "db:export without" . $r . $d . " (Sadece Yapı)" . $r . PHP_EOL;
         echo PHP_EOL;
 
         // help / exit

@@ -36,6 +36,16 @@ namespace Bin {
         }
 
         /**
+         * Metin içindeki @kullaniciadi formatındaki etiketleri linklere dönüştürür.
+         * XSS koruması için metnin önce display() fonksiyonundan geçmiş olması önerilir.
+         */
+                public static function parseMentions(string $text): string
+        {
+            $text = self::display($text);
+            return preg_replace('/@([A-Za-z0-9_]{3,30})/', '<a href="/user/profil/" class="cm-mention-link">@</a>', $text);
+        }
+
+        /**
          * URL'leri güvenli hale getirir, zararlı karakterleri temizler.
          */
         public static function escapeUrl(?string $url): string
@@ -156,7 +166,9 @@ namespace Bin {
             if (empty($date)) return '-';
             $time = is_numeric($date) ? $date : strtotime($date);
             $diff = time() - $time;
+            
             if ($diff < 1) return self::display(($lang === 'tr') ? 'şimdi' : 'just now');
+            if ($diff >= 604800) return self::display(date('d.m.Y', $time));
 
             $tokens = [
                 31536000 => 'year',
@@ -420,12 +432,7 @@ namespace Bin {
         public static function routeLink(?string $requestUri = null): void
         {
 
-            if (!defined('APP_MAINTENANCE')) {
-                $rawVal = $_ENV['APP_MAINTENANCE'] ?? false;
 
-                // filter_var("true", FILTER_VALIDATE_BOOLEAN) -> bool(true) üretir
-                define('APP_MAINTENANCE', filter_var($rawVal, FILTER_VALIDATE_BOOLEAN));
-            }
 
             // ------------------------------------------------------------------
             // 1. BAKIM MODU (MAINTENANCE GUARD)
@@ -637,6 +644,13 @@ namespace {
         function activeClass(string $path, string $className = 'active'): string
         {
             return \Bin\ViewMethod::activeClass($path, $className);
+        }
+    }
+
+    if (!function_exists('parseMentions')) {
+        function parseMentions(string $text): string
+        {
+            return \Bin\ViewMethod::parseMentions($text);
         }
     }
 

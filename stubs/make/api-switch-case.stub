@@ -14,7 +14,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/../app/ApiControl.php';
 
 use Bin\SystemMethod;
 
-$action = sanitizeString($_POST['action'] ?? '');
+$action = stripHtml($_POST['action'] ?? '');
 
 switch ($action) {
     case 'create':

@@ -47,7 +47,7 @@ namespace Bin {
          * @param string $value
          * @return string
          */
-        public static function sanitizeString(string $value): string
+        public static function stripHtml(string $value): string
         {
             return strip_tags(trim($value));
         }
@@ -97,6 +97,65 @@ namespace Bin {
         {
             return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
         }
+
+        /**
+         * Beni Hatırla: Güvenli Cookie Oluşturur (14 Gün)
+         */
+        public static function setRememberMeCookie(string $kullaniciIdHex): void
+        {
+            $expires = time() + (14 * 24 * 60 * 60); // 14 gün
+            $secret = $_ENV['DB_PASSWORD'] ?? 'SinavOrtagim2026';
+            $data = $kullaniciIdHex . '|' . $expires;
+            $hash = hash_hmac('sha256', $data, $secret);
+            $cookieValue = base64_encode($data . '|' . $hash);
+            
+            // HTTPOnly, Secure
+            setcookie('remember_me', $cookieValue, $expires, '/', '', true, true);
+        }
+
+        /**
+         * Beni Hatırla: Cookie'yi doğrular ve kullaniciId (hex) döner
+         */
+        public static function validateRememberMeCookie(): ?string
+        {
+            if (empty($_COOKIE['remember_me'])) {
+                return null;
+            }
+            
+            $cookieValue = base64_decode($_COOKIE['remember_me']);
+            if (!$cookieValue) return null;
+
+            $parts = explode('|', $cookieValue);
+            if (count($parts) !== 3) {
+                return null;
+            }
+            
+            [$kullaniciIdHex, $expires, $hash] = $parts;
+            
+            if (time() > (int)$expires) {
+                self::clearRememberMeCookie();
+                return null;
+            }
+            
+            $secret = $_ENV['DB_PASSWORD'] ?? 'SinavOrtagim2026';
+            $data = $kullaniciIdHex . '|' . $expires;
+            $expectedHash = hash_hmac('sha256', $data, $secret);
+            
+            if (!hash_equals($expectedHash, $hash)) {
+                return null; // Kurcalanmış
+            }
+            
+            return $kullaniciIdHex;
+        }
+
+        /**
+         * Beni Hatırla: Cookie'yi siler (Çıkış yaparken kullanılır)
+         */
+        public static function clearRememberMeCookie(): void
+        {
+            setcookie('remember_me', '', time() - 3600, '/', '', true, true);
+        }
+
 
         /**
          * API'ler için hızlı ve standart JSON yanıt (response) oluşturur.
@@ -336,7 +395,7 @@ namespace Bin {
          *
          * @return string 16-byte raw binary string
          */
-        public static function byteId(): string
+        public static function generateBinaryId(): string
         {
             // Get current timestamp in milliseconds (48-bit)
             $ts = (int)(microtime(true) * 1000);
@@ -398,9 +457,9 @@ namespace Bin {
          *
          * @return string 36-character hyphenated UUID string
          */
-        public static function makeId(): string
+        public static function generateStringId(): string
         {
-            return self::formatId(self::byteId());
+            return self::formatId(self::generateBinaryId());
         }
 
         /**
@@ -435,61 +494,54 @@ namespace Bin {
             return $asString ? (string) $result : $result;
         }
 
-        /**
-         * Sadece sayılardan oluşan rastgele bir OTP (One-Time Password) kodu üretir.
-         * @param int $length Hanelerin sayısı (Varsayılan 6)
-         */
-        public static function otpInt(int $length = 6): int
-        {
-            if ($length < 1) $length = 1;
-            if ($length > 18) $length = 18; // PHP 64-bit safe max length
+        
 
-            $min = (int) str_pad('1', $length, '0');
-            $max = (int) str_pad('9', $length, '9');
+        
 
-            return random_int($min, $max);
-        }
+        
+
+        
 
         /**
-         * Sadece harflerden oluşan rastgele bir OTP kodu üretir.
-         * @param int $length Hanelerin sayısı (Varsayılan 6)
-         * @param string $case 'c': Sadece küçük, 'C': Sadece büyük, 'cC'/'Cc': Karışık
+         * Hexadecimal string'i binary formata çevirir. Zaten binary ise dokunmaz.
+         * ID dönüşümlerinde kod tekrarını (DRY) engellemek için kullanılır.
          */
-        public static function otpStr(int $length = 6, string $case = 'C'): string
+        public static function convertToBinaryId(?string $id): ?string
         {
-            $lower = 'abcdefghijklmnopqrstuvwxyz';
-            $upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-            $chars = match (strtolower($case)) {
-                'c'  => $lower,
-                'cc' => $lower . $upper,
-                default => $upper,
-            };
-
-            $otp = '';
-            $maxIndex = strlen($chars) - 1;
-            for ($i = 0; $i < $length; $i++) {
-                $otp .= $chars[random_int(0, $maxIndex)];
+            if (empty($id)) return $id;
+            if (strlen($id) === 32 && ctype_xdigit($id)) {
+                return hex2bin($id);
             }
-
-            return $otp;
+            return $id;
         }
-
         /**
-         * Harf ve sayılardan (Alphanumeric) oluşan rastgele bir OTP kodu üretir.
+         * Güvenli ve rastgele bir OTP (One Time Password) kodu üretir.
+         * 
          * @param int $length Hanelerin sayısı (Varsayılan 6)
-         * @param string $case 'c': Küçük+Sayı, 'C': Büyük+Sayı, 'cC'/'Cc': Karışık+Sayı
+         * @param string $type 'numeric', 'alpha' veya 'alphanumeric'
+         * @param string $case 'lower', 'upper' veya 'mixed' (Sadece harf içeren durumlarda geçerli)
          */
-        public static function otpMix(int $length = 6, string $case = 'C'): string
+        public static function generateOTP(int $length = 6, string $type = 'numeric', string $case = 'upper'): string
         {
             $numbers = '0123456789';
             $lower   = 'abcdefghijklmnopqrstuvwxyz';
             $upper   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-            $chars = match (strtolower($case)) {
-                'c'  => $numbers . $lower,
-                'cc' => $numbers . $lower . $upper,
-                default => $numbers . $upper,
+            $chars = match ($type) {
+                'numeric' => $numbers,
+                'alpha' => match ($case) {
+                    'lower' => $lower,
+                    'upper' => $upper,
+                    'mixed' => $lower . $upper,
+                    default => $upper
+                },
+                'alphanumeric' => match ($case) {
+                    'lower' => $numbers . $lower,
+                    'upper' => $numbers . $upper,
+                    'mixed' => $numbers . $lower . $upper,
+                    default => $numbers . $upper
+                },
+                default => $numbers
             };
 
             $otp = '';
@@ -499,16 +551,6 @@ namespace Bin {
             }
 
             return $otp;
-        }
-
-        /**
-         * Gelen veriyi (özellikle BigInt ID'leri) güvenli bir şekilde string'e çevirir.
-         * Javascript'te 15 haneyi aşan sayılardaki veri kaybını engellemek için
-         * View dosyalarında data-id=<?= stringer($id) ?> şeklinde kullanılır.
-         */
-        public static function stringer($value): string
-        {
-            return (string) $value;
         }
     } // end class SystemMethod
 
@@ -532,9 +574,9 @@ namespace {
     }
 
     if (!function_exists('sanitizeString')) {
-        function sanitizeString(string $value): string
+        function stripHtml(string $value): string
         {
-            return \Bin\SystemMethod::sanitizeString($value);
+            return \Bin\SystemMethod::stripHtml($value);
         }
     }
 
@@ -658,9 +700,9 @@ namespace {
     }
 
     if (!function_exists('byteId')) {
-        function byteId(): string
+        function generateBinaryId(): string
         {
-            return \Bin\SystemMethod::byteId();
+            return \Bin\SystemMethod::generateBinaryId();
         }
     }
 
@@ -672,9 +714,9 @@ namespace {
     }
 
     if (!function_exists('makeId')) {
-        function makeId(): string
+        function generateStringId(): string
         {
-            return \Bin\SystemMethod::makeId();
+            return \Bin\SystemMethod::generateStringId();
         }
     }
 
@@ -692,31 +734,30 @@ namespace {
         }
     }
 
-    if (!function_exists('stringer')) {
-        function stringer($value): string
+    
+
+    
+
+    
+
+        if (!function_exists('generateOTP')) {
+        function generateOTP(int $length = 6, string $type = 'numeric', string $case = 'upper'): string
         {
-            return \Bin\SystemMethod::stringer($value);
+            return \Bin\SystemMethod::generateOTP($length, $type, $case);
         }
     }
 
-    if (!function_exists('otpInt')) {
-        function otpInt(int $length = 6): int
+    if (!function_exists('toBin')) {
+        function convertToBinaryId(?string $id): ?string
         {
-            return \Bin\SystemMethod::otpInt($length);
+            return \Bin\SystemMethod::convertToBinaryId($id);
         }
     }
 
-    if (!function_exists('otpStr')) {
-        function otpStr(int $length = 6, string $case = 'C'): string
+    if (!function_exists('generateOTP')) {
+        function generateOTP(int $length = 6, string $type = 'numeric', string $case = 'upper'): string
         {
-            return \Bin\SystemMethod::otpStr($length, $case);
-        }
-    }
-
-    if (!function_exists('otpMix')) {
-        function otpMix(int $length = 6, string $case = 'C'): string
-        {
-            return \Bin\SystemMethod::otpMix($length, $case);
+            return \Bin\SystemMethod::generateOTP($length, $type, $case);
         }
     }
 }

@@ -313,7 +313,7 @@
         <div class="sb-subcat">Sanitize & Validate</div>
         <a href="#sh-sanitizeint">sanitizeInt()</a>
         <a href="#sh-sanitizefloat">sanitizeFloat()</a>
-        <a href="#sh-sanitizestring">sanitizeString()</a>
+        <a href="#sh-sanitizestring">stripHtml()</a>
         <a href="#sh-sanitizeemail">sanitizeEmail()</a>
         <a href="#sh-verifyemail">verifyEmail()</a>
         <div class="sb-subcat">HTTP Request</div>
@@ -331,13 +331,16 @@
         <a href="#sh-slugify">slugify()</a>
         <a href="#sh-arrayonly">arrayOnly()</a>
         <div class="sb-subcat">ID Generation & Utilities</div>
-        <a href="#sh-byteid">byteId()</a>
-        <a href="#sh-makeid">makeId()</a>
+        <a href="#sh-byteid">generateBinaryId()</a>
+        <a href="#sh-makeid">generateStringId()</a>
         <a href="#sh-formatid">formatId()</a>
         <a href="#sh-intid">intId()</a>
         <a href="#sh-bigintid">bigintId()</a>
-        <a href="#sh-stringer">stringer()</a>
+        
         <a href="#sh-otpcoder">OTP Coder</a>
+        
+        <div class="sb-cat">Veritabanı</div>
+        <a href="#sh-sqlmethod">Mini-ORM & SQL</a>
         <div class="sb-cat">API Güvenliği</div>
         <a href="#api-methods">HTTP Metod Kontrolü</a>
         <a href="#api-cors">CORS</a>
@@ -485,8 +488,10 @@ artiframe&gt; </code></pre>
         <div class="tree">
 <span class="dir">proje-adi/</span>
 ├── <span class="dir">app/</span>                     <span class="note"># Altyapı katmanı</span>
-│   ├── <span class="file">ViewControl.php</span>      <span class="note"># View (HTML sayfa) bootstrapper'ı</span>
-│   ├── <span class="file">ApiControl.php</span>       <span class="note"># API endpoint bootstrapper'ı</span>
+│   ├── <span class="file">ViewControl.php</span>      <span class="note"># Standart View bootstrapper'ı</span>
+│   ├── <span class="file">AuthControl.php</span>      <span class="note"># Auth/Giriş View bootstrapper'ı</span>
+│   ├── <span class="file">ApiControl.php</span>       <span class="note"># Standart API endpoint bootstrapper'ı</span>
+│   ├── <span class="file">ApiAuthControl.php</span>   <span class="note"># Auth API endpoint bootstrapper'ı</span>
 │   ├── <span class="file">Database.php</span>         <span class="note"># PDO tabanlı veritabanı bağlantısı</span>
 │   └── <span class="file">DotEnv.php</span>           <span class="note"># .env okuyucu</span>
 │
@@ -561,7 +566,7 @@ $_GET['param2'] = '15';</code></pre>
             <p>Yukarıdaki yeni yapıda ilgili sayfada verilere erişmek oldukça basittir:</p>
             <pre><code><span class="cm">// public/user.php içerisinde:</span>
 $userId = sanitizeInt($_GET['param1']); <span class="cm">// 123456 (veya $_GET['id'])</span>
-$token = sanitizeString($_GET['param2']); <span class="cm">// 123j54m23k</span></code></pre>
+$token = stripHtml($_GET['param2']); <span class="cm">// 123j54m23k</span></code></pre>
         </div>
 
         <h3>2. Global Yardımcı Fonksiyonlar (Helpers)</h3>
@@ -615,7 +620,8 @@ axios.get('/api/user/get').catch(error => {
         <p>ArtiFrame, iki tamamen bağımsız bootstrapper kullanır. Bu mimari, <strong>HTML header sorunlarını ve güvenlik açıklarını</strong> kökten önler.</p>
         <div class="grid-2">
             <div class="card highlight">
-                <h3><span class="badge b-view">View</span> ViewControl.php</h3>
+                <h3><span class="badge b-view">View</span> ViewControl.php / AuthControl.php</h3>
+<p><strong>Zeka Eklentisi:</strong> CLI aracı `auth/` klasörü altına bir View oluşturduğunuzda otomatik olarak `AuthControl.php` (misafir kalkanı) çağırır.</p>
                 <p>HTML sayfaları (view dosyaları) için kullanılır. Session başlatır, <code class="ic">ViewMethod</code>'u yükler.</p>
                 <pre><code><span class="cm">// public/profil.php — EN ÜSTE, HTML basmadan önce</span>
 <span class="kw">&lt;?php</span>
@@ -627,7 +633,8 @@ axios.get('/api/user/get').catch(error => {
 ...</code></pre>
             </div>
             <div class="card highlight">
-                <h3><span class="badge b-api">API</span> ApiControl.php</h3>
+                <h3><span class="badge b-api">API</span> ApiControl.php / ApiAuthControl.php</h3>
+<p><strong>Zeka Eklentisi:</strong> `auth/` klasörü altına bir API oluşturduğunuzda, oturum duvarı olmayan ancak kaba kuvvet (Rate Limit) korumalı `ApiAuthControl.php` kalkanı otomatik entegre edilir.</p>
                 <p>API endpoint dosyaları için kullanılır. JSON header'ı ayarlar, HTTP metod kontrolü yapar, <code class="ic">SystemMethod</code>'u yükler.</p>
                 <pre><code><span class="cm">// public/api/kullanici/getir.php</span>
 <span class="kw">&lt;?php</span>
@@ -672,7 +679,7 @@ html[data-theme="default"][data-mode="light"] {
         </div>
         <div class="card">
             <h3>Kural 3: Güvenli Veri Akışı</h3>
-            <p>Veritabanından gelen her veri, DOM'a basılmadan önce <code class="ic">display()</code> ile sarılır. API'ye gelen her veri, işlenmeden önce <code class="ic">sanitizeString()</code> veya <code class="ic">sanitizeInt()</code> ile temizlenir.</p>
+            <p>Veritabanından gelen her veri, DOM'a basılmadan önce <code class="ic">display()</code> ile sarılır. API'ye gelen her veri, işlenmeden önce <code class="ic">stripHtml()</code> veya <code class="ic">sanitizeInt()</code> ile temizlenir.</p>
         </div>
         <div class="card">
             <h3>Kural 4: APP_ENV ile Hata Yönetimi</h3>
@@ -810,7 +817,7 @@ proje-adi/
 <span class="var">$allowedMethods</span> = [<span class="st">'POST'</span>];
 <span class="fn">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/../app/ApiControl.php'</span>;
 <span class="kw">use</span> Bin\SystemMethod;
-<span class="var">$action</span> = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'action'</span>] ?? <span class="st">''</span>);
+<span class="var">$action</span> = <span class="fn">stripHtml</span>(<span class="var">$_POST</span>[<span class="st">'action'</span>] ?? <span class="st">''</span>);
 <span class="kw">switch</span> (<span class="var">$action</span>) {
     <span class="kw">case</span> <span class="st">'create'</span>:
         <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'success'</span>, <span class="st">'message'</span> =&gt; <span class="st">'Oluşturuldu.'</span>], <span class="nu">200</span>);
@@ -3977,10 +3984,10 @@ if ($response['status'] === 'success') {
         <pre><code><span class="var">$fiyat</span> = <span class="fn">sanitizeFloat</span>(<span class="var">$_POST</span>[<span class="st">'fiyat'</span>]);</code></pre>
     </section>
     <section id="sh-sanitizestring">
-        <h2>System Helpers — <code>sanitizeString()</code> <span class="tag b-api">SystemMethod</span></h2>
-        <span class="ret">string sanitizeString(string $value)</span>
+        <h2>System Helpers — <code>stripHtml()</code> <span class="tag b-api">SystemMethod</span></h2>
+        <span class="ret">string stripHtml(string $value)</span>
         <p>XSS ve türevi saldırıları engellemek için tüm <strong>HTML ve PHP etiketlerini (<code>&lt;script&gt;</code>, <code>&lt;iframe&gt;</code> vb.) yok eder</strong>. Veritabanına String kaydetmeden önce mutlaka kullanılmalıdır.</p>
-        <pre><code><span class="var">$isim</span> = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'isim'</span>]);</code></pre>
+        <pre><code><span class="var">$isim</span> = <span class="fn">stripHtml</span>(<span class="var">$_POST</span>[<span class="st">'isim'</span>]);</code></pre>
     </section>
     <section id="sh-sanitizeemail">
         <h2>System Helpers — <code>sanitizeEmail()</code> <span class="tag b-api">SystemMethod</span></h2>
@@ -4076,7 +4083,7 @@ if ($response['status'] === 'success') {
 <span class="cm">// ID, rol gibi dışarıdan manipüle edilmiş değerler otomatik yok edilir.</span></code></pre>
     </section>
     <section id="sh-byteid">
-        <h2>System Helpers - <code>byteId()</code> <span class="tag b-api">SystemMethod</span></h2>
+        <h2>System Helpers - <code>generateBinaryId()</code> <span class="tag b-api">SystemMethod</span></h2>
         <div class="info-box">
             Native, yüksek performanslı ve sıralı (Time-ordered) raw 16-byte <strong>UUIDv7</strong> üretir.
         </div>
@@ -4086,13 +4093,13 @@ if ($response['status'] === 'success') {
                 <span class="code-lang">PHP</span>
             </div>
             <pre><code><span class="kw">use</span> Bin\SystemMethod;
-<span class="var">$rawId</span> = SystemMethod::<span class="fn">byteId</span>();
-<span class="cm">// Veya global helper: byteId();</span>
+<span class="var">$rawId</span> = SystemMethod::<span class="fn">generateBinaryId</span>();
+<span class="cm">// Veya global helper: generateBinaryId();</span>
 <span class="var">$db</span>-&gt;<span class="fn">prepare</span>(<span class="st">"INSERT INTO users (id, name) VALUES (?, ?)"</span>)-&gt;<span class="fn">execute</span>([<span class="var">$rawId</span>, <span class="st">'Utku'</span>]);</code></pre>
         </div>
         </section>
     <section id="sh-makeid">
-        <h2>System Helpers - <code>makeId()</code> <span class="tag b-api">SystemMethod</span></h2>
+        <h2>System Helpers - <code>generateStringId()</code> <span class="tag b-api">SystemMethod</span></h2>
         <div class="info-box">
             Native, standart 36 karakterlik <strong>UUIDv7</strong> string'i üretir.
         </div>
@@ -4102,7 +4109,7 @@ if ($response['status'] === 'success') {
                 <span class="code-lang">PHP</span>
             </div>
             <pre><code><span class="kw">use</span> Bin\SystemMethod;
-<span class="var">$stringId</span> = SystemMethod::<span class="fn">makeId</span>();
+<span class="var">$stringId</span> = SystemMethod::<span class="fn">generateStringId</span>();
 <span class="cm">// Örnek Çıktı: 0190ed84-3f12-7a91-8bc4-91823741abcd</span></code></pre>
         </div>
         </section>
@@ -4150,31 +4157,7 @@ if ($response['status'] === 'success') {
 <span class="var">$massiveId</span> = <span class="fn">bigintId</span>(18, <span class="kw">true</span>); <span class="cm">// 18 haneli STRING döner (JS için güvenli)</span></code></pre>
         </div>
         </section>
-    <section id="sh-stringer">
-        <h2>System Helpers - <code>stringer()</code> <span class="tag b-api">SystemMethod</span></h2>
-        <div class="info-box">
-            Değerleri Javascript'in devasa sayı (BIGINT) duyarsızlığına karşı güvenli bir şekilde string'e sarmalar.
-        </div>
-        <p>15 haneden büyük sayısal (BigInt vb.) değişkenleri View katmanında DOM'a basarken Javascript'in yuvarlama hatalarından (Precision Loss) korur.</p>
-        <div class="code-block">
-            <div class="code-header">
-                <span class="code-lang">HTML / PHP</span>
-            </div>
-            <pre><code><span class="cm">&lt;!-- JS'in bozmasını engellemek için stringer ile sarmalıyoruz --&gt;</span>
-&lt;button data-id=<span class="st">"&lt;?=</span> <span class="fn">stringer</span>(<span class="var">$data</span>[<span class="st">'id'</span>]) <span class="st">?&gt;"</span>&gt;Sil&lt;/button&gt;</code></pre>
-        </div>
-    <section id="sh-otpcoder">
-        <h2>System Helpers - OTP Coder <span class="tag b-api">SystemMethod</span></h2>
-        <div class="info-box">Rastgele, kriptografik olarak güvenli Doğrulama Kodları (OTP) üretir.</div>
-        <div class="code-block">
-            <pre><code><span class="cm">// 6 haneli rastgele sayı</span>
-<span class="var">$code</span> = <span class="fn">otpInt</span>(<span class="nu">6</span>); <span class="cm">// 482910</span>
-<span class="cm">// 8 haneli sadece harf ('c': küçük, 'C': büyük, 'cC': karışık)</span>
-<span class="var">$code</span> = <span class="fn">otpStr</span>(<span class="nu">8</span>, <span class="st">'C'</span>); <span class="cm">// PKLMDZRA</span>
-<span class="cm">// 6 haneli harf+sayı (Alphanumeric)</span>
-<span class="var">$code</span> = <span class="fn">otpMix</span>(<span class="nu">6</span>, <span class="st">'C'</span>); <span class="cm">// 9A4X2Z</span></code></pre>
-        </div>
-    </section>
+    
     </section>
     <!-- ====== API GÜVENLİĞİ ====== -->
     <section id="api-methods">
@@ -4271,9 +4254,9 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Çok f
     <span class="fn">jsonResponse</span>([<span class="st">'error'</span> =&gt; <span class="st">'Geçersiz token.'</span>], <span class="nu">403</span>);
 }
 <span class="cm">// 2. Veriyi Temizle</span>
-<span class="var">$ad</span>     = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'ad'</span>] ?? <span class="st">''</span>);
+<span class="var">$ad</span>     = <span class="fn">stripHtml</span>(<span class="var">$_POST</span>[<span class="st">'ad'</span>] ?? <span class="st">''</span>);
 <span class="var">$eposta</span> = <span class="fn">sanitizeEmail</span>(<span class="var">$_POST</span>[<span class="st">'eposta'</span>] ?? <span class="st">''</span>);
-<span class="var">$mesaj</span>  = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'mesaj'</span>] ?? <span class="st">''</span>);
+<span class="var">$mesaj</span>  = <span class="fn">stripHtml</span>(<span class="var">$_POST</span>[<span class="st">'mesaj'</span>] ?? <span class="st">''</span>);
 <span class="cm">// 3. İş Mantığı (Mail gönder, DB'ye kaydet vb.)</span>
 <span class="cm">// ...</span>
 <span class="cm">// 4. Yanıt Ver</span>
@@ -4284,6 +4267,94 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Çok f
         <div class="alert a-success">
             <strong>✅ Tamamlandı!</strong> XSS koruması, CSRF doğrulama, HTTP metod kısıtlaması ve data-js mimarisi ile tam güvenli ve standart uyumlu bir form akışı oluşturdunuz.
         </div>
+    </section>
+        <section id="sh-sqlmethod">
+        <h2>Mini-ORM (Veritabanı Kısayolları) <span class="tag b-api">SQLMethod</span></h2>
+        <p>Geliştiricilerin saatlerce SQL sorgusu yazmasını engelleyen, güvenlik odaklı (PDO Bind) Düz-Parametre mimarisidir. SQL Injection riski <strong>tamamen sıfırlanmıştır</strong>.</p>
+        <p>Aşağıda "Bunu nasıl kullanırım?" sorunuza cevap verecek, her senaryo için pratik kod parçacıklarını bulabilirsiniz.</p>
+        
+        <br>
+        <h4>1. Veri Çekme İşlemleri (Select)</h4>
+        
+        <h5><span class="badge b-view">dbGet()</span> Sadece Bir Kayıt Çekmek</h5>
+        <p>Sadece bir üyeyi veya yazıyı okumak istediğinizde kullanılır. Arka planda sorguya otomatik olarak <code>LIMIT 1</code> eklenir.</p>
+        <pre><code><span class="cm">// Sadece ID'ye göre çekmek</span>
+<span class="var">$uye</span> = <span class="fn">dbGet</span>(<span class="st">'uyeler'</span>, [<span class="st">'id'</span> => <span class="var">$id</span>]);
+<span class="keyword">echo</span> <span class="var">$uye</span>[<span class="st">'ad'</span>];
+
+<span class="cm">// En son kayıt olan aktif üyeyi getirmek</span>
+<span class="var">$sonUye</span> = <span class="fn">dbGet</span>(<span class="st">'uyeler'</span>, [<span class="st">'durum'</span> => <span class="nu">1</span>], <span class="st">'id DESC'</span>);</code></pre>
+
+        <h5><span class="badge b-view">dbList()</span> Birden Fazla Kayıt Çekmek (Dizi Döner)</h5>
+        <p>Listeleme, döngü (foreach) kurma işlemleri içindir. Dizi parametresi (Array) sayesinde "Eşittir", "Büyüktür", "LIKE" gibi tüm operatörleri destekler.</p>
+        <pre><code><span class="cm">// Tablodaki tüm veriyi çek (Koşulsuz)</span>
+<span class="var">$herkes</span> = <span class="fn">dbList</span>(<span class="st">'uyeler'</span>);
+
+<span class="cm">// Belirli koşullara uyanları çek (Örn: Durumu 1 olan ilk 20 kişi)</span>
+<span class="var">$aktifler</span> = <span class="fn">dbList</span>(<span class="st">'uyeler'</span>, [<span class="st">'durum'</span> => <span class="nu">1</span>], <span class="st">'tarih DESC'</span>, <span class="nu">20</span>);
+
+<span class="cm">// ÖZEL OPERATÖRLERLE ARAMA (Boşluktan sonrasına operatörü yazın)</span>
+<span class="cm">// Örn: Yaşı 18'den büyük ve adı 'Ali' ile başlayanlar</span>
+<span class="var">$yetiskinler</span> = <span class="fn">dbList</span>(<span class="st">'uyeler'</span>, [
+    <span class="st">'yas >'</span>     => <span class="nu">18</span>, 
+    <span class="st">'isim LIKE'</span> => <span class="st">'%Ali%'</span>
+]);</code></pre>
+
+        <h5><span class="badge b-view">dbCount()</span> Sadece Sayı Döndürmek</h5>
+        <p>Tabloda kaç adet kayıt olduğunu, Integer (Tam Sayı) olarak döner.</p>
+        <pre><code><span class="var">$toplam</span> = <span class="fn">dbCount</span>(<span class="st">'uyeler'</span>, [<span class="st">'durum'</span> => <span class="nu">1</span>, <span class="st">'rol'</span> => <span class="st">'mezun'</span>]);
+<span class="keyword">echo</span> <span class="st">"Toplam Mezun: "</span> . <span class="var">$toplam</span>;</code></pre>
+
+
+        <br>
+        <h4>2. Veri İşleme (Insert, Update, Delete)</h4>
+        
+        <h5><span class="badge b-view">dbInsert()</span> Yeni Kayıt Eklemek</h5>
+        <p>Gelen dizi anahtarlarını sütun adı, değerlerini ise güvenlikli parametre olarak kullanır ve <strong>son eklenen ID'yi</strong> döner.</p>
+        <pre><code><span class="cm">// Formdan gelenleri direkt içeri atma</span>
+<span class="var">$yeniId</span> = <span class="fn">dbInsert</span>(<span class="st">'uyeler'</span>, [
+    <span class="st">'ad'</span>    => <span class="fn">stripHtml</span>(<span class="var">$_POST</span>[<span class="st">'ad'</span>]),
+    <span class="st">'email'</span> => <span class="fn">sanitizeEmail</span>(<span class="var">$_POST</span>[<span class="st">'email'</span>]),
+    <span class="st">'yas'</span>   => <span class="fn">sanitizeInt</span>(<span class="var">$_POST</span>[<span class="st">'yas'</span>])
+]);
+<span class="keyword">echo</span> <span class="st">"Yeni Kayıt ID'si: "</span> . <span class="var">$yeniId</span>;</code></pre>
+
+        <h5><span class="badge b-view">dbUpdate()</span> Kayıt Güncellemek</h5>
+        <p>2. Parametre güncellenecek verilerdir, 3. Parametre ise WHERE şartıdır. Kaç satırın güncellendiğini döner.</p>
+        <pre><code><span class="cm">// ID'si $id olan kullanıcının durumunu 2 yap.</span>
+<span class="var">$etkilenenSatir</span> = <span class="fn">dbUpdate</span>(<span class="st">'uyeler'</span>, 
+    [<span class="st">'durum'</span> => <span class="nu">2</span>, <span class="st">'son_giris'</span> => <span class="fn">time</span>()], <span class="cm">// Ne değişecek?</span>
+    [<span class="st">'id'</span> => <span class="var">$id</span>] <span class="cm">// Kime uygulanacak? (ŞART)</span>
+);</code></pre>
+
+        <h5><span class="badge b-view">dbDelete()</span> Kayıt Silmek</h5>
+        <p>Tablo adı ve silinecek şartı yazmanız yeterlidir. Kaç satırın silindiğini döner.</p>
+        <pre><code><span class="cm">// ID'si 5 olan üyeyi sil</span>
+<span class="fn">dbDelete</span>(<span class="st">'uyeler'</span>, [<span class="st">'id'</span> => <span class="nu">5</span>]);
+
+<span class="cm">// Durumu 0 olan bütün yorumları sil</span>
+<span class="fn">dbDelete</span>(<span class="st">'yorumlar'</span>, [<span class="st">'durum'</span> => <span class="nu">0</span>]);</code></pre>
+
+        <div class="alert a-danger">
+            <strong>💣 Bomba Koruması:</strong> Yanlışlıkla tüm veritabanını güncellemeyi veya silmeyi engellemek için, <code>dbUpdate</code> ve <code>dbDelete</code> fonksiyonlarında <strong>WHERE dizisi zorunludur!</strong> Eğer şart dizisini <code>[]</code> boş bırakırsanız sistem <code>InvalidArgumentException</code> fırlatarak çöker ve işlemi reddeder. Tüm tabloyu sıfırlamak istiyorsanız, bilinçli olarak <code>dbExecute()</code> ile ham SQL yazmalısınız.
+        </div>
+        
+        <br>
+        <h4>3. Gelişmiş Raw (Ham) Sorgular</h4>
+        
+        <h5><span class="badge b-view">dbExecute() & dbRows()</span> JOIN ve Kompleks Sorgular</h5>
+        <p>Düz-Parametre mimarisine (Mini-ORM'e) sığmayan, birden fazla tablonun (JOIN) birleştiği, karmaşık AND/OR gruplarının olduğu veya Sub-Query (Alt Sorgu) barındıran tüm ham sorgularınız için tasarlanmıştır. Parametreleri <code>?</code> ile bind edip ikinci değişkende dizersiniz.</p>
+        <pre><code><span class="cm">// SELECT işlemleri için dbRows (çoklu) veya dbRow (tekli) kullanın</span>
+<span class="var">$ozelListe</span> = <span class="fn">dbRows</span>(<span class="st">"
+    SELECT g.*, u.ad 
+    FROM gonderiler g
+    LEFT JOIN uyeler u ON u.id = g.yazar_id
+    WHERE g.durum = ? AND u.yas > ?
+"</span>, [<span class="nu">1</span>, <span class="nu">18</span>]);
+
+<span class="cm">// INSERT, UPDATE, DELETE veya Tablo işlemleri için dbExecute kullanın</span>
+<span class="fn">dbExecute</span>(<span class="st">"UPDATE ayarlar SET tema = ? WHERE user_id IN (SELECT id FROM uyeler)"</span>, [<span class="st">'dark'</span>]);</code></pre>
+
     </section>
 </main>
 <script>

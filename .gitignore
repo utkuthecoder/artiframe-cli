@@ -23,5 +23,5 @@ Thumbs.db
 tmp/
 temp/
 
-# Promotional Site (Not for distribution)
-public/
+# ArtiFrame Dev specific exclusions (if any)
+export_*.sql

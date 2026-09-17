@@ -1,0 +1,15 @@
+{
+  "name": "artiframe-server-studio",
+  "version": "1.0.0",
+  "description": "ArtiFrame Real-time Server Dashboard",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "qrcode": "^1.5.3"
+  },
+  "devDependencies": {
+    "electron": "^28.2.0"
+  }
+}

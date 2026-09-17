@@ -312,7 +312,7 @@ SIDEBAR
 <div class="sb-subcat">Sanitize &amp; Validate</div>
 <a href="#sh-sanitizeint">sanitizeInt()</a>
 <a href="#sh-sanitizefloat">sanitizeFloat()</a>
-<a href="#sh-sanitizestring">sanitizeString()</a>
+<a href="#sh-sanitizestring">stripHtml()</a>
 <a href="#sh-sanitizeemail">sanitizeEmail()</a>
 <a href="#sh-verifyemail">verifyEmail()</a>
 <div class="sb-subcat">HTTP Request</div>
@@ -330,12 +330,12 @@ SIDEBAR
 <a href="#sh-slugify">slugify()</a>
 <a href="#sh-arrayonly">arrayOnly()</a>
 <div class="sb-subcat">ID Generation &amp; Utilities</div>
-<a href="#sh-byteid">byteId()</a>
-<a href="#sh-makeid">makeId()</a>
+<a href="#sh-byteid">generateBinaryId()</a>
+<a href="#sh-makeid">generateStringId()</a>
 <a href="#sh-formatid">formatId()</a>
 <a href="#sh-intid">intId()</a>
 <a href="#sh-bigintid">bigintId()</a>
-<a href="#sh-stringer">stringer()</a>
+
 <a href="#sh-otpcoder">OTP Coder</a>
 <div class="sb-cat">API Security</div>
 <a href="#api-methods">HTTP Method Control</a>
@@ -530,7 +530,7 @@ $_GET['param2'] = '15';</code></pre>
 <p>In the new structure above, accessing the data on the relevant page is quite simple:</p>
 <pre><code><span class="cm">// in public/user.php:</span>
 $userId = sanitizeInt($_GET['param1']); <span class="cm">// 123456 (or $_GET['id'])</span>
-$token = sanitizeString($_GET['param2']); <span class="cm">// 123j54m23k</span></code></pre>
+$token = stripHtml($_GET['param2']); <span class="cm">// 123j54m23k</span></code></pre>
 </div>
 <h3>2. Global Helpers</h3>
 <p>In older versions<code>\Bin\SystemMethod::generateToken()</code>or<code>\Bin\ViewMethod::display()</code>Long namespace calls like this were required. With v2.0.0, all of these functions are available in global namespace (<code>namespace { }</code>) was included.</p>
@@ -629,7 +629,7 @@ html[data-theme="default"][data-mode="light"] {
 </div>
 <div class="card">
 <h3>Rule 3: Secure Data Flow</h3>
-<p>Every data coming from the database is processed before being pushed to the DOM.<code class="ic">display()</code>It is wrapped with. Every data coming to the API is processed before it is processed.<code class="ic">sanitizeString()</code>or<code class="ic">sanitizeInt()</code>It is cleaned with .</p>
+<p>Every data coming from the database is processed before being pushed to the DOM.<code class="ic">display()</code>It is wrapped with. Every data coming to the API is processed before it is processed.<code class="ic">stripHtml()</code>or<code class="ic">sanitizeInt()</code>It is cleaned with .</p>
 </div>
 <div class="card">
 <h3>Rule 4: Error Handling with APP_ENV</h3>
@@ -765,7 +765,7 @@ make:api
 <span class="var">$allowedMethods</span> = [<span class="st">'POST'</span>];
 <span class="fn">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/../app/ApiControl.php'</span>;
 <span class="kw">use</span> Bin\SystemMethod;
-<span class="var">$action</span> = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'action'</span>] ?? <span class="st">''</span>);
+<span class="var">$action</span> = <span class="fn">stripHtml</span>(<span class="var">$_POST</span>[<span class="st">'action'</span>] ?? <span class="st">''</span>);
 <span class="kw">switch</span> (<span class="var">$action</span>) {
     <span class="kw">case</span> <span class="st">'create'</span>:
         <span class="fn">jsonResponse</span>([<span class="st">'status'</span> =&gt; <span class="st">'success'</span>, <span class="st">'message'</span> =&gt; <span class="st">'Created.'</span>], <span class="nu">200</span>);
@@ -3928,10 +3928,10 @@ if ($response['status'] === 'success') {
 <pre><code><span class="var">$price</span> = <span class="fn">sanitizeFloat</span>(<span class="var">$_POST</span>[<span class="st">'price'</span>]);</code></pre>
 </section>
 <section id="sh-sanitizestring">
-<h2>System Helpers—<code>sanitizeString()</code> <span class="tag b-api">SystemMethod</span></h2>
-<span class="ret">string sanitizeString(string $value)</span>
+<h2>System Helpers—<code>stripHtml()</code> <span class="tag b-api">SystemMethod</span></h2>
+<span class="ret">string stripHtml(string $value)</span>
 <p>To prevent XSS and similar attacks, all<strong>HTML and PHP tags (<code>&lt;script&gt;</code>, <code>&lt;iframe&gt;</code>etc.) destroys</strong>. It must be used before saving String to the database.</p>
-<pre><code><span class="var">$name</span> = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'name'</span>]);</code></pre>
+<pre><code><span class="var">$name</span> = <span class="fn">stripHtml</span>(<span class="var">$_POST</span>[<span class="st">'name'</span>]);</code></pre>
 </section>
 <section id="sh-sanitizeemail">
 <h2>System Helpers—<code>sanitizeEmail()</code> <span class="tag b-api">SystemMethod</span></h2>
@@ -4027,7 +4027,7 @@ if ($response['status'] === 'success') {
 <span class="cm">// Externally manipulated values ​​such as ID and role are automatically destroyed.</span></code></pre>
 </section>
 <section id="sh-byteid">
-<h2>System Helpers -<code>byteId()</code> <span class="tag b-api">SystemMethod</span></h2>
+<h2>System Helpers -<code>generateBinaryId()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">Native, high-performance and time-ordered raw 16-byte<strong>UUIDv7</strong>produces.</div>
 <p>ID columns in the database<code>BINARY(16)</code>When you want to achieve huge indexing and JOIN performance by keeping it as , you create new records with this function.</p>
 <div class="code-block">
@@ -4035,13 +4035,13 @@ if ($response['status'] === 'success') {
 <span class="code-lang">PHP</span>
 </div>
 <pre><code><span class="kw">use</span> Bin\SystemMethod;
-<span class="var">$rawId</span> = SystemMethod::<span class="fn">byteId</span>();
-<span class="cm">// Or global helper: byteId();</span>
+<span class="var">$rawId</span> = SystemMethod::<span class="fn">generateBinaryId</span>();
+<span class="cm">// Or global helper: generateBinaryId();</span>
 <span class="var">$db</span>-&gt;<span class="fn">prepare</span>(<span class="st">"INSERT INTO users (id, name) VALUES (?, ?)"</span>)-&gt;<span class="fn">execute</span>([<span class="var">$rawId</span>, <span class="st">'Triumph'</span>]);</code></pre>
 </div>
 </section>
 <section id="sh-makeid">
-<h2>System Helpers -<code>makeId()</code> <span class="tag b-api">SystemMethod</span></h2>
+<h2>System Helpers -<code>generateStringId()</code> <span class="tag b-api">SystemMethod</span></h2>
 <div class="info-box">Native, standard 36 characters<strong>UUIDv7</strong>produces the string.</div>
 <p>in database<code>CHAR(36)</code>or<code>VARCHAR(36)</code>If you are going to use it and do not want to deal with raw binary data, you can generate UUID directly in string format with this function.</p>
 <div class="code-block">
@@ -4049,7 +4049,7 @@ if ($response['status'] === 'success') {
 <span class="code-lang">PHP</span>
 </div>
 <pre><code><span class="kw">use</span> Bin\SystemMethod;
-<span class="var">$stringId</span> = SystemMethod::<span class="fn">makeId</span>();
+<span class="var">$stringId</span> = SystemMethod::<span class="fn">generateStringId</span>();
 <span class="cm">// Sample Output: 0190ed84-3f12-7a91-8bc4-91823741abcd</span></code></pre>
 </div>
 </section>
@@ -4091,29 +4091,7 @@ if ($response['status'] === 'success') {
 <span class="var">$massiveId</span> = <span class="fn">bigintId</span>(18, <span class="kw">true</span>); <span class="cm">// returns 18 digit STRING (JS safe)</span></code></pre>
 </div>
 </section>
-<section id="sh-stringer">
-<h2>System Helpers -<code>stringer()</code> <span class="tag b-api">SystemMethod</span></h2>
-<div class="info-box">Wraps values ​​into strings to protect against Javascript's huge number (BIGINT) insensitivity.</div>
-<p>It protects numeric (BigInt, etc.) variables larger than 15 digits from Javascript's rounding errors (Precision Loss) when printing them to the DOM in the View layer.</p>
-<div class="code-block">
-<div class="code-header">
-<span class="code-lang">HTML/PHP</span>
-</div>
-<pre><code><span class="cm">&lt;!-- We wrap it with a stringer to prevent JS from corrupting it --&gt;</span>
-&lt;button data-id=<span class="st">"&lt;?=</span> <span class="fn">Stringer</span>(<span class="var">$data</span>[<span class="st">'ID'</span>]) <span class="st">?&gt;"</span>&gt;Sil&lt;/button&gt;</code></pre>
-</div>
-<section id="sh-otpcoder">
-<h2>System Helpers - OTP Coder<span class="tag b-api">SystemMethod</span></h2>
-<div class="info-box">Generates random, cryptographically secure Authentication Codes (OTP).</div>
-<div class="code-block">
-<pre><code><span class="cm">// 6 digit random number</span>
-<span class="var">$code</span> = <span class="fn">otpInt</span>(<span class="nu">6</span>); <span class="cm">// 482910</span>
-<span class="cm">// 8 digit letter only ('c': lowercase, 'C': uppercase, 'cC': mixed)</span>
-<span class="var">$code</span> = <span class="fn">otpStr</span>(<span class="nu">8</span>, <span class="st">'C'</span>); <span class="cm">// PKLMDZRA</span>
-<span class="cm">// 6 digit letter+number (Alphanumeric)</span>
-<span class="var">$code</span> = <span class="fn">otpMix</span>(<span class="nu">6</span>, <span class="st">'C'</span>); <span class="cm">//9A4X2Z</span></code></pre>
-</div>
-</section>
+
 </section>
 ====== API SECURITY ======
 <section id="api-methods">
@@ -4205,9 +4183,9 @@ echo json_encode([<span class="st">'error'</span> =&gt; <span class="st">'Too ma
     <span class="fn">jsonResponse</span>([<span class="st">'error'</span> =&gt; <span class="st">'Invalid token.'</span>], <span class="nu">403</span>);
 }
 <span class="cm">// 2. Clear Data</span>
-<span class="var">$name</span>     = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'name'</span>] ?? <span class="st">''</span>);
+<span class="var">$name</span>     = <span class="fn">stripHtml</span>(<span class="var">$_POST</span>[<span class="st">'name'</span>] ?? <span class="st">''</span>);
 <span class="var">$email</span> = <span class="fn">sanitizeEmail</span>(<span class="var">$_POST</span>[<span class="st">'email'</span>] ?? <span class="st">''</span>);
-<span class="var">$message</span>  = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'message'</span>] ?? <span class="st">''</span>);
+<span class="var">$message</span>  = <span class="fn">stripHtml</span>(<span class="var">$_POST</span>[<span class="st">'message'</span>] ?? <span class="st">''</span>);
 <span class="cm">// 3. Business Logic (Send e-mail, save to DB, etc.)</span>
 <span class="cm">//...</span>
 <span class="cm">// 4. Reply</span>

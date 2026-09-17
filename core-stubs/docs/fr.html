@@ -331,7 +331,7 @@ BARRE LATÉRALE
 <a href="#sh-arrayonly">tableauOnly()</a>
 <div class="sb-subcat">Génération d'ID et utilitaires</div>
 <a href="#sh-byteid">octetId()</a>
-<a href="#sh-makeid">makeId()</a>
+<a href="#sh-makeid">generateStringId()</a>
 <a href="#sh-formatid">formatId()</a>
 <a href="#sh-intid">intId()</a>
 <a href="#sh-bigintid">bigintId()</a>
@@ -530,7 +530,7 @@ $_GET['param2'] = '15';</code></pre>
 <p>Dans la nouvelle structure ci-dessus, accéder aux données sur la page correspondante est assez simple :</p>
 <pre><code><span class="cm">// dans public/user.php :</span>
 $userId = sanitizeInt($_GET['param1']); <span class="cm">// 123456 (ou $_GET['id'])</span>
-$token = sanitizeString($_GET['param2']); <span class="cm">// 123j54m23k</span></code></pre>
+$token = stripHtml($_GET['param2']); <span class="cm">// 123j54m23k</span></code></pre>
 </div>
 <h3>2. Aides mondiales</h3>
 <p>Dans les anciennes versions<code>\Bin\SystemMethod::generateToken()</code>ou<code>\Bin\ViewMethod::display()</code>Des appels d'espace de noms longs comme celui-ci étaient nécessaires. Avec la v2.0.0, toutes ces fonctions sont disponibles dans l'espace de noms global (<code>namespace { }</code>) a été inclus.</p>
@@ -629,7 +629,7 @@ html[data-theme="default"][data-mode="light"] {
 </div>
 <div class="card">
 <h3>Règle 3 : flux de données sécurisé</h3>
-<p>Toutes les données provenant de la base de données sont traitées avant d'être transmises au DOM.<code class="ic">display()</code>Il est enveloppé avec. Toutes les données arrivant à l'API sont traitées avant d'être traitées.<code class="ic">sanitizeString()</code>ou<code class="ic">sanitizeInt()</code>Il est nettoyé avec .</p>
+<p>Toutes les données provenant de la base de données sont traitées avant d'être transmises au DOM.<code class="ic">display()</code>Il est enveloppé avec. Toutes les données arrivant à l'API sont traitées avant d'être traitées.<code class="ic">stripHtml()</code>ou<code class="ic">sanitizeInt()</code>Il est nettoyé avec .</p>
 </div>
 <div class="card">
 <h3>Règle 4 : Gestion des erreurs avec APP_ENV</h3>
@@ -3928,8 +3928,8 @@ if ($response['status'] === 'success') {
 <pre><code><span class="var">prix en $</span> = <span class="fn">désinfecterFlotteur</span>(<span class="var">$_POST</span>[<span class="st">'prix'</span>]);</code></pre>
 </section>
 <section id="sh-sanitizestring">
-<h2>Aides système—<code>sanitizeString()</code> <span class="tag b-api">MéthodeSystème</span></h2>
-<span class="ret">chaîne sanitizeString (chaîne $valeur)</span>
+<h2>Aides système—<code>stripHtml()</code> <span class="tag b-api">MéthodeSystème</span></h2>
+<span class="ret">chaîne stripHtml (chaîne $valeur)</span>
 <p>Pour empêcher XSS et les attaques similaires, tous<strong>Balises HTML et PHP (<code>&lt;script&gt;</code>, <code>&lt;iframe&gt;</code>etc.) détruit</strong>. Il doit être utilisé avant d'enregistrer String dans la base de données.</p>
 <pre><code><span class="var">$nom</span> = <span class="fn">désinfecterString</span>(<span class="var">$_POST</span>[<span class="st">'nom'</span>]);</code></pre>
 </section>
@@ -4027,7 +4027,7 @@ if ($response['status'] === 'success') {
 <span class="cm">// Les valeurs manipulées en externe telles que l'ID et le rôle sont automatiquement détruites.</span></code></pre>
 </section>
 <section id="sh-byteid">
-<h2>Aides système -<code>byteId()</code> <span class="tag b-api">MéthodeSystème</span></h2>
+<h2>Aides système -<code>generateBinaryId()</code> <span class="tag b-api">MéthodeSystème</span></h2>
 <div class="info-box">16 octets bruts natifs, hautes performances et ordonnés dans le temps<strong>UUIDv7</strong>produit.</div>
 <p>Colonnes d'ID dans la base de données<code>BINARY(16)</code>Lorsque vous souhaitez obtenir une énorme indexation et des performances JOIN en le gardant tel quel, vous créez de nouveaux enregistrements avec cette fonction.</p>
 <div class="code-block">
@@ -4036,12 +4036,12 @@ if ($response['status'] === 'success') {
 </div>
 <pre><code><span class="kw">utiliser</span> Bin\SystemMethod;
 <span class="var">$identifiantbrut</span> = SystemMethod::<span class="fn">ID d'octet</span>();
-<span class="cm">// Ou helper global : byteId();</span>
+<span class="cm">// Ou helper global : generateBinaryId();</span>
 <span class="var">$db</span>-&gt;<span class="fn">préparer</span>(<span class="st">"INSÉRER DANS LES VALEURS des utilisateurs (identifiant, nom) (?, ?)"</span>)-&gt;<span class="fn">exécuter</span>([<span class="var">$identifiantbrut</span>, <span class="st">'Triomphe'</span>]);</code></pre>
 </div>
 </section>
 <section id="sh-makeid">
-<h2>Aides système -<code>makeId()</code> <span class="tag b-api">MéthodeSystème</span></h2>
+<h2>Aides système -<code>generateStringId()</code> <span class="tag b-api">MéthodeSystème</span></h2>
 <div class="info-box">Natif, standard 36 caractères<strong>UUIDv7</strong>produit la chaîne.</div>
 <p>dans la base de données<code>CHAR(36)</code>ou<code>VARCHAR(36)</code>Si vous comptez l'utiliser et ne souhaitez pas traiter de données binaires brutes, vous pouvez générer l'UUID directement au format chaîne avec cette fonction.</p>
 <div class="code-block">
@@ -4049,7 +4049,7 @@ if ($response['status'] === 'success') {
 <span class="code-lang">PHP</span>
 </div>
 <pre><code><span class="kw">utiliser</span> Bin\SystemMethod;
-<span class="var">$stringId</span> = SystemMethod::<span class="fn">makeId</span>();
+<span class="var">$stringId</span> = SystemMethod::<span class="fn">generateStringId</span>();
 <span class="cm">// Exemple de sortie : 0190ed84-3f12-7a91-8bc4-91823741abcd</span></code></pre>
 </div>
 </section>
@@ -4091,29 +4091,7 @@ if ($response['status'] === 'success') {
 <span class="var">$massiveId</span> = <span class="fn">bigintId</span>(18, <span class="kw">vrai</span>); <span class="cm">// renvoie une CHAÎNE à 18 chiffres (coffre-fort JS)</span></code></pre>
 </div>
 </section>
-<section id="sh-stringer">
-<h2>Aides système -<code>stringer()</code> <span class="tag b-api">MéthodeSystème</span></h2>
-<div class="info-box">Encapsule les valeurs dans des chaînes pour se protéger contre l'insensibilité aux nombres énormes (BIGINT) de Javascript.</div>
-<p>Il protège les variables numériques (BigInt, etc.) de plus de 15 chiffres des erreurs d'arrondi de Javascript (perte de précision) lors de leur impression dans le DOM dans la couche View.</p>
-<div class="code-block">
-<div class="code-header">
-<span class="code-lang">HTML/PHP</span>
-</div>
-<pre><code><span class="cm">&lt;!-- Nous l'enveloppons avec un stringer pour empêcher JS de le corrompre --&gt;</span>
-&lt;button data-id=<span class="st">"&lt;?=</span> <span class="fn">Raidisseur</span>(<span class="var">$données</span>[<span class="st">'IDENTIFIANT'</span>]) <span class="st">?&gt;"</span>&gt;Sil&lt;/button&gt;</code></pre>
-</div>
-<section id="sh-otpcoder">
-<h2>Aides système - Codeur OTP<span class="tag b-api">MéthodeSystème</span></h2>
-<div class="info-box">Génère des codes d'authentification (OTP) aléatoires et cryptographiquement sécurisés.</div>
-<div class="code-block">
-<pre><code><span class="cm">// Nombre aléatoire à 6 chiffres</span>
-<span class="var">$code</span> = <span class="fn">otpInt</span>(<span class="nu">6</span>); <span class="cm">// 482910</span>
-<span class="cm">// Lettre à 8 chiffres uniquement ('c' : minuscule, 'C' : majuscule, 'cC' : mixte)</span>
-<span class="var">$code</span> = <span class="fn">otpStr</span>(<span class="nu">8</span>, <span class="st">'C'</span>); <span class="cm">// PKLMDZRA</span>
-<span class="cm">// Lettre+chiffre à 6 chiffres (Alphanumérique)</span>
-<span class="var">$code</span> = <span class="fn">otpMix</span>(<span class="nu">6</span>, <span class="st">'C'</span>); <span class="cm">//9A4X2Z</span></code></pre>
-</div>
-</section>
+
 </section>
 ====== SÉCURITÉ DES API ======
 <section id="api-methods">

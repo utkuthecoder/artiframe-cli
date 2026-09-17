@@ -88,7 +88,7 @@ class NewProjectCommand
         // Toplam adım sayısını hesapla
         $coreStubs    = \ARTIFRAME_CLI_ROOT . '/core-stubs';
         $stubCount    = $this->countFiles($coreStubs);
-        $dynamicCount = 14; // createDynamicFiles içindeki dosya sayısı
+        $dynamicCount = 12; // createDynamicFiles içindeki dosya sayısı
         $dirCount     = 10;  // oluşturulacak dinamik dizin sayısı
         $this->totalSteps = $stubCount + $dynamicCount + $dirCount;
 
@@ -428,7 +428,8 @@ class NewProjectCommand
     },
     "files": [
       "bin/ViewMethod.php",
-      "bin/SystemMethod.php"
+      "bin/SystemMethod.php",
+      "bin/SQLMethod.php"
     ]
   },
   "authors": [
@@ -450,17 +451,11 @@ JSON;
         // config/app-version.php
         file_put_contents(
             $targetDir . '/config/app-version.php',
-            $licenseHeader . "\n// APP_ENV: 0 = Canlı (Prod), 1 = Geliştirici (Debug)\ndefine('APP_ENV', 1);\ndefine('APP_VERSION', '1.0.0');\n"
+            $licenseHeader . "\n// APP_ENV: 0 = Canlı (Prod), 1 = Geliştirici (Debug)\ndefine('APP_ENV', 1);\ndefine('APP_VERSION', '1.0.0');\ndefine('APP_MAINTENANCE', false); // true yaparsanız sistem 503 Bakım Moduna geçer\n"
         );
         $this->tick('config/app-version.php');
 
-        // config/central-control.php
-        file_put_contents($targetDir . '/config/central-control.php', $licenseHeader . "\n// Central Control Configurations\n");
-        $this->tick('config/central-control.php');
 
-        // config/api-security.php
-        file_put_contents($targetDir . '/config/api-security.php', $licenseHeader . "\n// API Security Rules\n");
-        $this->tick('config/api-security.php');
 
         // .env & .env.example
         $envStub = implode("\n", [
@@ -473,8 +468,7 @@ JSON;
             "# Uygulama",
             "APP_NAME=ArtiFrame",
             "APP_URL=http://localhost",
-            "APP_MAINTENANCE=false",
-            "",
+                        "",
             "# Veritabanı (MySQL / MariaDB)",
             "DB_HOST=localhost",
             "DB_USER=root",
@@ -487,6 +481,17 @@ JSON;
             "REDIS_PORT=6379",
             "REDIS_PASSWORD=",
             "REDIS_DB=0",
+            "",
+            "# ── mail (phpmailer) ──────────────────────",
+            "# Mailpit varsayilan ayarlari: SMTP 1025, Web UI 8025",
+            "MAIL_MAILER=smtp",
+            "MAIL_HOST=127.0.0.1",
+            "MAIL_PORT=1025",
+            "MAIL_USERNAME=",
+            "MAIL_PASSWORD=",
+            "MAIL_ENCRYPTION=",
+            "MAIL_FROM_ADDRESS=\"hello@example.com\"",
+            "MAIL_FROM_NAME=\"ArtiFrame\"",
         ]) . "\n";
         file_put_contents($targetDir . '/.env', $envStub);
         $this->tick('.env');

@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtiFrame DB Studio V2.5</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leader-line/1.0.7/leader-line.min.js"></script>
+    <style>
+        body { margin: 0; font-family: -apple-system, sans-serif; background: #1e1e1e; color: #d4d4d4; display: flex; height: 100vh; overflow: hidden; }
+        #sidebar { width: 250px; background: #252526; border-right: 1px solid #333; display: flex; flex-direction: column; }
+        .sidebar-header { padding: 12px 15px; font-weight: bold; background: #333333; font-size: 13px; letter-spacing: 0.5px; border-bottom: 1px solid #1e1e1e; }
+        #table-list { list-style: none; padding: 0; margin: 0; overflow-y: auto; flex: 1; }
+        .table-list-item { padding: 8px 15px; font-size: 13px; cursor: pointer; border-bottom: 1px solid #2d2d2d; display: flex; align-items: center; justify-content: space-between;}
+        .table-list-item:hover { background: #2a2d2e; }
+        .table-list-item .icon { font-size: 14px; margin-right: 8px; }
+        #main-area { flex: 1; display: flex; flex-direction: column; background: #1e1e1e; position: relative; }
+        #tab-bar { display: flex; background: #2d2d2d; border-bottom: 1px solid #1e1e1e; overflow-x: auto; }
+        .tab { padding: 8px 15px; font-size: 13px; cursor: pointer; border-right: 1px solid #1e1e1e; background: #2d2d2d; color: #999; display: flex; align-items: center; }
+        .tab.active { background: #1e1e1e; color: #fff; border-top: 2px solid #007acc; }
+        .tab-close { margin-left: 8px; font-size: 14px; opacity: 0.6; cursor: pointer; }
+        .tab-close:hover { opacity: 1; color: #f48771; }
+        #tab-content { flex: 1; overflow: hidden; position: relative; display: flex; }
+        .tab-pane { flex: 1; display: none; flex-direction: column; height: 100%; position: absolute; top:0; left:0; width: 100%; }
+        .tab-pane.active { display: flex; }
+        #board-container { flex: 1; overflow: hidden; cursor: grab; background: #1e1e1e; position: relative; }
+        #transform-container { transform-origin: 0 0; width: 100%; height: 100%; position: absolute; }
+        .table-card { position: absolute; width: 300px; background: #1e1e1e; border: 1px solid #444; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.5); z-index: 10; cursor: move; }
+        .table-header { background: #007acc; padding: 0 12px; height: 34px; line-height: 34px; font-weight: bold; color: white; font-size: 13px; border-radius: 5px 5px 0 0; display: flex; justify-content: space-between; }
+        .table-body { padding-bottom: 12px; background: #252526; border-radius: 0 0 5px 5px; }
+        .table-row { display: flex; justify-content: space-between; align-items: center; padding: 0 12px; height: 26px; border-bottom: 1px solid #333; }
+        .badge-pk { background:#d7ba7d; color:#000; padding:2px 4px; border-radius:3px; font-size:10px; margin-right:4px; font-weight:bold; }
+        .badge-uk { background:#c586c0; color:#fff; padding:2px 4px; border-radius:3px; font-size:10px; margin-right:4px; font-weight:bold; }
+        .badge-ai { background:#569cd6; color:#fff; padding:2px 4px; border-radius:3px; font-size:10px; margin-right:4px; font-weight:bold; }
+        .badge-fk { background:#ce9178; color:#000; padding:2px 4px; border-radius:3px; font-size:10px; margin-right:4px; font-weight:bold; }
+        .badge-nn { background:#555; color:#fff; padding:2px 4px; border-radius:3px; font-size:10px; margin-right:4px; font-weight:bold; }
+        .stats-badge { background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 12px; font-size: 10px; font-weight: normal; }
+        .details-header { padding: 15px; background: #252526; border-bottom: 1px solid #333; display: flex; gap: 15px; align-items: center; }
+        .sub-tab { padding: 5px 10px; cursor: pointer; color: #888; font-size: 13px; border-bottom: 2px solid transparent; }
+        .sub-tab.active { color: #fff; border-bottom: 2px solid #007acc; font-weight: bold; }
+        .sub-tab-content { flex: 1; overflow: auto; display: none; flex-direction: column; }
+        .sub-tab-content.active { display: flex; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .data-table th { background: #2d2d2d; color: #4ec9b0; padding: 10px; text-align: left; position: sticky; top: 0; border-bottom: 1px solid #444; z-index: 10; min-width: 100px; }
+        .data-table td { padding: 8px 10px; border-bottom: 1px solid #333; color: #d4d4d4; }
+        /* Sticky İşlem Column for horizontal scrolling */
+        .data-table th:last-child { position: sticky; right: 0; top: 0; z-index: 12; border-left: 1px solid #444; text-align: center; min-width: 80px; }
+        .data-table td:last-child { position: sticky; right: 0; z-index: 2; background: #1e1e1e; border-left: 1px solid #333; text-align: center; }
+        .data-table td[contenteditable=true] { outline: none; cursor: text; }
+        .data-table td[contenteditable=true]:focus { background: #094771; }
+        .btn { background: #0e639c; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-size: 12px; }
+        .btn:hover { background: #1177bb; }
+        .btn-seed { background: #ce9178; color: #1e1e1e; font-weight: bold; }
+        .btn-seed:hover { background: #d7ba7d; }
+        .btn-danger { background: #d16969; }
+        .btn-danger:hover { background: #e06c6c; }
+        #status { font-size: 12px; padding: 10px; display: none; position: fixed; bottom: 20px; right: 20px; z-index: 9999; border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .success { background: #1b4b24; color: #50f17b; border: 1px solid #236a30; }
+        .error { background: #5a1d1d; color: #f48771; border: 1px solid #822222; }
+        .schema-row { display: flex; gap: 10px; align-items: center; padding: 10px 15px; border-bottom: 1px solid #333; }
+        .schema-row input[type="text"], .schema-row select { background: #3c3c3c; border: 1px solid #555; color: #ccc; padding: 5px; border-radius: 3px; font-size: 13px; }
+        .code-preview { background: #1e1e1e; border: 1px solid #333; padding: 15px; margin: 15px; border-radius: 5px; font-family: 'Courier New', Courier, monospace; font-size: 13px; color: #9cdcfe; }
+        
+        /* Custom Tooltip */
+        .tooltip-container { position: relative; display: inline-flex; align-items: center; cursor: help; margin-left: 8px; }
+        .tooltip-icon { background: #007acc; color: white; border-radius: 50%; width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; border: 1px solid #1177bb; }
+        .tooltip-content { 
+            visibility: hidden; width: 280px; background-color: #252526; color: #d4d4d4; text-align: left; 
+            border-radius: 6px; padding: 12px; position: absolute; z-index: 999; 
+            top: -10px; left: 100%; margin-left: 5px; opacity: 0; transition: opacity 0.2s, margin-left 0.2s;
+            font-size: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.6); border: 1px solid #444; line-height: 1.5;
+        }
+        .tooltip-content strong { color: #4ec9b0; font-size: 13px; display: block; margin-bottom: 5px; border-bottom: 1px solid #444; padding-bottom: 4px; }
+        .tooltip-content::after { content: ""; position: absolute; top: 12px; right: 100%; margin-left: 0; border-width: 6px; border-style: solid; border-color: transparent #444 transparent transparent; }
+        .tooltip-container:hover .tooltip-content { visibility: visible; opacity: 1; margin-left: 12px; }
+    
+        .ctx-item { padding: 10px 15px; cursor: pointer; color: #d4d4d4; font-size: 13px; transition: 0.1s; }
+        .ctx-item:hover { background: #007acc; color: white; }
+    </style>
+
+</head>
+<body>
+    <div id="sidebar">
+        <div style="padding: 15px; text-align: center; border-bottom: 1px solid #1e1e1e; background: #252526;">
+            <img src="logo.svg" alt="ArtiFrame Logo" style="height: 35px; margin-bottom: 8px;">
+            <div style="font-weight: bold; color: #fff; font-size: 14px;">ArtiFrame <span style="color: #2ea043;">DB</span></div>
+        </div>
+        <div class="sidebar-header">TABLOLAR 
+    <div style="float: right;">
+        <button class="btn" style="padding: 2px 6px; font-size:10px; background:#f39c12; margin-right:5px;" onclick="window.api.restartOffline()">🏠 Başlatıcı</button>
+        <button class="btn" style="padding: 2px 6px; font-size:10px;" onclick="openNewTableModal()">+ Yeni</button>
+    </div>
+</div>
+        <ul id="table-list"></ul>
+    </div>
+    <div id="main-area"><div id="tab-bar"></div><div id="tab-content"></div></div>
+    
+    <div id="status"></div>
+    
+    <!-- ER Diagram Context Menu -->
+    <div id="er-context-menu" style="display:none; position:fixed; background:#252526; border:1px solid #444; box-shadow:0 4px 12px rgba(0,0,0,0.5); z-index:9999; border-radius:4px; overflow:hidden; min-width:200px;">
+        <div class="ctx-item" onclick="document.getElementById('er-context-menu').style.display='none'; openNewTableModal()">✨ Yeni Tablo Ekle</div>
+        <div style="height:1px; background:#444;"></div>
+        <div class="ctx-item" onclick="document.getElementById('er-context-menu').style.display='none'; triggerImportArtiframe()">📥 İçe Aktar (.artiframe)</div>
+        <div class="ctx-item" onclick="document.getElementById('er-context-menu').style.display='none'; exportArtiframe()">📤 Dışa Aktar (.artiframe)</div>
+    </div>
+    
+
+
+    
+    <div id="sync-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:#252526; padding:25px; border-radius:8px; border:1px solid #444; width:500px;">
+            <h3 style="margin-top:0; color:#d4d4d4; font-size:16px; border-bottom:1px solid #444; padding-bottom:10px;">⚡ Şema Senkronizasyonu (Migration)</h3>
+            <p style="font-size:12px; color:#aaa; margin-bottom:15px; line-height:1.5;">İçe aktardığınız dosya mevcut canlı veritabanınızla karşılaştırıldı. Veri kaybını önlemek amacıyla <b>hiçbir kolon silinmeyecektir</b>. Sadece yeni tablolar ve eksik kolonlar eklenecektir.</p>
+            
+            <div id="sync-diff-content" style="background:#1e1e1e; border:1px solid #333; border-radius:4px; padding:10px; max-height:200px; overflow-y:auto; font-size:11px; color:#4ec9b0; font-family:monospace; margin-bottom:20px; white-space:pre-wrap;">
+            </div>
+            
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <button class="btn" style="background:#007acc; padding:10px;" onclick="executeMigration()">🚀 Uygula (SQL Kodunu Hazırla)</button>
+                <div style="text-align:center; color:#888; font-size:10px;">veya</div>
+                <button class="btn" style="background:#f39c12; padding:10px;" onclick="restartInOfflineMode()">👁️ Çevrimdışı (Offline) Modda İncele</button>
+                <button class="btn btn-danger" style="padding:10px; margin-top:5px;" onclick="document.getElementById('sync-modal').style.display='none'">İptal</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="new-table-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:#252526; padding:20px; border-radius:8px; border:1px solid #444; width:300px; text-align:center;">
+            <h3 style="margin-top:0; color:#d4d4d4; font-size:16px;">Yeni Tablo Ekle</h3>
+            <p style="font-size:11px; color:#888; margin-bottom:10px;">İngilizce ve çoğul isim kullanmanız önerilir (örn: orders).</p>
+            <input type="text" id="new-table-name" placeholder="Tablo adı..." style="width:100%; padding:8px; background:#1e1e1e; border:1px solid #555; color:white; margin-bottom:15px; box-sizing:border-box; border-radius:4px;">
+            <div style="display:flex; gap:10px; justify-content:center;">
+                <button class="btn btn-danger" style="flex:1;" onclick="document.getElementById('new-table-modal').style.display='none'">İptal</button>
+                <button class="btn" style="background:#007acc; flex:1;" onclick="executeNewTable()">Oluştur</button>
+            </div>
+        </div>
+    </div>
+
+
+    <datalist id="dl-varchar"><option value="16"><option value="32"><option value="64"><option value="128"><option value="255"><option value="512"><option value="1024"><option value="65535"></datalist>
+    <datalist id="dl-decimal"><option value="10,2"><option value="8,2"><option value="14,4"></datalist>
+    <datalist id="dl-binary"><option value="16"><option value="32"><option value="64"></datalist>
+    <datalist id="dl-int"><option value="11"></datalist>
+
+    
+    <script>
+        const typeHints = {
+            'INT': '<strong>INT (Tam Sayı)</strong>Maksimum: 2147483647 (İşaretli).<br>ID, adet, yaş gibi standart tam sayı verileri için kullanılır.',
+            'BIGINT': '<strong>BIGINT (Büyük Sayı)</strong>Maksimum: 9223372036854775807.<br>Çok yüksek rakamlar veya Snowflake ID\'ler için (örn: izlenme sayısı).',
+            'TINYINT': '<strong>TINYINT (Küçük Sayı)</strong>Aralık: -128 ile 127.<br>Durum (Status) kodları, aşamalar veya kategoriler için bellek dostudur.',
+            'DECIMAL': '<strong>DECIMAL (Hassas Küsürat)</strong>Veri kaybı yaşatmayan ondalıklı sayı.<br>Uzunluk "10,2" girilirse: 8 haneli tam sayı ve 2 haneli küsürat tutar. Finans ve maaş için zorunludur.',
+            'VARCHAR': '<strong>VARCHAR (Kısa Metin)</strong>Maksimum: 65,535 byte.<br>Uzunluk belirtmek zorunludur. (Örn: İsim için 50, E-posta için 255).',
+            'TEXT': '<strong>TEXT (Uzun Metin)</strong>Maksimum: 64 KB (Yaklaşık 65,000 karakter).<br>Uzunluk belirtilmez. Makale gövdesi veya uzun yorumlar için.',
+            'LONGTEXT': '<strong>LONGTEXT (Dev Metin)</strong>Maksimum: 4 GB.<br>Uzunluk belirtilmez. Base64 formatlı görseller veya devasa veriler için.',
+            'DATETIME': '<strong>DATETIME (Tarih ve Saat)</strong>Format: YYYY-MM-DD HH:MM:SS.<br>Sunucu zaman diliminden bağımsız sabit tarih tutar.',
+            'DATE': '<strong>DATE (Tarih)</strong>Format: YYYY-MM-DD.<br>Sadece gün, ay, yıl tutar (örn: Doğum tarihi).',
+            'TIMESTAMP': '<strong>TIMESTAMP (Zaman Damgası)</strong>1970\'ten bugüne saniye sayar.<br>CURRENT_TIMESTAMP ile kayıt eklendiğinde/güncellendiğinde otomatik saat tutmak için idealdir.',
+            'BOOLEAN': '<strong>BOOLEAN (Mantıksal)</strong>MySQL\'de yerleşik Boolean yoktur, bu yüzden TINYINT(1) olarak çevrilir.<br><em>Dikkat:</em> NoSQL\'deki gibi "true/false" yerine SQL sorgularınızda <strong>1 (True)</strong> ve <strong>0 (False)</strong> değerlerini kullanmalısınız.',
+            'JSON': '<strong>JSON (Dizi / Obje)</strong>İlişkisel olmayan esnek dizi ve objeleri tutar.<br>MySQL\'in yerleşik JSON fonksiyonlarıyla (Örn: JSON_EXTRACT) veritabanı seviyesinde sorgulanabilir.',
+            'BINARY': '<strong>BINARY (Sabit Bayt)</strong>Sabit uzunluklu bayt dizisi.<br>Özellikle <em>UUID (16 byte)</em> saklamak için VARCHAR(36)\'dan çok daha yüksek performans sağlar. Uzunluk genelde 16 girilir.',
+            'VARBINARY': '<strong>VARBINARY (Esnek Bayt)</strong>Değişken uzunluklu bayt dizisi.<br>Şifrelenmiş (encrypted) verileri, hash kodlarını veya küçük dosyaları saklamak için kullanılır.'
+        };
+
+        function updateTypeHint(selectEl) {
+            const container = selectEl.parentElement.querySelector('.tooltip-container');
+            const hintContent = container.querySelector('.tooltip-content');
+            const lenInput = selectEl.parentElement.querySelector('.col-len');
+            const val = selectEl.value;
+            const oldLen = lenInput.value.trim();
+            
+            hintContent.innerHTML = typeHints[val] || 'Bilgi bulunamadı.';
+            
+            const noLengthTypes = ['TEXT', 'LONGTEXT', 'DATE', 'DATETIME', 'TIMESTAMP', 'JSON', 'BOOLEAN'];
+            lenInput.removeAttribute('list');
+            
+            if (noLengthTypes.includes(val)) {
+                lenInput.value = '';
+                lenInput.placeholder = '-';
+                lenInput.disabled = true;
+            } else {
+                lenInput.disabled = false;
+                lenInput.placeholder = 'Uzunluk';
+                
+                if (val === 'VARCHAR') {
+                    lenInput.setAttribute('list', 'dl-varchar');
+                    if (!oldLen || oldLen.includes(',')) lenInput.value = '255';
+                } 
+                else if (val === 'BINARY' || val === 'VARBINARY') {
+                    lenInput.setAttribute('list', 'dl-binary');
+                    if (!oldLen || oldLen.includes(',')) lenInput.value = '16';
+                }
+                else if (val === 'DECIMAL') {
+                    lenInput.setAttribute('list', 'dl-decimal');
+                    if (!oldLen || !oldLen.includes(',')) lenInput.value = '10,2';
+                }
+                else if (val === 'INT' || val === 'BIGINT' || val === 'TINYINT') {
+                    lenInput.setAttribute('list', 'dl-int');
+                    if (oldLen === '255' || oldLen === '16' || oldLen.includes(',')) lenInput.value = '';
+                }
+            }
+        }
+
+        const sidebarList = document.getElementById('table-list');
+        const tabBar = document.getElementById('tab-bar');
+        const tabContent = document.getElementById('tab-content');
+        const statusDiv = document.getElementById('status');
+        
+        let currentTables = []; let lines = []; let tabs = []; let activeTabId = null; const pageState = {}; let globalDbData = null; let currentMutatingSql = ""; let currentAppMode = "live"; let currentProjectRoot = "";
+
+        
+        function openNewTableModal() {
+            document.getElementById('new-table-modal').style.display = 'flex';
+            document.getElementById('new-table-name').value = '';
+            document.getElementById('new-table-name').focus();
+        }
+
+        async function executeNewTable() {
+            const tName = document.getElementById('new-table-name').value.trim();
+            if (!tName) {
+                showStatus('Lütfen tablo adı girin.', false);
+                return;
+            }
+            if (!/^[a-zA-Z0-9_]+$/.test(tName)) {
+                showStatus('Tablo adı sadece harf, rakam ve alt tire (_) içerebilir.', false);
+                return;
+            }
+            
+            const sql = `CREATE TABLE IF NOT EXISTS \`${tName}\` (
+  \`id\` int NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (\`id\`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`;
+            
+            document.getElementById('new-table-modal').style.display = 'none';
+            showStatus('Tablo oluşturuluyor...', true);
+            
+            const res = await window.api.executeSql(sql);
+            if (res.success) {
+                showStatus(tName + ' tablosu başarıyla oluşturuldu.', true);
+                await loadSchema(); // Refresh
+                const tableObj = currentTables.find(t => t.name === tName);
+                openTab('table-' + tName, tName, 'table', tableObj);
+            } else {
+                showStatus('Hata: ' + res.error, false);
+            }
+        }
+
+        
+        
+        
+        function asyncPrompt(msg) {
+            return new Promise((resolve) => {
+                document.getElementById('index-prompt-desc').innerText = msg;
+                const input = document.getElementById('index-prompt-input');
+                input.value = '';
+                document.getElementById('index-prompt-modal').style.display = 'flex';
+                input.focus();
+                
+                document.getElementById('index-prompt-cancel').onclick = () => {
+                    document.getElementById('index-prompt-modal').style.display = 'none';
+                    resolve(null);
+                };
+                document.getElementById('index-prompt-ok').onclick = () => {
+                    document.getElementById('index-prompt-modal').style.display = 'none';
+                    resolve(input.value);
+                };
+            });
+        }
+        function customAlert(msg) {
+            document.getElementById('index-alert-desc').innerText = msg;
+            document.getElementById('index-alert-modal').style.display = 'flex';
+        }
+        
+        function asyncConfirm(msg) {
+            return new Promise((resolve) => {
+                document.getElementById('index-confirm-desc').innerText = msg;
+                document.getElementById('index-confirm-modal').style.display = 'flex';
+                document.getElementById('index-confirm-modal').querySelector('.btn[onclick]').onclick = () => {
+                    document.getElementById('index-confirm-modal').style.display = 'none';
+                    resolve(false);
+                };
+                document.getElementById('index-confirm-ok').onclick = () => {
+                    document.getElementById('index-confirm-modal').style.display = 'none';
+                    resolve(true);
+                };
+            });
+        }
+        
+        async function loadSchema() {
+            if (currentAppMode === 'offline') {
+                globalDbData = { tables: [] };
+                currentTables = [];
+                return;
+            }
+            
+            const data = await window.api.getSchema();
+            
+            if (currentAppMode === 'preview') {
+                globalDbData = data.schema || { tables: [] };
+                currentTables = globalDbData.tables || []; // FIX: set currentTables so the sidebar/links work if needed
+                tabs = [];
+                
+                if (!globalDbData.tables || globalDbData.tables.length === 0) {
+                    customAlert('Uyarı: Okunan şema dosyasında tablo bulunamadı.');
+                }
+                
+                openTab('er-diagram', 'Şema Önizlemesi', 'er', globalDbData);
+                showStatus("Şema önizleme modunda açıldı.", true);
+                return;
+            }
+            
+            if (data.error) { showStatus(data.error, false); return; }
+            currentTables = data.json ? (data.json.tables || []) : []; globalDbData = data.json;
+            renderSidebar();
+            if (!tabs.find(t => t.id === 'er-diagram')) { openTab('er-diagram', 'ER Diyagramı', 'er', data.json); } 
+            else { renderBoard(data.json); }
+            if (!tabs.find(t => t.id === 'query-builder')) { openTab('query-builder', '⚡ Sorgu & Kod', 'query-builder', data.json); }
+        }
+
+        
+        
+        // --- VISUAL QUERY BUILDER (VQB) ---
+        
+        function buildGlobalQueryPane(pane, json) {
+            let tableOpts = '<option value="">-- Tablo Seç --</option>';
+            if(json && json.tables) {
+                json.tables.forEach(t => tableOpts += `<option value="${t.name}">${t.name}</option>`);
+            }
+            
+            pane.innerHTML = `
+                <div style="padding:15px; background:#252526; border-bottom:1px solid #333;">
+                    <div style="display:flex; gap:15px; margin-bottom:15px;">
+                        <div style="flex:1;">
+                            <div style="font-size:11px; color:#888; margin-bottom:4px;">AKSYON TİPİ</div>
+                            <select id="vqb-action" onchange="vqbRenderUI()" style="width:100%; padding:8px; background:#3c3c3c; color:white; border:1px solid #555; border-radius:3px;">
+                                <option value="SELECT">SELECT (Kayıtları Getir)</option>
+                                <option value="UPDATE">UPDATE (Toplu Güncelle)</option>
+                                <option value="DELETE">DELETE (Toplu Sil)</option>
+                            </select>
+                        </div>
+                        <div style="flex:3;">
+                            <div style="font-size:11px; color:#888; margin-bottom:4px;">ANA TABLO</div>
+                            <select id="vqb-main-table" onchange="vqbRenderUI(true)" style="width:100%; padding:8px; background:#3c3c3c; color:white; border:1px solid #555; border-radius:3px;">
+                                ${tableOpts}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- SELECT & GROUP BY Alanı -->
+                    <div id="vqb-select-group-area" style="margin-bottom:15px; border-left:3px solid #2ecc71; padding-left:15px;">
+                        <div style="font-size:11px; color:#2ecc71; margin-bottom:8px; font-weight:bold;">KOLON SEÇİMİ VE KÜMELEME (SELECT & GROUP BY)</div>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <span style="color:#888; font-size:11px; width:50px;">SELECT:</span>
+                            
+                            <div id="vqb-select-container" style="position:relative; flex:1;">
+                                <div id="vqb-select-btn" style="padding:6px; background:#3c3c3c; color:white; border:1px solid #555; cursor:pointer; display:flex; justify-content:space-between; align-items:center; border-radius:3px;" onclick="const d = document.getElementById('vqb-select-dropdown'); d.style.display = d.style.display === 'block' ? 'none' : 'block'">
+                                    <span id="vqb-select-label" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:90%;">Tüm Kolonlar (*)</span>
+                                    <span style="font-size:10px;">▼</span>
+                                </div>
+                                <div id="vqb-select-dropdown" style="display:none; position:absolute; top:100%; left:0; width:100%; max-height:250px; overflow-y:auto; background:#252526; border:1px solid #555; z-index:999; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                                    <div id="vqb-select-dropdown-list" style="padding:5px;" onchange="vqbUpdateSelectLabel(event)">
+                                        <label style="display:block; padding:4px;"><input type="checkbox" class="vqb-sel-chk" value="*" checked> Tüm Kolonlar (*)</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            
+                            <span style="color:#888; font-size:11px; margin-left:15px;">GROUP BY:</span>
+                            <select id="vqb-group-col" class="vqb-dynamic-col" style="padding:6px; background:#3c3c3c; color:white; border:1px solid #555; width:200px;">
+                                <option value="">- Gruplama Yok -</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- SET Alanı (Sadece UPDATE) -->
+                    <div id="vqb-set-area" style="display:none; margin-bottom:15px; border-left:3px solid #f39c12; padding-left:15px;">
+                        <div style="font-size:11px; color:#f39c12; margin-bottom:8px; font-weight:bold;">GÜNCELLENECEK ALANLAR (SET)</div>
+                        <div id="vqb-sets" style="display:flex; flex-direction:column; gap:8px; margin-bottom:8px;"></div>
+                        <button class="btn" style="background:#444; font-size:11px;" onclick="vqbAddSet()">+ Yeni Değer Ekle</button>
+                    </div>
+
+                    <!-- JOIN Alanı -->
+                    <div id="vqb-join-area" style="margin-bottom:15px; border-left:3px solid #007acc; padding-left:15px;">
+                        <div style="font-size:11px; color:#007acc; margin-bottom:8px; font-weight:bold;">TABLO BAĞLANTILARI (JOIN)</div>
+                        <div id="vqb-joins" style="display:flex; flex-direction:column; gap:8px; margin-bottom:8px;"></div>
+                        <button class="btn" style="background:#444; font-size:11px;" onclick="vqbAddJoin()">+ JOIN Ekle</button>
+                    </div>
+
+                    <!-- WHERE Alanı -->
+                    <div id="vqb-where-area" style="margin-bottom:15px; border-left:3px solid #e74c3c; padding-left:15px;">
+                        <div style="font-size:11px; color:#e74c3c; margin-bottom:8px; font-weight:bold;">FİLTRELER / KOŞULLAR (WHERE)</div>
+                        <div id="vqb-wheres" style="display:flex; flex-direction:column; gap:8px; margin-bottom:8px;"></div>
+                        <button class="btn" style="background:#444; font-size:11px;" onclick="vqbAddWhere()">+ Koşul Ekle</button>
+                    </div>
+                    
+                    <!-- ORDER & LIMIT Alanı -->
+                    <div id="vqb-sort-limit-area" style="margin-bottom:15px; border-left:3px solid #9b59b6; padding-left:15px;">
+                        <div style="font-size:11px; color:#9b59b6; margin-bottom:8px; font-weight:bold;">SIRALAMA VE LİMİT (ORDER BY & LIMIT)</div>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <select id="vqb-order-col" class="vqb-dynamic-col" style="padding:6px; background:#3c3c3c; color:white; border:1px solid #555; width:200px;">
+                                <option value="">- Sıralama Yok -</option>
+                            </select>
+                            <select id="vqb-order-dir" style="padding:6px; background:#3c3c3c; color:white; border:1px solid #555; width:120px;">
+                                <option value="ASC">Artan (ASC)</option>
+                                <option value="DESC">Azalan (DESC)</option>
+                            </select>
+                            
+                            <span style="color:#888; font-size:11px; margin-left:10px;">LİMİT:</span>
+                            <input type="number" id="vqb-limit" value="50" min="1" max="10000" style="width:80px; padding:6px; background:#3c3c3c; color:white; border:1px solid #555;">
+                        </div>
+                    </div>
+                    
+                    <button class="btn" id="vqb-run-btn" style="background:#007acc; font-weight:bold; padding:8px 20px; font-size:14px; width:100%;" onclick="vqbExecute()">🚀 SORGULA VE KOD ÜRET</button>
+                </div>
+                
+                <div class="code-preview" id="gqb-code" style="position:relative; cursor:pointer; margin:15px; display:none;" onclick="copyGlobalCode()" title="Kopyalamak için tıklayın">
+                    <div style="position:absolute; top:10px; right:15px; font-size:16px; opacity:0.7;">📋</div>
+                    <div id="gqb-code-text" style="white-space:pre-wrap;"></div>
+                </div>
+                
+                
+                <div id="vqb-execute-btn-container" style="display:none; text-align:right; margin-bottom: 15px; margin-right: 15px;">
+                    <button class="btn btn-danger" style="font-weight:bold; padding:8px 15px;" onclick="vqbRunMutatingSql()">🔥 BU SORGUYU VERİTABANINDA ÇALIŞTIR (TEHLİKELİ)</button>
+                </div>
+
+                <div id="vqb-results-info" style="padding:5px 15px; font-size:11px; color:#888;"></div>
+                <div style="flex:1; overflow:auto;"><table class="data-table"><thead id="gqb-th"></thead><tbody id="gqb-tb"></tbody></table></div>
+            `;
+        }
+        
+        function vqbGetColOptions() {
+            const mainT = document.getElementById('vqb-main-table').value;
+            let opts = '<option value="">- Seç -</option>';
+            if(mainT) {
+                const mt = currentTables.find(t => t.name === mainT);
+                if(mt) {
+                    opts += `<optgroup label="${mt.name}">`;
+                    mt.columns.forEach(c => opts += `<option value="${mt.name}.${c.name}">${mt.name}.${c.name}</option>`);
+                    opts += '</optgroup>';
+                }
+            }
+            // Add joined tables cols
+            const joinSelects = document.querySelectorAll('.vqb-join-table');
+            joinSelects.forEach(js => {
+                if(js.value) {
+                    const jt = currentTables.find(t => t.name === js.value);
+                    if(jt) {
+                        opts += `<optgroup label="${jt.name}">`;
+                        jt.columns.forEach(c => opts += `<option value="${jt.name}.${c.name}">${jt.name}.${c.name}</option>`);
+                        opts += '</optgroup>';
+                    }
+                }
+            });
+            return opts;
+        }
+
+        function vqbRenderUI(clearAll = false) {
+            const action = document.getElementById('vqb-action').value;
+            const mainTable = document.getElementById('vqb-main-table').value;
+            
+            document.getElementById('vqb-set-area').style.display = (action === 'UPDATE') ? 'block' : 'none';
+            document.getElementById('vqb-select-group-area').style.display = (action === 'SELECT') ? 'block' : 'none';
+            
+            const btn = document.getElementById('vqb-run-btn');
+            if(action === 'SELECT') { btn.style.background = '#007acc'; btn.innerHTML = '🔍 SORGULA VE KOD ÜRET'; }
+            if(action === 'UPDATE') { btn.style.background = '#f39c12'; btn.innerHTML = '⚠️ GÜNCELLE (UPDATE) VE KOD ÜRET'; }
+            if(action === 'DELETE') { btn.style.background = '#e74c3c'; btn.innerHTML = '🛑 SİL (DELETE) VE KOD ÜRET'; }
+            
+            if(clearAll) {
+                document.getElementById('vqb-sets').innerHTML = '';
+                document.getElementById('vqb-joins').innerHTML = '';
+                document.getElementById('vqb-wheres').innerHTML = '';
+            }
+            
+            // Refresh column dropdowns in existing rows
+            const opts = vqbGetColOptions();
+            document.querySelectorAll('.vqb-dynamic-col').forEach(sel => {
+                const oldVal = sel.value;
+                sel.innerHTML = opts;
+                sel.value = oldVal;
+            });
+            vqbUpdateSelectCheckboxes();
+        }
+        
+        function vqbUpdateSelectCheckboxes() {
+            const list = document.getElementById('vqb-select-dropdown-list');
+            if(!list) return;
+            // Preserve currently checked items
+            const oldChecked = Array.from(list.querySelectorAll('.vqb-sel-chk:checked')).map(c => c.value);
+            
+            const mainT = document.getElementById('vqb-main-table').value;
+            let html = `
+                <label style="display:block; padding:6px; cursor:pointer; border-bottom:1px solid #333;"><input type="checkbox" class="vqb-sel-chk" value="*" ${oldChecked.includes('*') || oldChecked.length===0 ? 'checked' : ''}> Tüm Kolonlar (*)</label>
+                <label style="display:block; padding:6px; cursor:pointer; border-bottom:1px solid #333;"><input type="checkbox" class="vqb-sel-chk" value="COUNT(*) AS toplam_kayit" ${oldChecked.includes('COUNT(*) AS toplam_kayit') ? 'checked' : ''}> <span style="color:#2ecc71;">Toplam Kayıt Sayısı (COUNT)</span></label>
+            `;
+            
+            if(mainT) {
+                const mt = currentTables.find(t => t.name === mainT);
+                if(mt) {
+                    html += `<div style="font-size:10px; color:#aaa; margin-top:8px; padding-left:4px; font-weight:bold;">${mt.name} (Ana Tablo)</div>`;
+                    mt.columns.forEach(c => {
+                        const val = `\`${mt.name}\`.\`${c.name}\``;
+                        html += `<label style="display:block; padding:4px; margin-left:10px; cursor:pointer;"><input type="checkbox" class="vqb-sel-chk" value="${val}" ${oldChecked.includes(val) ? 'checked' : ''}> ${c.name}</label>`;
+                    });
+                }
+            }
+            
+            const joinSelects = document.querySelectorAll('.vqb-join-table');
+            joinSelects.forEach(js => {
+                if(js.value) {
+                    const jt = currentTables.find(t => t.name === js.value);
+                    if(jt) {
+                        html += `<div style="font-size:10px; color:#aaa; margin-top:8px; padding-left:4px; font-weight:bold;">${jt.name} (JOIN)</div>`;
+                        jt.columns.forEach(c => {
+                            const val = `\`${jt.name}\`.\`${c.name}\``;
+                            html += `<label style="display:block; padding:4px; margin-left:10px; cursor:pointer;"><input type="checkbox" class="vqb-sel-chk" value="${val}" ${oldChecked.includes(val) ? 'checked' : ''}> ${c.name}</label>`;
+                        });
+                    }
+                }
+            });
+            list.innerHTML = html;
+            vqbUpdateSelectLabel();
+        }
+
+        function vqbUpdateSelectLabel(e) {
+            const list = document.getElementById('vqb-select-dropdown-list');
+            const asterisk = list.querySelector('input[value="*"]');
+            
+            // If asterisk was clicked
+            if (e && e.target === asterisk && asterisk.checked) {
+                list.querySelectorAll('.vqb-sel-chk').forEach(c => { if(c !== asterisk) c.checked = false; });
+            } else if (e && e.target !== asterisk && e.target.checked) {
+                if(asterisk) asterisk.checked = false;
+            }
+            
+            const checked = Array.from(list.querySelectorAll('.vqb-sel-chk:checked'));
+            if(checked.length === 0 && asterisk) {
+                asterisk.checked = true;
+                checked.push(asterisk);
+            }
+            
+            const label = document.getElementById('vqb-select-label');
+            if(asterisk && asterisk.checked) {
+                label.innerText = "Tüm Kolonlar (*)";
+                label.style.color = "white";
+            } else {
+                label.innerText = checked.map(c => c.parentElement.innerText.trim()).join(', ');
+                label.style.color = "#4ec9b0";
+            }
+        }
+        
+        // Hide on outside click
+        document.addEventListener('click', function(event) {
+            const container = document.getElementById('vqb-select-container');
+            const dropdown = document.getElementById('vqb-select-dropdown');
+            if(container && dropdown && !container.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+
+        function vqbAddSet() {
+            const row = document.createElement('div'); row.style.display = 'flex'; row.style.gap = '10px';
+            row.innerHTML = `
+                <select class="vqb-dynamic-col vqb-set-col" style="padding:6px; background:#3c3c3c; color:white; border:1px solid #555; width:200px;">${vqbGetColOptions()}</select>
+                <span style="color:#888; padding-top:6px;">=</span>
+                <input type="text" class="vqb-set-val" placeholder="Yeni Değer..." style="flex:1; padding:6px; background:#3c3c3c; color:white; border:1px solid #555;">
+                <button class="btn btn-danger" onclick="this.parentElement.remove()">X</button>
+            `;
+            document.getElementById('vqb-sets').appendChild(row);
+        }
+
+        function vqbAddJoin() {
+            let tableOpts = '<option value="">- Tablo -</option>';
+            currentTables.forEach(t => tableOpts += `<option value="${t.name}">${t.name}</option>`);
+            
+            const row = document.createElement('div'); row.style.display = 'flex'; row.style.gap = '10px';
+            row.innerHTML = `
+                <select class="vqb-join-type" style="padding:6px; background:#3c3c3c; color:white; border:1px solid #555;">
+                    <option value="INNER JOIN">INNER JOIN</option><option value="LEFT JOIN">LEFT JOIN</option><option value="RIGHT JOIN">RIGHT JOIN</option>
+                </select>
+                <select class="vqb-join-table" onchange="vqbRenderUI()" style="padding:6px; background:#3c3c3c; color:white; border:1px solid #555;">${tableOpts}</select>
+                <span style="color:#888; padding-top:6px;">ON</span>
+                <select class="vqb-dynamic-col vqb-join-on1" style="padding:6px; background:#3c3c3c; color:white; border:1px solid #555; width:150px;">${vqbGetColOptions()}</select>
+                <span style="color:#888; padding-top:6px;">=</span>
+                <select class="vqb-dynamic-col vqb-join-on2" style="padding:6px; background:#3c3c3c; color:white; border:1px solid #555; width:150px;">${vqbGetColOptions()}</select>
+                <button class="btn btn-danger" onclick="this.parentElement.remove(); vqbRenderUI();">X</button>
+            `;
+            document.getElementById('vqb-joins').appendChild(row);
+        }
+
+        function vqbAddWhere() {
+            const isFirst = document.getElementById('vqb-wheres').children.length === 0;
+            const row = document.createElement('div'); row.style.display = 'flex'; row.style.gap = '10px';
+            
+            let logicHtml = isFirst ? `<span style="width:60px; display:inline-block; text-align:right; color:#888; padding-top:6px;">WHERE</span>` : `<select class="vqb-where-logic" style="width:60px; padding:6px; background:#3c3c3c; color:white; border:1px solid #555;"><option value="AND">AND</option><option value="OR">OR</option></select>`;
+            
+            row.innerHTML = `
+                ${logicHtml}
+                <select class="vqb-dynamic-col vqb-where-col" style="padding:6px; background:#3c3c3c; color:white; border:1px solid #555; width:180px;">${vqbGetColOptions()}</select>
+                <select class="vqb-where-op" onchange="const val = this.nextElementSibling; if(this.value.includes('NULL')){val.disabled=true;val.style.opacity=0.5;}else{val.disabled=false;val.style.opacity=1;}" style="padding:6px; background:#3c3c3c; color:white; border:1px solid #555; width:120px;">
+                    <option value="=">=</option><option value="!=">!=</option><option value=">">></option><option value=">=">>=</option>
+                    <option value="<"><</option><option value="<="><=</option><option value="LIKE">LIKE</option>
+                    <option value="IN">IN</option><option value="BETWEEN">BETWEEN</option><option value="IS NULL">IS NULL</option><option value="IS NOT NULL">IS NOT NULL</option>
+                </select>
+                <input type="text" class="vqb-where-val" placeholder="Değer..." style="flex:1; padding:6px; background:#3c3c3c; color:white; border:1px solid #555;">
+                <button class="btn btn-danger" onclick="this.parentElement.remove()">X</button>
+            `;
+            document.getElementById('vqb-wheres').appendChild(row);
+        }
+        
+        
+        function translateMySqlError(err) {
+            if(!err) return "Bilinmeyen bir veritabanı hatası oluştu.";
+            if(err.includes("only_full_group_by") || err.includes("not in GROUP BY clause")) {
+                return "💡 Kural Hatası (GROUP BY):\nKümeleme (GROUP BY) yaptığınızda, SELECT kısmında seçtiğiniz kolonlar ya GROUP BY alanında da seçili olmalı ya da COUNT(), MAX(), SUM() gibi bir fonksiyonun içinde (Aggregate) olmalıdır. Lütfen SELECT kısmındaki 'salt' kolonları kaldırın veya sadece grupladığınız kolonu/fonksiyonları seçin.";
+            }
+            if(err.includes("Unknown column")) {
+                const col = err.match(/Unknown column '(.*?)'/);
+                return `💡 Kolon Bulunamadı:\nSorguda (${col ? col[1] : 'Bilinmeyen'}) isimli bir kolon kullanmaya çalıştınız ancak bağlı tablolarda böyle bir kolon yok. JOIN bağlantılarınızı veya kolon isimlerini kontrol edin.`;
+            }
+            if(err.includes("You have an error in your SQL syntax")) {
+                return "💡 Sözdizimi (Syntax) Hatası:\nÜretilen SQL sorgusunda yapısal bir hata var. Muhtemelen bir değeri veya koşulu eksik bıraktınız.";
+            }
+            if(err.includes("ambiguous")) {
+                return "💡 Belirsiz Kolon (Ambiguous):\nİki tabloda da aynı isimli kolon var (örn: 'id'). Sistem hangisini kastettiğinizi anlayamıyor. Lütfen kolonları seçerken 'tablo_adi.kolon_adi' şeklinde belirtin.";
+            }
+            return "💡 Veritabanı Hatası: " + err;
+        }
+
+        function copyGlobalCode() {
+            const text = document.getElementById('gqb-code-text').innerText;
+            navigator.clipboard.writeText(text);
+            showStatus('Kod Panoya Kopyalandı!', true);
+        }
+        
+        
+        async function vqbRunMutatingSql() {
+            if(!currentMutatingSql) return;
+            
+            if(!(await asyncConfirm(`Aşağıdaki kalıcı işlem veritabanında ÇALIŞTIRILACAK:\n\n${currentMutatingSql}\n\nBu işlemin geri dönüşü yoktur. Onaylıyor musunuz?`))) return;
+            
+            const info = document.getElementById('vqb-results-info');
+            info.innerHTML = `<span style="color:#007acc; font-weight:bold;">İşlem yürütülüyor...</span>`;
+            
+            const res = await window.api.executeSql(currentMutatingSql);
+            if(res.success) {
+                info.innerHTML = `<span style="color:#4ec9b0; font-weight:bold;">İşlem başarıyla tamamlandı! (Kalıcı olarak veritabanına işlendi)</span>`;
+                showStatus('Veritabanı işlemi başarılı!', true);
+                document.getElementById('vqb-execute-btn-container').style.display = 'none';
+            } else {
+                info.innerHTML = `<span style="color:#f48771; font-weight:bold; white-space:pre-wrap;">${translateMySqlError(res.error)}</span>`;
+                showStatus('Hata oluştu', false);
+            }
+        }
+
+        async function vqbExecute() {
+            const action = document.getElementById('vqb-action').value;
+            const mainTable = document.getElementById('vqb-main-table').value;
+            if(!mainTable) { showStatus('Lütfen bir ana tablo seçin!', false); return; }
+            
+            let sql = ""; let phpCode = "";
+            let joins = []; let wheres = []; let sets = [];
+            
+            // Build JOINs
+            document.getElementById('vqb-joins').querySelectorAll('div').forEach(r => {
+                const type = r.querySelector('.vqb-join-type').value;
+                const tbl = r.querySelector('.vqb-join-table').value;
+                const on1 = r.querySelector('.vqb-join-on1').value;
+                const on2 = r.querySelector('.vqb-join-on2').value;
+                if(tbl && on1 && on2) joins.push(`${type} \`${tbl}\` ON ${on1} = ${on2}`);
+            });
+            
+            // Build SETs (Update)
+            document.getElementById('vqb-sets').querySelectorAll('div').forEach(r => {
+                const col = r.querySelector('.vqb-set-col').value;
+                const val = r.querySelector('.vqb-set-val').value;
+                const isNumeric = !isNaN(val) && val !== '';
+                if(col) sets.push(`${col} = ${isNumeric ? val : "'" + val + "'"}`);
+            });
+            
+            // Build WHEREs
+            document.getElementById('vqb-wheres').querySelectorAll('div').forEach((r, idx) => {
+                const logic = r.querySelector('.vqb-where-logic') ? r.querySelector('.vqb-where-logic').value : '';
+                const col = r.querySelector('.vqb-where-col').value;
+                const op = r.querySelector('.vqb-where-op').value;
+                const rawVal = r.querySelector('.vqb-where-val').value.trim();
+                if(!col) return;
+                
+                let valStr = '';
+                if (op === 'IS NULL' || op === 'IS NOT NULL') {
+                    valStr = '';
+                } else if (op === 'BETWEEN') {
+                    const bw = rawVal.split(',').map(s => isNaN(s.trim()) ? `'${s.trim()}'` : s.trim());
+                    if(bw.length >= 2) valStr = `${bw[0]} AND ${bw[1]}`;
+                    else valStr = rawVal;
+                } else if (op === 'IN') {
+                    const sqlArr = rawVal.split(',').map(s => isNaN(s.trim()) ? `'${s.trim()}'` : s.trim()).join(', ');
+                    valStr = `(${sqlArr})`;
+                } else if (op === 'LIKE') {
+                    valStr = `'%${rawVal}%'`;
+                } else {
+                    valStr = (!isNaN(rawVal) && rawVal !== '') ? rawVal : `'${rawVal}'`;
+                }
+                
+                wheres.push(`${idx > 0 ? logic : ''} ${col} ${op} ${valStr}`.trim());
+            });
+            
+            const joinStr = joins.length > 0 ? ' ' + joins.join(' ') : '';
+            const whereStr = wheres.length > 0 ? ' WHERE ' + wheres.join(' ') : '';
+            
+            const checkedSelects = Array.from(document.querySelectorAll('#vqb-select-dropdown-list .vqb-sel-chk:checked')).map(c => c.value);
+            const selectCols = checkedSelects.length > 0 ? checkedSelects.join(', ') : '*';
+            const groupCol = document.getElementById('vqb-group-col').value;
+            const groupStr = groupCol ? ` GROUP BY ${groupCol}` : '';
+            
+            const orderCol = document.getElementById('vqb-order-col').value;
+            const orderDir = document.getElementById('vqb-order-dir').value;
+            const limit = document.getElementById('vqb-limit').value.trim();
+            
+            const orderStr = orderCol ? ` ORDER BY ${orderCol} ${orderDir}` : '';
+            const limitStr = limit ? ` LIMIT ${limit}` : '';
+            
+            if(action === 'SELECT') {
+                sql = `SELECT ${selectCols} FROM \`${mainTable}\`${joinStr}${whereStr}${groupStr}${orderStr}${limitStr}`;
+                if(joins.length === 0 && wheres.length === 1 && wheres[0].includes('=')) {
+                    // Simple ArtiFrame Code
+                    
+                    let phpOrderBy = orderCol ? `'${orderCol.replace(mainTable+'.', '')} ${orderDir}'` : 'null';
+                    let phpLimit = limit ? limit : 'null';
+                    phpCode = `// Basit Kullanım (ArtiFrame ORM):\n$sonuclar = dbList('${mainTable}', [...koşullar...], ${phpOrderBy}, ${phpLimit});\n\n// Tam SQL Sorgusu:\n$sql = "${sql}";\n$sonuclar = dbQuery($sql);`;
+                } else {
+                    phpCode = `// Karmaşık sorgu sebebiyle saf SQL metodu önerilir:\n$sql = "${sql}";\n$sonuclar = dbQuery($sql);`;
+                }
+            } else if (action === 'UPDATE') {
+                if(sets.length === 0) { showStatus('UPDATE için en az bir SET değeri girmelisiniz!', false); return; }
+                if(wheres.length === 0) {
+                    if(!(await asyncConfirm('DİKKAT: WHERE koşulu girmediniz! Tablodaki TÜM kayıtlar güncellenecek. Emin misiniz?'))) return;
+                }
+                sql = `UPDATE \`${mainTable}\`${joinStr} SET ${sets.join(', ')}${whereStr}${orderStr}${limitStr}`;
+                phpCode = `// Toplu Güncelleme Kodu:\n$sql = "${sql}";\n$etkilenenKayit = dbExecute($sql);`;
+            } else if (action === 'DELETE') {
+                if(wheres.length === 0) {
+                    if(!(await asyncConfirm('DİKKAT: WHERE koşulu girmediniz! Tablodaki TÜM kayıtlar SİLİNECEK. Emin misiniz?'))) return;
+                }
+                sql = `DELETE FROM \`${mainTable}\`${joinStr}${whereStr}${orderStr}${limitStr}`;
+                phpCode = `// Toplu Silme Kodu:\n$sql = "${sql}";\n$etkilenenKayit = dbExecute($sql);`;
+            }
+            
+            document.getElementById('gqb-code').style.display = 'block';
+            document.getElementById('gqb-code-text').innerText = phpCode;
+            
+            const thead = document.getElementById('gqb-th'); 
+            const tbody = document.getElementById('gqb-tb');
+            const info = document.getElementById('vqb-results-info');
+
+            // --- SAFETY PATTERN ---
+            if (action !== 'SELECT') {
+                currentMutatingSql = sql;
+                document.getElementById('vqb-execute-btn-container').style.display = 'block';
+                thead.innerHTML = ''; tbody.innerHTML = '';
+                info.innerHTML = `<span style="color:#f39c12; font-weight:bold;">Güvenlik Uyarısı:</span> Kod başarıyla üretildi. Sadece kodu kopyalamak istiyorsanız yukarıdan alabilirsiniz. Eğer işlemi lokal veritabanınızda kalıcı olarak çalıştırmak istiyorsanız yandaki kırmızı butona tıklayın.`;
+                return;
+            }
+            
+            // IF SELECT, Execute immediately to preview data
+            document.getElementById('vqb-execute-btn-container').style.display = 'none';
+            const res = await window.api.executeSql(sql);
+
+            
+            // If SELECT
+            if(res.success && res.data && res.data.length > 0) {
+                info.innerText = `Bulunan sonuçları aşağıdaki tablodan doğrudan düzenleyebilir ve kaydedebilirsiniz.`;
+                const t = currentTables.find(x => x.name === mainTable);
+                const pkCol = t ? t.columns.find(c => c.isPk) : null;
+                
+                // Extract all column names from first result row (because of joins, columns might not just be from main table)
+                const colNames = Object.keys(res.data[0]);
+                
+                let headHtml = '<tr>'; colNames.forEach(c => headHtml += `<th>${c}</th>`); headHtml += '<th>İşlem</th></tr>';
+                thead.innerHTML = headHtml;
+                
+                let bodyHtml = '';
+                res.data.forEach(row => {
+                    let tr = '<tr>';
+                    colNames.forEach(c => { 
+                        // Only main table columns can be cleanly updated via generic saveRow, but let's allow trying.
+                        const val = row[c] !== null ? row[c] : ''; 
+                        tr += `<td contenteditable="true" data-col="${c}">${val}</td>`; 
+                    });
+                    const pkVal = pkCol && row[pkCol.name] ? row[pkCol.name] : '';
+                    if(pkVal) {
+                        tr += `<td><button class="btn" onclick="saveRow(this, '${mainTable}', '${pkCol.name}', '${pkVal}')">💾</button> <button class="btn btn-danger" onclick="deleteRow(this, '${mainTable}', '${pkCol.name}', '${pkVal}')">🗑️</button></td></tr>`;
+                    } else {
+                        tr += `<td><span style="font-size:10px; color:#888;">(JOIN Salt Okunur)</span></td></tr>`;
+                    }
+                    bodyHtml += tr;
+                });
+                tbody.innerHTML = bodyHtml;
+            } else { 
+                thead.innerHTML = ''; 
+                tbody.innerHTML = `<tr><td style="padding: 20px; text-align: left; color: #f48771; white-space:pre-wrap; line-height:1.6; border:1px solid #e74c3c; background:rgba(231,76,60,0.1);">${res.error ? translateMySqlError(res.error) : 'Bu kritere uygun sonuç bulunamadı.'}</td></tr>`; 
+                info.innerText = '';
+            }
+        }
+
+        
+        // --- CONTEXT MENU & .ARTIFRAME EXPORT/IMPORT ---
+        
+        document.addEventListener('contextmenu', function(e) {
+            // Sadece ER Diyagramı içinde sağ tıklamaya izin ver
+            const pane = document.getElementById('pane-er-diagram');
+            if (pane && pane.contains(e.target)) {
+                e.preventDefault();
+                const menu = document.getElementById('er-context-menu');
+                menu.style.display = 'block';
+                menu.style.left = e.clientX + 'px';
+                menu.style.top = e.clientY + 'px';
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('er-context-menu');
+            if (menu && menu.style.display === 'block') {
+                menu.style.display = 'none';
+            }
+        });
+
+        async function exportArtiframe() {
+            if (!globalDbData) return;
+            
+            // Mevcut dizilimi (UI koordinatlarını) kaydet
+            document.querySelectorAll('.table-card').forEach(card => {
+                const tableName = card.dataset.tableName;
+                if (tableName) {
+                    const t = globalDbData.tables.find(x => x.name === tableName);
+                    if (t) {
+                        if (!t.ui) t.ui = {};
+                        t.ui.left = card.style.left;
+                        t.ui.top = card.style.top;
+                    }
+                }
+            });
+            
+            const res = await window.api.saveArtiframeFile(globalDbData);
+            if (res) showStatus("Diyagram şifreli .artiframe dosyası olarak başarıyla dışa aktarıldı.", true);
+        }
+
+        
+        let pendingMigrationSql = "";
+        
+        function generateSchemaDiff(liveData, importedData) {
+            let sqlLines = [];
+            let summary = "";
+            
+            const liveTables = liveData.tables || [];
+            const impTables = importedData.tables || [];
+            
+            impTables.forEach(impT => {
+                const liveT = liveTables.find(t => t.name === impT.name);
+                
+                if (!liveT) {
+                    // NEW TABLE
+                    summary += `[+] Yeni Tablo Eklenecek: ${impT.name}\n`;
+                    let cols = [];
+                    let pks = [];
+                    impT.columns.forEach(c => {
+                        let def = `\`${c.name}\` ${c.type}`;
+                        if(!c.nullable) def += ' NOT NULL';
+                        if(c.isAi) def += ' AUTO_INCREMENT';
+                        if(c.defaultVal !== null && c.defaultVal !== undefined) {
+                            if (c.defaultVal.toUpperCase() === 'CURRENT_TIMESTAMP') def += ' DEFAULT CURRENT_TIMESTAMP';
+                            else def += ` DEFAULT '${c.defaultVal}'`;
+                        }
+                        cols.push(def);
+                        if(c.isPk) pks.push(`\`${c.name}\``);
+                    });
+                    if(pks.length > 0) cols.push(`PRIMARY KEY (${pks.join(',')})`);
+                    
+                    sqlLines.push(`CREATE TABLE IF NOT EXISTS \`${impT.name}\` (\n  ${cols.join(',\n  ')}\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`);
+                } else {
+                    // COMPARE COLUMNS
+                    impT.columns.forEach(impC => {
+                        const liveC = liveT.columns.find(c => c.name === impC.name);
+                        if (!liveC) {
+                            // NEW COLUMN
+                            summary += `[+] Yeni Kolon (${impT.name}): ${impC.name} (${impC.type})\n`;
+                            let def = `\`${impC.name}\` ${impC.type}`;
+                            if(!impC.nullable) def += ' NOT NULL';
+                            if(impC.defaultVal !== null && impC.defaultVal !== undefined) {
+                                if (impC.defaultVal.toUpperCase() === 'CURRENT_TIMESTAMP') def += ' DEFAULT CURRENT_TIMESTAMP';
+                                else def += ` DEFAULT '${impC.defaultVal}'`;
+                            }
+                            sqlLines.push(`ALTER TABLE \`${impT.name}\` ADD COLUMN ${def};`);
+                        }
+                    });
+                }
+            });
+            
+            if (sqlLines.length === 0) {
+                summary = "✅ Canlı veritabanınız içe aktarılan şema ile birebir uyumlu. Herhangi bir eksik bulunamadı.";
+            }
+            
+            return { summary, sql: sqlLines.join('\n\n') };
+        }
+        
+        function executeMigration() {
+            document.getElementById('sync-modal').style.display = 'none';
+            if (!pendingMigrationSql) {
+                showStatus('Uygulanacak bir SQL bulunamadı!', false);
+                return;
+            }
+            
+            // Go to Query Tab and inject
+            openTab('query-builder', '⚡ Sorgu & Kod', 'query-builder', globalDbData);
+            
+            // Wait for tab render
+            setTimeout(() => {
+                document.getElementById('vqb-action').value = 'UPDATE'; // Force red button mode conceptually
+                document.getElementById('gqb-code').style.display = 'block';
+                document.getElementById('gqb-code-text').innerText = `/* MIGRATION (ŞEMA GÖÇÜ) SCRIPT'I */\n\n${pendingMigrationSql}`;
+                
+                currentMutatingSql = pendingMigrationSql;
+                document.getElementById('vqb-execute-btn-container').style.display = 'block';
+                
+                document.getElementById('vqb-results-info').innerHTML = `<span style="color:#f39c12; font-weight:bold;">Migration Hazır:</span> İçe aktarılan şemayı kurmak için gereken SQL kodu yukarıdadır. Lütfen inceleyin ve hazırsanız yandaki kırmızı butona basın.`;
+            }, 200);
+        }
+        
+        async function restartInOfflineMode() {
+            if(window.api && window.api.restartOffline) {
+                await window.api.restartOffline();
+            }
+        }
+
+        async function importArtiframe(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.metadata?.type !== "ArtiFrameDBDiagram") {
+                        showStatus("Geçersiz dosya formatı! Sadece .artiframe dosyaları kabul edilir.", false);
+                        return;
+                    }
+                    
+                    if (currentAppMode === 'offline') {
+                        // Welcome ekranını kapat, Canvas'ı aç
+                        document.getElementById('welcome-screen').style.display = 'none';
+                        document.getElementById('tab-bar').style.display = 'flex';
+                        document.getElementById('tab-content').style.display = 'flex';
+                        
+                        tabs = []; // Sadece ER Diyagramı olacak
+                        openTab('er-diagram', 'İçe Aktarılan Diyagram', 'er', data.schema);
+                        
+                        globalDbData = data.schema;
+                        
+                        const btnC = document.getElementById('scaffold-btn-container');
+                        if (btnC) btnC.style.display = 'block';
+                        
+                        showStatus("Diyagram çevrimdışı modda başarıyla yüklendi.", true);
+                    } else {
+                        // Live modda diff analizini aç
+                        const diff = generateSchemaDiff(globalDbData, data.schema);
+                        pendingMigrationSql = diff.sql;
+                        document.getElementById('sync-diff-content').innerText = diff.summary;
+                        document.getElementById('sync-modal').style.display = 'flex';
+                    }
+                    
+                } catch (err) {
+                    showStatus("Dosya okunurken hata oluştu: Bozuk JSON", false);
+                }
+                event.target.value = ''; // Reset input
+            };
+            reader.readAsText(file);
+        }
+
+
+        
+        async function promptScaffoldProject(isFromWelcome = false) {
+            if (!isFromWelcome && (!globalDbData || !globalDbData.tables || globalDbData.tables.length === 0)) {
+                // If clicked from top bar but diagram is empty (shouldn't really happen, but safety first)
+            }
+            
+            const msg = isFromWelcome ? 
+                "Sıfırdan boş bir proje klasörü oluşturulacak. Klasör adı girin (Örn: my-app):" : 
+                "Şu anki diyagramınızla kurulacak projenin klasör adını girin (Örn: my-app):";
+                
+            const pName = await asyncPrompt(msg);
+            if (!pName || pName.trim() === '') return;
+            
+            showStatus("Proje oluşturuluyor, lütfen bekleyin...", true);
+            if(window.api && window.api.scaffoldProject) {
+                const res = await window.api.scaffoldProject(pName.trim(), globalDbData);
+                if(res.success) {
+                    showStatus("Proje başarıyla oluşturuldu! (" + res.path + ")", true);
+                    customAlert('Proje başarıyla kuruldu! Dizin: ' + res.path + '\n\n1. Terminalden bu yeni dizine gidin.\n2. .env dosyasındaki veritabanı şifrenizi vb. ayarlayın.\n3. \'artiframe db:onproject\' komutunu çalıştırarak az önce ürettiğiniz veritabanı şemasını (schema.sql) canlıya alın!');
+                } else {
+                    showStatus("Hata: " + res.error, false);
+                }
+            }
+        }
+
+        function formatBytes(bytes) {
+            if(bytes === 0) return '0 B';
+            const k = 1024, sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        function renderSidebar() {
+            sidebarList.innerHTML = '';
+            
+            // Sabit Araçlar (Tools)
+            const toolsDiv = document.createElement('div');
+            toolsDiv.style.marginBottom = '15px';
+            toolsDiv.innerHTML = `
+                <div style="font-size: 10px; color: #666; margin-bottom: 5px; padding-left: 15px; font-weight: bold; letter-spacing: 1px;">GENEL ARAÇLAR</div>
+                <li class="table-list-item" style="border-left: 3px solid #f39c12; margin-bottom: 2px;" onclick="openTab('er-diagram', 'ER Diyagramı', 'er', globalDbData)">
+                    <div><span class="icon">📊</span>ER Diyagramı</div>
+                </li>
+                <li class="table-list-item" style="border-left: 3px solid #007acc; margin-bottom: 10px;" onclick="openTab('query-builder', '⚡ Sorgu & Kod', 'query-builder', globalDbData)">
+                    <div><span class="icon">⚡</span>Sorgu & Kod Üretici</div>
+                </li>
+                <div style="font-size: 10px; color: #666; margin-bottom: 5px; padding-left: 15px; font-weight: bold; letter-spacing: 1px; border-top: 1px solid #333; padding-top: 10px;">TABLOLAR</div>
+            `;
+            sidebarList.appendChild(toolsDiv);
+
+            currentTables.forEach(t => {
+                const li = document.createElement('li'); li.className = 'table-list-item';
+                li.onclick = () => openTab('table-' + t.name, t.name, 'table', t);
+                li.innerHTML = `<div><span class="icon">📄</span>${t.name}</div><div style="font-size:10px; color:#666;">${t.stats ? formatBytes(t.stats.sizeBytes) : ''}</div>`;
+                sidebarList.appendChild(li);
+            });
+        }
+
+        function openTab(id, title, type, data) {
+            if (tabs.find(t => t.id === id)) { setActiveTab(id); return; }
+            tabs.push({ id, title, type, data }); renderTabs();
+            const pane = document.createElement('div'); pane.className = 'tab-pane'; pane.id = 'pane-' + id;
+            tabContent.appendChild(pane);
+            if (type === 'er') buildERPane(pane, data);
+            else if (type === 'table') buildTablePane(pane, data);
+            else if (type === 'sql') buildSqlPane(pane, data);
+            else if (type === 'query-builder') buildGlobalQueryPane(pane, data);
+            setActiveTab(id);
+        }
+
+        function closeTab(id, e) {
+            e.stopPropagation(); const index = tabs.findIndex(t => t.id === id);
+            if(index > -1) {
+                tabs.splice(index, 1); document.getElementById('pane-' + id).remove();
+                if(activeTabId === id) { if(tabs.length > 0) setActiveTab(tabs[tabs.length-1].id); else activeTabId = null; }
+                renderTabs();
+            }
+        }
+
+        
+        function applyAppModeUI() {
+            if (currentAppMode === 'offline' || currentAppMode === 'preview') {
+                document.getElementById('sidebar').style.display = 'none';
+                document.getElementById('tab-bar').style.display = 'flex';
+                document.getElementById('tab-content').style.display = 'flex';
+                
+                if(document.getElementById('welcome-screen')) document.getElementById('welcome-screen').style.display = 'none';
+                
+                if(!document.getElementById('scaffold-btn-container')) {
+                    const topBar = document.getElementById('tab-bar');
+                    const btnContainer = document.createElement('div');
+                    btnContainer.id = 'scaffold-btn-container';
+                    btnContainer.style.position = 'absolute';
+                    btnContainer.style.right = '10px';
+                    btnContainer.style.top = '10px';
+                    btnContainer.innerHTML = '<button class="btn" style="background:#2ecc71; font-weight:bold; padding:6px 12px; color:#111;" onclick="promptScaffoldProject()">🚀 Proje Oluştur</button>';
+                    topBar.appendChild(btnContainer);
+                } else {
+                    document.getElementById('scaffold-btn-container').style.display = 'block';
+                }
+                
+                // Tabs array should only contain ER diagram
+                tabs = tabs.filter(t => t.id === 'er-diagram');
+                renderTabs();
+            } else {
+                document.getElementById('sidebar').style.display = 'flex';
+                document.getElementById('tab-bar').style.display = 'flex';
+                document.getElementById('tab-content').style.display = 'flex';
+                if(document.getElementById('welcome-screen')) document.getElementById('welcome-screen').style.display = 'none';
+                
+                const btnContainer = document.getElementById('scaffold-btn-container');
+                if(btnContainer) btnContainer.style.display = 'none';
+            }
+        }
+
+        function renderTabs() {
+            tabBar.innerHTML = '';
+            tabs.forEach(t => {
+                const tab = document.createElement('div'); tab.className = 'tab' + (t.id === activeTabId ? ' active' : '');
+                tab.onclick = () => setActiveTab(t.id);
+                tab.innerHTML = `${t.title} <span class="tab-close" onclick="closeTab('${t.id}', event)">&times;</span>`;
+                tabBar.appendChild(tab);
+            });
+        }
+
+        function setActiveTab(id) {
+            activeTabId = id; renderTabs();
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            const activePane = document.getElementById('pane-' + id);
+            if(activePane) activePane.classList.add('active');
+            
+            if (id === 'er-diagram') {
+                if (globalDbData) renderBoard(globalDbData);
+            } else {
+                lines.forEach(l => l.hide('none'));
+            }
+        }
+
+        let scale = 1, panning = false, pointX = 0, pointY = 0, startX = 0, startY = 0;
+        function buildERPane(pane, json) {
+            pane.innerHTML = `
+                <div id="board-container"><div id="transform-container"></div></div>
+                <button class="btn" style="position:absolute; top:15px; right:165px; z-index:100; background:#f39c12; color:#111; font-weight:bold;" onclick="saveLiveLayout()">💾 Dizilimi Kaydet</button>
+                <button class="btn" style="position:absolute; top:15px; right:15px; z-index:100;" onclick="openTab('sql-console', 'SQL Konsolu', 'sql')">📝 Özel SQL Çalıştır</button>`;
+            const board = pane.querySelector('#board-container'); const transform = pane.querySelector('#transform-container');
+            board.onmousedown = function(e) {
+                if (e.target.closest('.table-card') || e.target.closest('button')) return; 
+                e.preventDefault(); panning = true; board.style.cursor = 'grabbing';
+                startX = e.clientX - pointX; startY = e.clientY - pointY;
+            };
+            board.onmousemove = function(e) { if (!panning) return; pointX = e.clientX - startX; pointY = e.clientY - startY; updateTransform(transform); };
+            board.onmouseup = function() { panning = false; board.style.cursor = 'grab'; };
+            board.onmouseleave = function() { panning = false; board.style.cursor = 'grab'; };
+            board.onwheel = function(e) {
+                e.preventDefault(); const xs = (e.clientX - pointX) / scale, ys = (e.clientY - pointY) / scale;
+                const delta = e.deltaY || e.wheelDelta; scale *= (delta > 0) ? 0.9 : 1.1;
+                pointX = e.clientX - xs * scale; pointY = e.clientY - ys * scale; updateTransform(transform);
+            };
+            renderBoard(json);
+        }
+
+        function updateTransform(tc) { tc.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`; if (activeTabId === 'er-diagram') lines.forEach(l => l.position()); }
+
+        function renderBoard(json) {
+            const tc = document.getElementById('transform-container'); if(!tc) return;
+            tc.innerHTML = ''; lines.forEach(l => l.remove()); lines = [];
+            if (!json || !json.tables || json.tables.length === 0) return;
+            let maxX = 50, maxY = 50;
+            json.tables.forEach(table => {
+                if (table.ui && table.ui.left && table.ui.top) {
+                    const l = parseInt(table.ui.left) || 50;
+                    const t = parseInt(table.ui.top) || 50;
+                    if (l > maxX) maxX = l;
+                    if (t > maxY) maxY = t;
+                }
+            });
+            let nextX = maxX > 50 ? maxX + 350 : 50;
+            if (nextX > 1500) { nextX = 50; maxY += 300; }
+            let y = maxX > 50 ? maxY : 50;
+
+            json.tables.forEach(table => {
+                const card = document.createElement('div'); card.className = 'table-card'; card.dataset.tableName = table.name;
+                if (table.ui && table.ui.left && table.ui.top) {
+                    card.style.left = table.ui.left; card.style.top = table.ui.top;
+                } else {
+                    card.style.left = nextX + 'px'; card.style.top = y + 'px'; 
+                    nextX += 350; if (nextX > 1500) { nextX = 50; y += 300; }
+                }
+                let rowsHtml = '';
+                (table.columns || []).forEach(col => {
+                    let badges = '';
+                    if (col.isPk) badges += `<span class="badge-pk">PK</span>`;
+                    if (col.isUk) badges += `<span class="badge-uk">UK</span>`;
+                    if (col.isAi) badges += `<span class="badge-ai">AI</span>`;
+                    const isFk = (json.relationships || []).some(r => r.fromTable === table.name && r.fromCol === col.name);
+                    if (isFk) badges += `<span class="badge-fk">FK</span>`;
+                    if (col.isNotNull) badges += `<span class="badge-nn">NN</span>`;
+                    rowsHtml += `<div class="table-row" id="col-${table.name}-${col.name}"><div>${badges}<span style="color:#9cdcfe; font-weight:bold;">${col.name}</span></div><span style="color:#4ec9b0; font-size:12px;">${col.type}</span></div>`;
+                });
+                const stats = table.stats || {rows:0, sizeBytes:0};
+                card.innerHTML = `<div class="table-header"><span>${table.name} <span class="stats-badge">${stats.rows} Satır | ${formatBytes(stats.sizeBytes)}</span></span><span style="cursor:pointer;" onclick="openTab('table-${table.name}', '${table.name}', 'table', currentTables.find(t=>t.name==='${table.name}'))">↗️</span></div><div class="table-body">${rowsHtml}</div>`;
+                tc.appendChild(card);
+                const header = card.querySelector('.table-header'); let pos1=0, pos2=0, pos3=0, pos4=0;
+                header.onmousedown = (e) => {
+                    if (e.target.tagName === 'SPAN' && e.target.innerText === '↗️') return;
+                    document.querySelectorAll('.table-card').forEach(c=>c.style.zIndex=10); card.style.zIndex=100;
+                    e.preventDefault(); pos3 = e.clientX; pos4 = e.clientY;
+                    document.onmouseup = () => { document.onmouseup=null; document.onmousemove=null; };
+                    document.onmousemove = (ev) => {
+                        ev.preventDefault(); pos1 = pos3 - ev.clientX; pos2 = pos4 - ev.clientY; pos3 = ev.clientX; pos4 = ev.clientY;
+                        card.style.top = (card.offsetTop - (pos2/scale)) + "px"; card.style.left = (card.offsetLeft - (pos1/scale)) + "px";
+                        if (activeTabId === 'er-diagram') lines.forEach(l => l.position());
+                    };
+                };
+            });
+            setTimeout(() => {
+                (json.relationships || []).forEach(r => {
+                    const s = document.getElementById(`col-${r.fromTable}-${r.fromCol}`); const e = document.getElementById(`col-${r.toTable}-${r.toCol}`);
+                    if(s && e) lines.push(new LeaderLine(s, e, { color: '#007acc', size: 2, path: 'fluid', startSocket: 'right', endSocket: 'left' }));
+                });
+                if(activeTabId !== 'er-diagram') lines.forEach(l => l.hide('none'));
+            }, 100);
+        }
+
+        function buildTablePane(pane, t) {
+            pane.innerHTML = `
+                <div class="details-header">
+                    <div class="sub-tab active" onclick="switchSubTab(this, 'data-${t.name}')">🗄️ Veri (Data)</div>
+                    <div class="sub-tab" onclick="switchSubTab(this, 'struct-${t.name}')">🏗️ Yapı (Tasarımcı)</div>
+                    
+                </div>
+                
+                <div class="sub-tab-content active" id="data-${t.name}">
+                    <div style="padding:15px; background:#252526; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #333;">
+                        <div>
+                            <button class="btn btn-seed" onclick="seedData('${t.name}')">🎲 50 Sahte Veri Doldur</button>
+                            <select id="data-limit-${t.name}" onchange="changeDataLimit('${t.name}')" style="margin-left: 10px; background: #3c3c3c; border: 1px solid #555; color: white; padding: 5px; border-radius:3px;">
+                                <option value="50">50 Kayıt</option>
+                                <option value="100">100 Kayıt</option>
+                                <option value="500">500 Kayıt</option>
+                                <option value="1000">1000 Kayıt</option>
+                                <option value="5000">5000 Kayıt</option>
+                            </select>
+                        </div>
+                        <div class="pagination-controls" style="display:flex; gap:10px; align-items:center;">
+                            <button class="btn" style="background:#444;" onclick="prevPage('${t.name}')">◀ Önceki</button>
+                            <span id="page-info-${t.name}" style="font-size: 13px; color:#ccc;">Sayfa 1</span>
+                            <button class="btn" style="background:#444;" onclick="nextPage('${t.name}')">Sonraki ▶</button>
+                        </div>
+                    </div>
+                    <div style="flex:1; overflow:auto;"><table class="data-table"><thead id="thead-${t.name}"></thead><tbody id="tbody-${t.name}"></tbody></table></div>
+                </div>
+                
+                <div class="sub-tab-content" id="struct-${t.name}">
+                    <div style="padding:15px; background:#252526; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #333; position:sticky; top:0; z-index:100;">
+                        <div>
+                            <button class="btn" onclick="addColumnRow('${t.name}')">+ Kolon Ekle</button>
+                            <button class="btn" style="background:#569cd6; margin-left:10px;" onclick="addIndexRow('${t.name}')">+ İndeks Ekle</button>
+                            <button class="btn" style="background:#ce9178; color:#1e1e1e;" onclick="addFkRow('${t.name}')">+ Yabancı Anahtar Ekle</button>
+                        </div>
+                        <button class="btn" style="background:#1b4b24;" onclick="executeAlter('${t.name}')">💾 Değişiklikleri Veritabanına Yaz</button>
+                    </div>
+                    <div style="flex:1; overflow:auto; padding: 15px;">
+                        <h4 style="margin-top:0; border-bottom:1px solid #444; padding-bottom:5px; color:#d7ba7d;">Kolonlar (Columns)</h4>
+                        <div id="struct-list-${t.name}" style="margin-bottom: 30px;"></div>
+                        
+                        <h4 style="margin-top:0; border-bottom:1px solid #444; padding-bottom:5px; color:#569cd6;">İndeksler (Indexes)</h4>
+                        <div id="idx-list-${t.name}" style="margin-bottom: 30px;"></div>
+
+                        <h4 style="margin-top:0; border-bottom:1px solid #444; padding-bottom:5px; color:#ce9178;">Yabancı Anahtarlar (Foreign Keys)</h4>
+                        <div id="fk-list-${t.name}" style="margin-bottom: 30px;"></div>
+                    </div>
+                </div>
+                
+                `;
+            loadTableData(t.name); populateStructure(t);
+        }
+
+        function switchSubTab(el, targetId) {
+            const parent = el.parentElement; parent.querySelectorAll('.sub-tab').forEach(e => e.classList.remove('active')); el.classList.add('active');
+            const pane = parent.parentElement; pane.querySelectorAll('.sub-tab-content').forEach(e => e.classList.remove('active')); pane.querySelector('#' + targetId).classList.add('active');
+        }
+
+        function buildSqlPane(pane, data) {
+            pane.innerHTML = `
+            <div style="display:flex; flex-direction:column; height:100%; width:100%; overflow:hidden;">
+                <div style="padding:10px; background:#252526; border-bottom: 1px solid #333; display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+                    <span style="color:#d4d4d4; font-weight:bold;">SQL Konsolu</span>
+                    <button class="btn" style="background:#007acc;" onclick="runConsoleSql()">▶️ Sorguyu Çalıştır (F5)</button>
+                </div>
+                <div style="flex:1; display:flex; flex-direction:column; min-height:0;">
+                    <textarea id="sql-console-input" style="height:200px; min-height:100px; flex-shrink:0; background:#1e1e1e; color:#d4d4d4; border:none; border-bottom:1px solid #333; padding:15px; font-family:monospace; font-size:14px; resize:vertical; outline:none;" placeholder="Örn: SELECT * FROM users;"></textarea>
+                    <div id="sql-console-results" style="flex:1; overflow:auto; background:#252526; padding:0; min-height:0; position:relative;">
+                        <div style="padding:15px;"><span style="color:#666;">Sonuçlar burada görünecek...</span></div>
+                    </div>
+                </div>
+            </div>`;
+            
+            // Add F5 listener
+            const input = pane.querySelector('#sql-console-input');
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'F5') {
+                    e.preventDefault();
+                    runConsoleSql();
+                }
+            });
+            setTimeout(() => input.focus(), 100);
+        }
+        
+        async function runConsoleSql() {
+            const input = document.getElementById('sql-console-input');
+            const resultsDiv = document.getElementById('sql-console-results');
+            if(!input || !resultsDiv) return;
+            
+            const sql = input.value.trim(); 
+            if(!sql) return;
+            
+            resultsDiv.innerHTML = '<div style="padding:15px;"><span style="color:#007acc;">Sorgu çalıştırılıyor...</span></div>';
+            const res = await window.api.executeSql(sql);
+            
+            if(res.success) { 
+                showStatus('Sorgu başarıyla çalıştırıldı.', true); 
+                loadSchema();
+                
+                if (res.data && Array.isArray(res.data)) {
+                    if (res.data.length === 0) {
+                        resultsDiv.innerHTML = '<div style="padding:15px;"><span style="color:#999;">Sorgu başarılı, ancak 0 kayıt döndü.</span></div>';
+                    } else {
+                        // Build result table
+                        const cols = Object.keys(res.data[0]);
+                        let html = '<table class="data-table" style="width:auto; min-width:100%;"><thead><tr>';
+                        cols.forEach(c => html += `<th>${c}</th>`);
+                        html += '</tr></thead><tbody>';
+                        res.data.forEach(row => {
+                            html += '<tr>';
+                            cols.forEach(c => html += `<td>${row[c] !== null ? row[c] : '<i style="color:#666">NULL</i>'}</td>`);
+                            html += '</tr>';
+                        });
+                        html += '</tbody></table>';
+                        resultsDiv.innerHTML = html;
+                    }
+                } else {
+                    resultsDiv.innerHTML = '<div style="padding:15px;"><span style="color:#2ecc71;">İşlem başarılı (Kayıt döndürmeyen sorgu).</span></div>';
+                }
+            } else { 
+                showStatus('Hata: ' + res.error, false); 
+                resultsDiv.innerHTML = `<div style="padding:15px;"><div style="color:#e74c3c; padding:10px; background:rgba(231,76,60,0.1); border:1px solid #e74c3c; border-radius:4px;">${res.error}</div></div>`;
+            }
+        }
+
+        
+        function changeDataLimit(tableName) {
+            const val = parseInt(document.getElementById('data-limit-'+tableName).value);
+            if(!pageState[tableName]) pageState[tableName] = { limit: 50, page: 1, total: 0 };
+            pageState[tableName].limit = val;
+            pageState[tableName].page = 1;
+            loadTableData(tableName);
+        }
+        function prevPage(tableName) {
+            if (!pageState[tableName] || pageState[tableName].page <= 1) return;
+            pageState[tableName].page--;
+            loadTableData(tableName);
+        }
+        function nextPage(tableName) {
+            if (!pageState[tableName]) return;
+            const state = pageState[tableName];
+            const totalPages = Math.ceil(state.total / state.limit) || 1;
+            if (state.page < totalPages) {
+                state.page++;
+                loadTableData(tableName);
+            }
+        }
+        async function loadTableData(tableName) {
+            if (!pageState[tableName]) pageState[tableName] = { limit: 50, page: 1, total: 0 };
+            const state = pageState[tableName];
+            const offset = (state.page - 1) * state.limit;
+            
+            const t = currentTables.find(x => x.name === tableName);
+            const res = await window.api.getTableData(tableName, state.limit, offset);
+            if(!res.success) return;
+            
+            state.total = res.total;
+            const totalPages = Math.ceil(state.total / state.limit) || 1;
+            const pageInfo = document.getElementById('page-info-'+tableName);
+            if (pageInfo) pageInfo.innerText = `Sayfa ${state.page} / ${totalPages} (Toplam: ${state.total})`;
+
+            let headHtml = '<tr>'; t.columns.forEach(c => headHtml += `<th>${c.name}${c.isPk?' 🔑':''}</th>`); headHtml += '<th>İşlem</th></tr>';
+            document.getElementById('thead-'+tableName).innerHTML = headHtml;
+            let bodyHtml = ''; const pkCol = t.columns.find(c => c.isPk);
+            res.data.forEach(row => {
+                let tr = '<tr>';
+                t.columns.forEach(c => { const editable = (c.isPk && c.isAi) ? 'false' : 'true'; const val = row[c.name] !== null ? row[c.name] : ''; tr += `<td contenteditable="${editable}" data-col="${c.name}">${val}</td>`; });
+                const pkVal = pkCol ? row[pkCol.name] : '';
+                tr += `<td><button class="btn" onclick="saveRow(this, '${tableName}', '${pkCol?.name}', '${pkVal}')">💾</button> <button class="btn btn-danger" onclick="deleteRow(this, '${tableName}', '${pkCol?.name}', '${pkVal}')">🗑️</button></td></tr>`;
+                bodyHtml += tr;
+            });
+            document.getElementById('tbody-'+tableName).innerHTML = bodyHtml;
+        }
+        async function saveRow(btn, tableName, pkCol, pkVal) {
+            if(!pkVal) return; const tr = btn.closest('tr'); const updateData = {};
+            tr.querySelectorAll('td[contenteditable=true]').forEach(td => updateData[td.getAttribute('data-col')] = td.innerText);
+            btn.innerText = '⏳'; const res = await window.api.updateRow(tableName, pkCol, pkVal, updateData); btn.innerText = '💾';
+            if(res.success) showStatus('Kaydedildi', true); else showStatus(res.error, false);
+        }
+        async function deleteRow(btn, tableName, pkCol, pkVal) {
+            if(!pkVal || !(await asyncConfirm('Silmek istediğinize emin misiniz?'))) return;
+            const res = await window.api.deleteRow(tableName, pkCol, pkVal);
+            if(res.success) { btn.closest('tr').remove(); showStatus('Silindi', true); }
+        }
+        async function seedData(tableName) {
+            const t = currentTables.find(x => x.name === tableName);
+            const res = await window.api.seedTable(tableName, t.columns, 50);
+            if(res.success) { showStatus(res.message, true); loadTableData(tableName); loadSchema(); } else showStatus(res.error, false);
+        }
+
+        // --- Structure Builder (Columns, Indexes, FKs) ---
+        function populateStructure(t) {
+            const list = document.getElementById('struct-list-'+t.name); list.innerHTML = '';
+            t.columns.forEach(c => { list.appendChild(createStructRow(c.name, c.type, c.isPk, c.isAi, c.isNotNull, false)); });
+            
+            const idxList = document.getElementById('idx-list-'+t.name); idxList.innerHTML = '';
+            if (t.indexes) t.indexes.forEach(i => { idxList.appendChild(createIndexRow(t.name, i.name, i.col, i.isUnique, false)); });
+            
+            const fkList = document.getElementById('fk-list-'+t.name); fkList.innerHTML = '';
+            if (t.fks) t.fks.forEach(f => { fkList.appendChild(createFkRow(t.name, f.name, f.localCol, f.refTable, f.refCol, f.onDelete, f.onUpdate, false)); });
+        }
+
+        function addColumnRow(tableName) { document.getElementById('struct-list-'+tableName).appendChild(createStructRow('', 'VARCHAR(255)', false, false, false, true)); }
+        function addIndexRow(tableName) { document.getElementById('idx-list-'+tableName).appendChild(createIndexRow(tableName, '', '', false, true)); }
+        function addFkRow(tableName) { document.getElementById('fk-list-'+tableName).appendChild(createFkRow(tableName, '', '', '', '', 'RESTRICT', 'RESTRICT', true)); }
+
+        function createStructRow(name, type, isPk, isAi, isNotNull, isNew) {
+            const div = document.createElement('div'); div.className = 'schema-row col-row';
+            let baseType = type.toUpperCase(); let length = '';
+            const match = type.match(/^([A-Z]+)\(([^)]+)\)/i);
+            if (match) { baseType = match[1]; length = match[2]; }
+            if (baseType === 'TINYINT' && length === '1') baseType = 'BOOLEAN';
+
+            div.innerHTML = `
+                <input type="text" class="col-name" value="${name}" placeholder="Kolon Adı" style="width: 140px;" ${isNew ? '' : 'readonly title="Mevcut kolon değiştirilemez"'}> 
+                <select class="col-type" style="width: 130px;" onchange="updateTypeHint(this)">
+                    <optgroup label="Sayısal">
+                        <option value="INT" ${baseType==='INT'?'selected':''}>INT</option>
+                        <option value="BIGINT" ${baseType==='BIGINT'?'selected':''}>BIGINT</option>
+                        <option value="TINYINT" ${baseType==='TINYINT'?'selected':''}>TINYINT</option>
+                        <option value="DECIMAL" ${baseType==='DECIMAL'?'selected':''}>DECIMAL</option>
+                    </optgroup>
+                    <optgroup label="Metin">
+                        <option value="VARCHAR" ${baseType==='VARCHAR'?'selected':''}>VARCHAR</option>
+                        <option value="TEXT" ${baseType==='TEXT'?'selected':''}>TEXT</option>
+                        <option value="LONGTEXT" ${baseType==='LONGTEXT'?'selected':''}>LONGTEXT</option>
+                    </optgroup>
+                    <optgroup label="Tarih & Zaman">
+                        <option value="DATETIME" ${baseType==='DATETIME'?'selected':''}>DATETIME</option>
+                        <option value="DATE" ${baseType==='DATE'?'selected':''}>DATE</option>
+                        <option value="TIMESTAMP" ${baseType==='TIMESTAMP'?'selected':''}>TIMESTAMP</option>
+                    </optgroup>
+                    <optgroup label="Diğer">
+                        <option value="BOOLEAN" ${baseType==='BOOLEAN'?'selected':''}>BOOLEAN</option>
+                        <option value="JSON" ${baseType==='JSON'?'selected':''}>JSON</option>
+                        <option value="BINARY" ${baseType==='BINARY'?'selected':''}>BINARY</option>
+                        <option value="VARBINARY" ${baseType==='VARBINARY'?'selected':''}>VARBINARY</option>
+                    </optgroup>
+                </select>
+                <input type="text" class="col-len" value="${length}" placeholder="Uzunluk" style="width: 60px;">
+                <div class="tooltip-container"><div class="tooltip-icon">?</div><div class="tooltip-content"></div></div>
+                <label style="font-size:12px; margin-left:10px;"><input type="checkbox" class="cb-pk" ${isPk?'checked':''}> Primary Key</label> 
+                <label style="font-size:12px;"><input type="checkbox" class="cb-ai" ${isAi?'checked':''}> Auto Inc</label> 
+                <label style="font-size:12px;"><input type="checkbox" class="cb-nn" ${isNotNull?'checked':''}> Not Null</label> 
+                ${isNew ? `<button class="btn btn-danger" onclick="this.parentElement.remove()">İptal</button>` : `<button class="btn btn-danger" onclick="markDrop(this)">Sil (Drop)</button>`}
+            `;
+            div.dataset.oldName = name; div.dataset.isNew = isNew;
+            setTimeout(() => updateTypeHint(div.querySelector('.col-type')), 10);
+            return div;
+        }
+
+        
+        function buildIdxColSelect(tableName, selectedVal, isNew, isFirst = false) {
+            const t = currentTables.find(x => x.name === tableName);
+            let h = `<div style="display:inline-flex; align-items:center; background:#3c3c3c; border-radius:3px; border:1px solid #555; padding-right:${!isFirst && isNew ? '5px' : '0'}">`;
+            h += `<select class="idx-col-select" style="width: 90px; padding: 3px; border:none; background:transparent; color:#ccc; outline:none;" ${isNew ? 'onchange="updateIdxOptions(this.closest(\'.idx-row\'))"' : 'disabled'}>`;
+            h += `<option value="" style="background:#3c3c3c;">- Seç -</option>`;
+            t.columns.forEach(c => {
+                h += `<option value="${c.name}" style="background:#3c3c3c;" ${selectedVal === c.name ? 'selected' : ''}>${c.name}</option>`;
+            });
+            h += `</select>`;
+            if (!isFirst && isNew) {
+                h += `<span style="cursor:pointer; color:#f48771; font-weight:bold; font-size:14px; margin-left:3px; line-height:1;" title="Kolonu Çıkar" onclick="this.parentElement.remove(); updateIdxOptions(this.closest(\'.idx-row\'))">&times;</span>`;
+            }
+            h += `</div>`;
+            return h;
+        }
+
+        function updateIdxOptions(row) {
+            const selects = Array.from(row.querySelectorAll('.idx-col-select'));
+            const selectedValues = selects.map(s => s.value).filter(v => v);
+            selects.forEach(sel => {
+                const currentVal = sel.value;
+                Array.from(sel.options).forEach(opt => {
+                    if (!opt.value) return;
+                    if (selectedValues.includes(opt.value) && opt.value !== currentVal) {
+                        opt.disabled = true;
+                    } else {
+                        opt.disabled = false;
+                    }
+                });
+            });
+        }
+function createIndexRow(tableName, name, col, isUnique, isNew) {
+            const t = currentTables.find(x => x.name === tableName);
+            const div = document.createElement('div'); div.className = 'schema-row idx-row';
+            
+            let colsWrapperHtml = `<div class="idx-cols-wrapper" style="display:flex; gap:5px; flex-wrap:wrap; align-items:center;">`;
+            const selectedCols = col ? col.split(',').map(s=>s.trim()) : [''];
+            selectedCols.forEach((sc, idx) => {
+                colsWrapperHtml += buildIdxColSelect(tableName, sc, isNew, idx === 0);
+            });
+            colsWrapperHtml += `</div>`;
+            
+            const addColBtn = isNew ? `<button class="btn btn-idx-add-col" style="padding:2px 6px; background:#444;" title="Composite (Bileşik) İndeks için yeni kolon ekle">+</button>` : '';
+
+            div.innerHTML = `
+                <input type="text" class="idx-name" value="${name}" placeholder="İndeks Adı" style="width: 130px;" ${isNew ? '' : 'readonly'}>
+                <select class="idx-type" style="width: 120px;" ${isNew ? '' : 'disabled'}>
+                    <option value="INDEX" ${!isUnique?'selected':''}>Normal (INDEX)</option>
+                    <option value="UNIQUE" ${isUnique?'selected':''}>Benzersiz (UNIQUE)</option>
+                </select>
+                ${colsWrapperHtml}
+                ${addColBtn}
+                ${isNew ? `<button class="btn btn-danger" style="margin-left:auto;" onclick="this.parentElement.remove()">İptal</button>` : `<button class="btn btn-danger" style="margin-left:auto;" onclick="markDrop(this)">Sil (Drop)</button>`}
+            `;
+            div.dataset.oldName = name; div.dataset.isNew = isNew;
+            
+            if (isNew) {
+                setTimeout(() => updateIdxOptions(div), 10);
+                div.querySelector('.btn-idx-add-col').onclick = () => {
+                    const wrapper = div.querySelector('.idx-cols-wrapper');
+                    if (wrapper.children.length < t.columns.length) {
+                        wrapper.insertAdjacentHTML('beforeend', buildIdxColSelect(tableName, '', true, false));
+                        updateIdxOptions(div);
+                    } else {
+                        showStatus('Tablodaki toplam kolon sayısından fazla indeks ekleyemezsiniz!', false);
+                    }
+                };
+            }
+            return div;
+        }
+
+        function createFkRow(tableName, name, localCol, refTable, refCol, onDelete, onUpdate, isNew) {
+            const t = currentTables.find(x => x.name === tableName);
+            const div = document.createElement('div'); div.className = 'schema-row fk-row';
+            const colsHtml = t.columns.map(c => `<option value="${c.name}" ${localCol===c.name?'selected':''}>${c.name}</option>`).join('');
+            
+            let tablesHtml = '<option value="">-- Tablo --</option>';
+            currentTables.forEach(xt => { tablesHtml += `<option value="${xt.name}" ${refTable===xt.name?'selected':''}>${xt.name}</option>`; });
+
+            div.innerHTML = `
+                <input type="text" class="fk-name" value="${name}" placeholder="fk_adi" style="width: 130px;" ${isNew ? '' : 'readonly'}>
+                <select class="fk-local" style="width: 120px;" ${isNew ? '' : 'disabled'}>
+                    <option value="">-- Kendi Kolonu --</option>${colsHtml}
+                </select>
+                <span style="color:#666; font-size:12px;">bağlanır ➔</span>
+                <select class="fk-ref-tbl" onchange="updateFkRefCols(this)" style="width: 120px;" ${isNew ? '' : 'disabled'}>
+                    ${tablesHtml}
+                </select>
+                <select class="fk-ref-col" style="width: 120px;" ${isNew ? '' : 'disabled'}>
+                    <option value="${refCol}">${refCol || '-- Hedef Kolon --'}</option>
+                </select>
+                <div style="display:flex; flex-direction:column; gap:4px; margin-left:10px; font-size:11px;">
+                    <label>ON DELETE: <select class="fk-del" style="background:#333; padding:2px; border:none;" ${isNew ? '' : 'disabled'}><option ${onDelete==='RESTRICT'?'selected':''}>RESTRICT</option><option ${onDelete==='CASCADE'?'selected':''}>CASCADE</option><option ${onDelete==='SET NULL'?'selected':''}>SET NULL</option><option ${onDelete==='NO ACTION'?'selected':''}>NO ACTION</option></select></label>
+                    <label>ON UPDATE: <select class="fk-upd" style="background:#333; padding:2px; border:none;" ${isNew ? '' : 'disabled'}><option ${onUpdate==='RESTRICT'?'selected':''}>RESTRICT</option><option ${onUpdate==='CASCADE'?'selected':''}>CASCADE</option><option ${onUpdate==='SET NULL'?'selected':''}>SET NULL</option><option ${onUpdate==='NO ACTION'?'selected':''}>NO ACTION</option></select></label>
+                </div>
+                ${isNew ? `<button class="btn btn-danger" style="margin-left:auto;" onclick="this.parentElement.remove()">İptal</button>` : `<button class="btn btn-danger" style="margin-left:auto;" onclick="markDrop(this)">Sil (Drop)</button>`}
+            `;
+            div.dataset.oldName = name; div.dataset.isNew = isNew;
+            if (isNew) setTimeout(() => updateFkRefCols(div.querySelector('.fk-ref-tbl')), 10);
+            return div;
+        }
+
+        function updateFkRefCols(selectEl) {
+            const tblName = selectEl.value;
+            const targetSelect = selectEl.parentElement.querySelector('.fk-ref-col');
+            targetSelect.innerHTML = '<option value="">-- Hedef Kolon --</option>';
+            if (!tblName) return;
+            const t = currentTables.find(x => x.name === tblName);
+            if (t) {
+                t.columns.forEach(c => {
+                    const opt = document.createElement('option'); opt.value = c.name; opt.innerText = c.name;
+                    targetSelect.appendChild(opt);
+                });
+            }
+        }
+
+        async function markDrop(btn) {
+            if (!(await asyncConfirm('Bunu silmek üzere işaretliyorsunuz. Değişiklikleri kaydettiğinizde veritabanından kalıcı olarak silinecektir. Onaylıyor musunuz?'))) return;
+            const row = btn.parentElement;
+            row.style.display = 'none';
+            row.dataset.drop = 'true';
+        }
+
+        async function executeAlter(tableName) {
+            let alterLines = [];
+            
+            // 1. Columns
+            document.getElementById('struct-list-'+tableName).querySelectorAll('.col-row').forEach(r => {
+                const isNew = r.dataset.isNew === 'true'; const isDrop = r.dataset.drop === 'true';
+                if (isDrop) { alterLines.push(`DROP COLUMN \`${r.dataset.oldName}\``); return; }
+                const name = r.querySelector('.col-name').value.trim(); const baseType = r.querySelector('.col-type').value; 
+                let length = r.querySelector('.col-len').value.trim(); 
+                const isPk = r.querySelector('.cb-pk').checked; const isAi = r.querySelector('.cb-ai').checked; const isNotNull = r.querySelector('.cb-nn').checked;
+                
+                let finalType = baseType;
+                if (length && !r.querySelector('.col-len').disabled) { finalType = `${baseType}(${length})`; }
+                else if (baseType === 'VARCHAR' && !length) finalType = 'VARCHAR(255)';
+                else if (baseType === 'BOOLEAN') finalType = 'TINYINT(1)';
+
+                if (isNew && name) { 
+                    let def = `ADD COLUMN \`${name}\` ${finalType}`; 
+                    if(isNotNull) def += ' NOT NULL'; 
+                    if(isPk) def += ' PRIMARY KEY'; 
+                    if(isAi) def += ' AUTO_INCREMENT'; 
+                    alterLines.push(def); 
+                }
+            });
+
+            // 2. FKs Drop
+            document.getElementById('fk-list-'+tableName).querySelectorAll('.fk-row').forEach(r => {
+                const isDrop = r.dataset.drop === 'true';
+                if (isDrop) { alterLines.push(`DROP FOREIGN KEY \`${r.dataset.oldName}\``); }
+            });
+            
+            // 3. Indexes Drop
+            document.getElementById('idx-list-'+tableName).querySelectorAll('.idx-row').forEach(r => {
+                const isDrop = r.dataset.drop === 'true';
+                if (isDrop) { alterLines.push(`DROP INDEX \`${r.dataset.oldName}\``); }
+            });
+
+            // 4. Indexes Add
+            document.getElementById('idx-list-'+tableName).querySelectorAll('.idx-row').forEach(r => {
+                const isNew = r.dataset.isNew === 'true'; const isDrop = r.dataset.drop === 'true';
+                if (isNew && !isDrop) {
+                    let name = r.querySelector('.idx-name').value.trim();
+                    const type = r.querySelector('.idx-type').value;
+                    const selects = Array.from(r.querySelectorAll('.idx-col-select'));
+                    const colsList = selects.map(s => s.value).filter(v => v);
+                    if (colsList.length === 0) return;
+                    let col = colsList.join(',');
+                    if (!name && col) name = `idx_${col.replace(/[^a-zA-Z0-9_]/g, '')}`;
+                    if (name && col) {
+                        const kw = type === 'UNIQUE' ? 'UNIQUE INDEX' : 'INDEX';
+                        const colsMapped = col.split(',').map(c => `\`${c.trim()}\``).join(', ');
+                        alterLines.push(`ADD ${kw} \`${name}\` (${colsMapped})`);
+                    }
+                }
+            });
+            
+            // 5. FKs Add
+            document.getElementById('fk-list-'+tableName).querySelectorAll('.fk-row').forEach(r => {
+                const isNew = r.dataset.isNew === 'true'; const isDrop = r.dataset.drop === 'true';
+                if (isNew && !isDrop) {
+                    let name = r.querySelector('.fk-name').value.trim();
+                    const loc = r.querySelector('.fk-local').value;
+                    const refTbl = r.querySelector('.fk-ref-tbl').value;
+                    const refCol = r.querySelector('.fk-ref-col').value;
+                    const del = r.querySelector('.fk-del').value;
+                    const upd = r.querySelector('.fk-upd').value;
+                    if (!name && loc && refTbl) name = `fk_${tableName}_${loc}`;
+                    if (name && loc && refTbl && refCol) {
+                        alterLines.push(`ADD CONSTRAINT \`${name}\` FOREIGN KEY (\`${loc}\`) REFERENCES \`${refTbl}\` (\`${refCol}\`) ON DELETE ${del} ON UPDATE ${upd}`);
+                    }
+                }
+            });
+
+            if(alterLines.length === 0) { showStatus('Değişiklik yok', false); return; }
+            const sql = `ALTER TABLE \`${tableName}\` \n` + alterLines.join(',\n') + ';';
+            const res = await window.api.executeSql(sql);
+            if(res.success) { 
+                showStatus('Tablo güncellendi!', true); 
+                await loadSchema(); 
+                const tUpd = currentTables.find(x => x.name === tableName); 
+                if(tUpd) { 
+                    populateStructure(tUpd); 
+                    loadTableData(tableName); 
+                } 
+            } else { 
+                showStatus('Hata: ' + res.error, false); 
+            }
+        }
+
+        
+        
+
+        async function saveLiveLayout() {
+            if (currentAppMode !== 'live') {
+                showStatus("Önizleme modunda dizilim 'Dışa Aktar' işlemi sırasında otomatik kaydedilir.", false);
+                return;
+            }
+            const layoutData = {};
+            document.querySelectorAll('.table-card').forEach(card => {
+                const tableName = card.dataset.tableName;
+                if (tableName) {
+                    layoutData[tableName] = { left: card.style.left, top: card.style.top };
+                }
+            });
+            const res = await window.api.saveLayout(layoutData);
+            if (res && res.success) {
+                showStatus("Dizilim projeye (.artiframe_layout.json) başarıyla kaydedildi!", true);
+            } else {
+                showStatus("Dizilim kaydedilemedi: " + (res?res.error:'Bilinmeyen hata'), false);
+            }
+        }
+        
+        function showStatus(msg, isSuccess) {
+            statusDiv.style.display = 'block'; statusDiv.className = isSuccess ? 'success' : 'error';
+            statusDiv.innerText = msg; setTimeout(() => statusDiv.style.display = 'none', 5000);
+        }
+
+        async function initApp() {
+            if (window.api && window.api.getAppMode) {
+                const initData = await window.api.getAppMode();
+                if (initData) {
+                    currentAppMode = initData.mode;
+                    currentProjectRoot = initData.projectRoot;
+                    if (typeof applyAppModeUI === 'function') {
+                        applyAppModeUI();
+                    }
+                }
+            }
+            await loadSchema();
+        }
+        initApp();
+    </script>
+
+    
+    <div id="index-confirm-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:#252526; padding:20px; border-radius:8px; border:1px solid #444; width:350px; text-align:center;">
+            <h3 style="margin-top:0; color:#e74c3c; font-size:16px;">Onay Gerekli</h3>
+            <p id="index-confirm-desc" style="font-size:13px; color:#ccc; margin-bottom:20px; white-space:pre-wrap;">Emin misiniz?</p>
+            <div style="display:flex; gap:10px; justify-content:center;">
+                <button class="btn" style="background:#555; flex:1;" onclick="document.getElementById('index-confirm-modal').style.display='none'">İptal</button>
+                <button class="btn btn-danger" style="flex:1;" id="index-confirm-ok">Evet, Onaylıyorum</button>
+            </div>
+        </div>
+    </div>
+    <div id="index-prompt-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:#252526; padding:20px; border-radius:8px; border:1px solid #444; width:300px; text-align:center;">
+            <h3 id="index-prompt-title" style="margin-top:0; color:#d4d4d4; font-size:16px;">Başlık</h3>
+            <p id="index-prompt-desc" style="font-size:12px; color:#888; margin-bottom:15px;">Açıklama</p>
+            <input type="text" id="index-prompt-input" style="width:100%; padding:8px; background:#1e1e1e; border:1px solid #555; color:white; margin-bottom:15px; box-sizing:border-box; border-radius:4px;">
+            <div style="display:flex; gap:10px; justify-content:center;">
+                <button class="btn btn-danger" style="flex:1;" onclick="document.getElementById('index-prompt-modal').style.display='none'">İptal</button>
+                <button class="btn" style="background:#007acc; flex:1;" id="index-prompt-ok">Tamam</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="index-prompt-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:#252526; padding:20px; border-radius:8px; border:1px solid #444; width:350px; text-align:center;">
+            <h3 style="margin-top:0; color:#d4d4d4; font-size:16px;">Giriş Gerekli</h3>
+            <p id="index-prompt-desc" style="font-size:13px; color:#ccc; margin-bottom:15px;"></p>
+            <input type="text" id="index-prompt-input" style="width:100%; padding:8px; background:#1e1e1e; border:1px solid #555; color:white; margin-bottom:15px; box-sizing:border-box; border-radius:4px;">
+            <div style="display:flex; gap:10px; justify-content:center;">
+                <button class="btn" style="background:#555; flex:1;" id="index-prompt-cancel">İptal</button>
+                <button class="btn" style="background:#007acc; flex:1;" id="index-prompt-ok">Tamam</button>
+            </div>
+        </div>
+    </div>
+    <div id="index-alert-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:#252526; padding:20px; border-radius:8px; border:1px solid #444; width:450px; text-align:center;">
+            <h3 style="margin-top:0; color:#f39c12; font-size:16px;">Bilgi</h3>
+            <p id="index-alert-desc" style="font-size:13px; color:#ccc; margin-bottom:20px; white-space:pre-wrap; text-align:left; line-height:1.5;"></p>
+            <button class="btn" style="background:#007acc; padding:8px 30px;" onclick="document.getElementById('index-alert-modal').style.display='none'">Tamam</button>
+        </div>
+    </div>
+</body>
+</html>

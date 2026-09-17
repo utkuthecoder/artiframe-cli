@@ -21,7 +21,25 @@ class DotEnv
      */
     public static function load(string $path): void
     {
-        // 1. Yol içindeki ".." ve bağıl (relative) katmanları temizle
+        // 1. Önce Hızlı Cache Dosyası Var Mı Kontrol Et (Performans Modu)
+        $dir = dirname($path);
+        $cachePath = $dir . '/config/env-cache.php';
+        
+        if (file_exists($cachePath) && is_readable($cachePath)) {
+            $cachedEnv = require $cachePath;
+            if (is_array($cachedEnv)) {
+                foreach ($cachedEnv as $name => $value) {
+                    if (!array_key_exists($name, $_SERVER) && !array_key_exists($name, $_ENV)) {
+                        putenv(sprintf('%s=%s', $name, $value));
+                        $_ENV[$name] = $value;
+                        $_SERVER[$name] = $value;
+                    }
+                }
+                return; // Cache bulunduysa .env okumadan direkt dön!
+            }
+        }
+
+        // 2. Cache Yoksa Klasik Yavaş Dosya Okuma (Geliştirici Modu)
         $realPath = realpath($path);
         $targetPath = $realPath !== false ? $realPath : $path;
 

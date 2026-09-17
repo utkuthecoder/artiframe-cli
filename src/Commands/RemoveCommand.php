@@ -40,11 +40,22 @@ class RemoveCommand
              return;
         }
 
-        echo "\n⚠️  " . $this->translator->get('REMOVE_CONFIRM_FILE', ['path' => $targetPath]) . " [y/N]: ";
-        $ans = trim(fgets(STDIN));
-        if (strtolower($ans) !== 'y') {
-            echo "Abort.\n";
+        // ─── Path Traversal Ön Kontrolü ──────────────────────────
+        $resolvedEarly = realpath($targetPath);
+        $realProjectRoot = realpath($projectRoot);
+        if ($resolvedEarly && $realProjectRoot && !str_starts_with($resolvedEarly, $realProjectRoot . '/')) {
+            echo "❌ Güvenlik ihlali: Hedef dosya proje dizini dışında!\n";
             return;
+        }
+
+        $force = in_array('--force', $args) || in_array('-y', $args);
+        if (!$force) {
+            echo "\n⚠️  " . $this->translator->get('REMOVE_CONFIRM_FILE', ['path' => $targetPath]) . " [y/N]: ";
+            $ans = trim(fgets(STDIN));
+            if (strtolower($ans) !== 'y') {
+                echo "Abort.\n";
+                return;
+            }
         }
 
         $targetPath = realpath($targetPath);
@@ -75,8 +86,15 @@ class RemoveCommand
             }
 
             if (!empty($assetsFound)) {
-                echo "\n⚠️  " . $this->translator->get('REMOVE_CONFIRM_ASSETS') . " [y/N]: ";
-                $ansAssets = trim(fgets(STDIN));
+                if (in_array('--no-assets', $args)) {
+                    $ansAssets = 'n';
+                } elseif (!$force) {
+                    echo "\n⚠️  " . $this->translator->get('REMOVE_CONFIRM_ASSETS') . " [y/N]: ";
+                    $ansAssets = trim(fgets(STDIN));
+                } else {
+                    $ansAssets = 'y';
+                }
+                
                 if (strtolower($ansAssets) === 'y') {
                     foreach ($assetsFound as $a) {
                         unlink($a);
@@ -97,6 +115,16 @@ class RemoveCommand
                         echo "   -> " . $usage['file'] . " (Lines: " . implode(', ', $usage['lines']) . ")\n";
                     }
                     echo "\n📌 " . $this->translator->get('REMOVE_API_WARNING') . "\n";
+                    
+                    // --force olsa bile kullanım tespit edilirse --force-class olmadan iptal et
+                    if (!in_array('--force-class', $args)) {
+                        echo "\n❓ Yine de silmek istiyor musunuz? [y/N]: ";
+                        $ansClass = trim(fgets(STDIN));
+                        if (strtolower($ansClass) !== 'y') {
+                            echo "Abort.\n";
+                            return;
+                        }
+                    }
                 }
             }
         }

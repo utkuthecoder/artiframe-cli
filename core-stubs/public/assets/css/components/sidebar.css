@@ -1,0 +1,184 @@
+/* ==========================================================================
+   Sidebar Component (Glassmorphism & Expand on Hover)
+   ========================================================================== */
+
+.app-sidebar {
+    width: 80px;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-right: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 5px 0 20px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 100;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+[data-mode="dark"] .app-sidebar {
+    background: rgba(255, 255, 255, 0.03);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 5px 0 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Hover olduğunda genişlet */
+.app-sidebar:hover {
+    width: 240px;
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem 0;
+    justify-content: center;
+    min-width: 80px;
+    overflow: hidden;
+}
+
+.sidebar-logo .logo-icon {
+    width: 44px;
+    height: 44px;
+    transition: transform 0.3s ease, opacity 0.2s ease;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1));
+}
+
+.sidebar-logo .logo-full {
+    width: 140px;
+    height: auto;
+    transition: opacity 0.3s ease;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1));
+    display: none;
+    opacity: 0;
+}
+
+.app-sidebar:hover .sidebar-logo .logo-icon {
+    display: none;
+}
+
+.app-sidebar:hover .sidebar-logo .logo-full {
+    display: block;
+    opacity: 1;
+}
+
+.app-sidebar:hover .sidebar-logo {
+    justify-content: flex-start;
+    padding-left: 1.1rem;
+}
+
+/* Navigasyon Menüsü */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem 0;
+    flex: 1;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    border-radius: 0 20px 20px 0;
+    margin-right: 1rem; /* Sağdan biraz boşluk */
+    overflow: hidden;
+}
+
+/* Sol taraftaki ikon container (sabit 80px genişliğe uyum sağlamak için) */
+.nav-item .nav-icon {
+    min-width: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.nav-item .nav-icon i {
+    font-size: 1.25rem;
+    color: currentColor;
+}
+
+/* Menü Etiketleri (Yalnızca hover'da görünür) */
+.nav-item .nav-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    opacity: 0;
+    white-space: nowrap;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+}
+
+.app-sidebar:hover .nav-item .nav-label {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Hover & Active Durumları */
+.nav-item:hover {
+    color: var(--brand-primary);
+    background: rgba(59, 31, 110, 0.05); /* brand-primary light */
+}
+
+.nav-item.active {
+    background: var(--brand-primary);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(59, 31, 110, 0.3);
+}
+
+/* Karanlık Modda Daha Yumuşak (Soft) Hover/Active Stilleri */
+[data-mode="dark"] .nav-item:hover {
+    background: color-mix(in srgb, var(--brand-primary) 8%, transparent);
+    color: var(--brand-primary);
+}
+
+[data-mode="dark"] .nav-item.active {
+    background: color-mix(in srgb, var(--brand-primary) 15%, transparent);
+    color: var(--brand-primary);
+    box-shadow: inset 3px 0 0 var(--brand-primary); /* Soldan zarif bir vurgu çizgisi */
+}
+
+/* Alt kısımdaki ikonlar (Ayarlar vb.) */
+.sidebar-footer {
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+[data-mode="dark"] .sidebar-footer {
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+@media (max-width: 992px) {
+    /* Mobilde sidebar genelde gizlenir veya hamburger menü ile açılır. */
+    .app-sidebar {
+        position: fixed;
+        left: -100%;
+        width: 280px;
+        transition: left 0.3s ease;
+    }
+    
+    .app-sidebar.mobile-open {
+        left: 0;
+    }
+    
+    .app-sidebar:hover {
+        width: 280px;
+    }
+    
+    .nav-item .nav-label {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

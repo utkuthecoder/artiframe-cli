@@ -1,0 +1,26 @@
+<?php
+// Auth kalkanı (Sadece giriş yapmamış kullanıcılar görebilir)
+require_once $_SERVER['DOCUMENT_ROOT'] . '/../app/AuthControl.php';
+use Bin\ViewMethod;
+?>
+<!DOCTYPE html>
+<html lang="{{LANG}}" data-theme="default" data-mode="light">
+<head>
+    <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/head-auth.php'; ?>
+
+    <title>{{VIEW_TITLE}}</title>
+
+    <!-- View-Specific Assets with Cache-Busting -->
+    <link rel="stylesheet" href="{{CSS_PATH}}?v=<?= APP_VERSION ?>">
+    <script src="{{JS_PATH}}?v=<?= APP_VERSION ?>" defer></script>
+</head>
+<body>
+    <main class="auth-wrapper">
+        <div class="auth-container">
+            <h1>{{VIEW_TITLE}}</h1>
+            <!-- Auth form content starts here -->
+
+        </div>
+    </main>
+</body>
+</html>

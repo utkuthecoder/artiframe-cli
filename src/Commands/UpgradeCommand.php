@@ -69,16 +69,13 @@ class UpgradeCommand
         // ── KURAL 3 & ANA İŞLEM: KOPYALAMA ──────────────────────────────
         $this->copyDirectory(\ARTIFRAME_CLI_ROOT . '/core-stubs/app', $targetDir . '/app');
         $this->copyDirectory(\ARTIFRAME_CLI_ROOT . '/core-stubs/bin', $targetDir . '/bin');
-
-        // Docs
-        $docsSource = \ARTIFRAME_CLI_ROOT . '/core-stubs/docs';
-        $docsTarget = $targetDir . '/public/docs';
-        if (is_dir($docsSource)) {
-            if (!is_dir($docsTarget)) {
-                mkdir($docsTarget, 0755, true);
-            }
-            $this->copyDirectory($docsSource, $docsTarget);
+        
+        // Public (Eksik layout/UI dosyalarini tamamla ama var olanlari ezme)
+        if (is_dir(\ARTIFRAME_CLI_ROOT . '/core-stubs/public')) {
+            $this->copyDirectorySafe(\ARTIFRAME_CLI_ROOT . '/core-stubs/public', $targetDir . '/public');
         }
+
+
 
         // ── KURAL 4: SERVICE STUB EZİLMESİ ──────────────────────────────
         $servicesDir = $targetDir . '/src/Service';
@@ -206,4 +203,36 @@ class UpgradeCommand
         }
         return $functions;
     }
+
+    private function copyDirectorySafe(string $source, string $target): void
+    {
+        if (!is_dir($target)) {
+            mkdir($target, 0755, true);
+        }
+
+        $dir = opendir($source);
+        while (($file = readdir($dir)) !== false) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+            $srcFile = $source . '/' . $file;
+            $tgtFile = $target . '/' . $file;
+
+            if (is_dir($srcFile)) {
+                $this->copyDirectorySafe($srcFile, $tgtFile);
+            } else {
+                if (!file_exists($tgtFile)) {
+                    copy($srcFile, $tgtFile);
+                    
+                    $normalizedTarget = str_replace('\\', '/', $tgtFile);
+                    $normalizedCwd = str_replace('\\', '/', getcwd()) . '/';
+                    $relativePath = str_replace($normalizedCwd, '', $normalizedTarget);
+                    
+                    $this->changes['added'][] = $relativePath;
+                }
+            }
+        }
+        closedir($dir);
+    }
+
 }

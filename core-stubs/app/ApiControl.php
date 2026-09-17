@@ -18,15 +18,26 @@ require_once __DIR__ . '/../config/app-version.php';
 // 3. Sadece API'ye özgü metodları yükle
 require_once __DIR__ . '/../bin/SystemMethod.php';
 
-// 4. API Konfigürasyonları (JSON Response Header vs.)
+// 4. Oturum (Session) Konfigürasyonları
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Beni Hatırla Kontrolü
+if (empty($_SESSION['kullaniciId']) && !empty($_COOKIE['remember_me'])) {
+    $rememberedIdHex = \Bin\SystemMethod::validateRememberMeCookie();
+    if ($rememberedIdHex) {
+        $_SESSION['kullaniciId'] = hex2bin($rememberedIdHex);
+    }
+}
+
+// 5. API Konfigürasyonları (JSON Response Header vs.)
 header('Content-Type: application/json; charset=utf-8');
 
-// 5. İzin Verilen HTTP Metodlarının Kontrolü
-// API uç noktalarında tanımlanan $allowedMethods dizisini baz alır. Tanımsızsa sadece POST kabul eder.
+// 6. İzin Verilen HTTP Metodlarının Kontrolü
 $allowed = isset($allowedMethods) && is_array($allowedMethods) ? $allowedMethods : ['POST'];
 $requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'UNKNOWN';
 
-// Preflight istekleri (OPTIONS) CORS için hayati öneme sahiptir, her halükarda 200 dönüp çıkış yapmasını sağlarız.
 if ($requestMethod === 'OPTIONS') {
     http_response_code(200);
     exit;
@@ -34,48 +45,83 @@ if ($requestMethod === 'OPTIONS') {
 
 if (!in_array($requestMethod, $allowed)) {
     http_response_code(405);
-    echo json_encode([
-        'status' => 'error', 
-        'message' => "Geçersiz istek metodu. Sadece " . implode(', ', $allowed) . " kabul edilir."
-    ]);
+    echo json_encode(['status' => 'error', 'message' => "Geçersiz istek metodu. Sadece " . implode(', ', $allowed) . " kabul edilir."]);
     exit;
 }
 
-/* 
-// -------------------------------------------------------------------------
-// 6. CORS (Cross-Origin Resource Sharing) Kuralları
-// -------------------------------------------------------------------------
-// Başka domainlerden veya mobil uygulamalardan gelen API isteklerini kabul 
-// etmek isterseniz aşağıdaki satırları aktifleştirin. "*" yerine kendi 
-// domaininizi (örn: "https://artilingo.com") yazarak güvenliği artırabilirsiniz.
+// 7. Global CSRF Duvarı
+if (in_array($requestMethod, ['POST', 'PUT', 'DELETE'])) {
+    // 1. Header'dan kontrol et (Fetch/Axios SPA uyumu)
+    $token = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
 
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
-header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+    // 2. Eğer Header'da yoksa, JSON Body'den kontrol et
+    if (empty($token)) {
+        $input = json_decode(file_get_contents('php://input'), true);
+        if (is_array($input) && !empty($input['csrf_token'])) {
+            $token = $input['csrf_token'];
+        }
+    }
+
+    // 3. Eğer JSON'da da yoksa standart POST datasından kontrol et (Eski usül form)
+    if (empty($token)) {
+        $token = $_POST['csrf_token'] ?? '';
+    }
+
+    if (!\Bin\SystemMethod::verifyCsrf($token)) {
+        http_response_code(403);
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'CSRF doğrulaması başarısız. Lütfen sayfayı yenileyip tekrar deneyin.'
+        ]);
+        exit;
+    }
+}
+
+// 8. CORS (Cross-Origin Resource Sharing) Kuralları
+// Geliştirme aşamasında her yerden gelen isteklere izin ver
+if ($_ENV['APP_ENV'] === 'development') {
+    header('Access-Control-Allow-Origin: *');
+} else {
+    // Canlı ortamda sadece belirlenen adreslere izin ver
+    header('Access-Control-Allow-Origin: https://senindomainin.com');
+}
+
+/*
+// -------------------------------------------------------------------------
+// 8. Auth Guard (Oturum Kalkanı - API İçin)
+// -------------------------------------------------------------------------
+// Eğer bu API uç noktasının (endpoint) ZORUNLU olarak giriş yapmış üyelere 
+// açık olmasını istiyorsanız aşağıdaki bloğu kullanabilirsiniz.
+// Not: Auth. işlem yapmayan tüm özel (private) API'ler için önerilir.
+
+if (empty($_SESSION['kullaniciId']) && empty($_SESSION['kullanici_id'])) {
+    http_response_code(401);
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Bu işlemi yapabilmek için giriş yapmalısınız.'
+    ]);
+    exit;
+}
 */
 
 /*
 // -------------------------------------------------------------------------
-// 7. Rate Limiting (Basit IP Tabanlı Hız Sınırlandırma - Redis Örneği)
+// 9. RBAC (Rol Bazlı Erişim Kontrolü - API İçin)
 // -------------------------------------------------------------------------
-// Kötü niyetli kişilerin veya botların API'nizi flood etmesini engeller.
-// Redis servisinizi aktif ettiyseniz bu bloğu kullanabilirsiniz.
-// Aşağıdaki örnekte, aynı IP adresinin 1 dakikada 60'tan fazla istek yapması engellenir.
+// Belirli bir API işleminin (örn: ürün silme) sadece Admin veya yetkili 
+// roller tarafından yapılmasını sağlamak için.
+// API dosyanızın en tepesinde $allowedRoles = [1]; şeklinde tanımlayabilirsiniz.
 
-$ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-$rateKey = 'rate_limit:' . $ip;
-$limit = 60; // 1 dakikadaki maksimum istek sayısı
-$redis = \Src\Service\RedisService::getInstance();
-
-$currentCount = $redis->get($rateKey);
-if ($currentCount !== null && $currentCount >= $limit) {
-    http_response_code(429); // 429 Too Many Requests
-    echo json_encode(['status' => 'error', 'message' => 'Çok fazla istek gönderdiniz. Lütfen daha sonra tekrar deneyin.']);
-    exit;
-}
-
-$redis->incr($rateKey);
-if ($currentCount === null) {
-    $redis->expire($rateKey, 60); // Sayacı 60 saniye sonra sıfırla
+if (isset($allowedRoles) && is_array($allowedRoles)) {
+    $userRole = $_SESSION['rol'] ?? 3; // Örn: 1=Admin, 2=Mod, 3=User
+    
+    if (!in_array($userRole, $allowedRoles)) {
+        http_response_code(403);
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Bu işlem için yeterli yetkiniz bulunmuyor.'
+        ]);
+        exit;
+    }
 }
 */

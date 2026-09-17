@@ -2,20 +2,41 @@
  * ArtiFrame CLI — postinstall script
  *
  * Sets the execute permission on bin/artiframe.php on Unix-like systems.
- * Silently skipped on Windows (not needed).
+ * Creates the default global Workspace directory (C:\ArtiFrame or ~/ArtiFrame).
  */
 
 const fs   = require('fs');
 const path = require('path');
+const os   = require('os');
 
-if (process.platform === 'win32') {
-    process.exit(0);
-}
-
+// 1. CHMOD for Unix
 const target = path.join(__dirname, '..', 'bin', 'artiframe.php');
-
-try {
-    fs.chmodSync(target, 0o755);
-} catch (e) {
-    // Non-fatal — if permissions fail (e.g. read-only fs), skip silently.
+if (process.platform !== 'win32') {
+    try {
+        fs.chmodSync(target, 0o755);
+    } catch (e) {}
 }
+
+// 2. Create Default Workspace
+const defaultWorkspace = process.platform === 'win32' 
+    ? 'C:\\ArtiFrame' 
+    : path.join(os.homedir(), 'ArtiFrame');
+
+if (!fs.existsSync(defaultWorkspace)) {
+    try {
+        fs.mkdirSync(defaultWorkspace, { recursive: true });
+        
+        // Put a nice greeting file
+        const greeting = `ArtiFrame Workspace\n===================\nWelcome to the ArtiFrame ecosystem!\n\nAll your DevOps Studio projects will be created and managed here.\nTo start the studio, simply run:\n\n> artiframe devops\n`;
+        fs.writeFileSync(path.join(defaultWorkspace, 'README.txt'), greeting);
+        
+        console.log('\n\x1b[32m%s\x1b[0m', '✅ ArtiFrame workspace created at: ' + defaultWorkspace);
+        console.log('\x1b[36m%s\x1b[0m', '   Run `artiframe devops` to launch the studio!\n');
+    } catch (e) {
+        // Silently fail if no permissions
+    }
+} else {
+    console.log('\n\x1b[36m%s\x1b[0m', '✅ ArtiFrame workspace ready at: ' + defaultWorkspace);
+    console.log('\x1b[36m%s\x1b[0m', '   Run `artiframe devops` to launch the studio!\n');
+}
+

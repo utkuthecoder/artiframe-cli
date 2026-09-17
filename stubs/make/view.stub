@@ -24,6 +24,9 @@ use Bin\ViewMethod;
 
     </main>
 
+    <!-- Mobile Navigation -->
+    <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/mobilenav.php'; ?>
+
     <!-- Footer -->
     <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
 </body>

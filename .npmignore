@@ -1,15 +1,18 @@
-# Development / CI files — not needed in the published package
+# Development / CI files
 node_modules/
 .git/
 .github/
 .gitignore
 
-# Test & dev scripts
-scripts/postinstall.js
+# Tests
+tests/
+phpunit.xml
 
-# Any editor or OS artifacts
+# Editor or OS artifacts
+.idea/
+.vscode/
 .DS_Store
 Thumbs.db
 *.log
 *.tmp
-public
+public/

@@ -1,0 +1,64 @@
+/* ==========================================================================
+   ArtiFrame Global Variables & Base Styles
+   (Driven by data-attributes: data-theme and data-mode)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Comfortaa:wght@700&display=swap');
+
+/* Light Mode (Varsayılan) */
+html[data-theme="default"][data-mode="light"] {
+    --brand-primary: #3B1F6E;
+    --brand-secondary: #1A5C38;
+    --brand-accent: #D4622A;
+    
+    --canvas-bg: #F8F9FA;
+    --card-bg: #FFFFFF;
+    --border: #EBEBEB;
+    
+    --text-main: #1C1924;
+    --text-muted: #645F73;
+    
+    --success: #1A5C38;
+    --success-light: #E4F4EC;
+    --info: #2B75D3;
+    --info-light: #E8F1FC;
+    --warning: #E89A15;
+    --warning-light: #FDF5E7;
+    --danger: #D63946;
+    --danger-light: #FBEAEC;
+    
+    /* Extended Vars */
+    --text-main-rgb: 28, 25, 36;
+    --brand-primary-rgb: 59, 31, 110;
+    --brand-secondary-rgb: 26, 92, 56;
+    --border-color: var(--border);
+}
+
+/* Dark Mode */
+html[data-theme="default"][data-mode="dark"] {
+    --brand-primary: #A98CFA;
+    --brand-secondary: #34D399;
+    --brand-accent: #FF9B71;
+    
+    --canvas-bg: #1B1924;
+    --card-bg: #252233;
+    --border: #3A354A;
+    
+    --text-main: #F4F0FF;
+    --text-muted: #A09CA8;
+    
+    --success: #34D399;
+    --success-light: rgba(52, 211, 153, 0.15);
+    --info: #60A5FA;
+    --info-light: rgba(96, 165, 250, 0.15);
+    --warning: #FBBF24;
+    --warning-light: rgba(251, 191, 36, 0.15);
+    --danger: #F87171;
+    --danger-light: rgba(248, 113, 113, 0.15);
+    
+    /* Extended Vars */
+    --text-main-rgb: 244, 240, 255;
+    --brand-primary-rgb: 169, 140, 250;
+    --brand-secondary-rgb: 52, 211, 153;
+    --border-color: var(--border);
+}

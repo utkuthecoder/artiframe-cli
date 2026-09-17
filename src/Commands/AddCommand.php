@@ -136,11 +136,11 @@ class AddCommand
             'stub'     => 'phpmailer.stub',
             'env'      => [
                 '# ── mail (phpmailer) ──────────────────────',
-                'MAIL_HOST=smtp.mailtrap.io',
-                'MAIL_PORT=2525',
+                'MAIL_HOST=127.0.0.1',
+                'MAIL_PORT=1025',
                 'MAIL_USERNAME=',
                 'MAIL_PASSWORD=',
-                'MAIL_ENCRYPTION=tls',
+                'MAIL_ENCRYPTION=',
                 'MAIL_FROM_ADDRESS=hello@example.com',
                 'MAIL_FROM_NAME=ArtiFrame',
             ],
@@ -317,29 +317,46 @@ class AddCommand
             return;
         }
 
+
         $envBlock = PHP_EOL . implode(PHP_EOL, $package['env']) . PHP_EOL;
 
         // .env dosyasına ekle
         $envFile = $projectRoot . '/.env';
         if (file_exists($envFile)) {
-            // Zaten eklenmişse tekrar ekleme
             $currentContent = file_get_contents($envFile);
-            if (str_contains($currentContent, $package['env'][0])) {
-                return; // Başlık satırı zaten var, atla
+            // Zaten eklenmiş anahtarlardan herhangi biri var mı kontrol et
+            $alreadyExists = false;
+            foreach ($package['env'] as $line) {
+                if (str_starts_with(trim($line), '#') || empty(trim($line))) continue;
+                $key = explode('=', $line)[0];
+                if (str_contains($currentContent, $key . '=')) {
+                    $alreadyExists = true;
+                    break;
+                }
             }
-            file_put_contents($envFile, $envBlock, FILE_APPEND);
+            if (!$alreadyExists) {
+                file_put_contents($envFile, $envBlock, FILE_APPEND);
+            }
         }
 
         // .env.example dosyasına ekle
         $envExample = $projectRoot . '/.env.example';
         if (file_exists($envExample)) {
             $currentContent = file_get_contents($envExample);
-            if (!str_contains($currentContent, $package['env'][0])) {
+            $alreadyExists = false;
+            foreach ($package['env'] as $line) {
+                if (str_starts_with(trim($line), '#') || empty(trim($line))) continue;
+                $key = explode('=', $line)[0];
+                if (str_contains($currentContent, $key . '=')) {
+                    $alreadyExists = true;
+                    break;
+                }
+            }
+            if (!$alreadyExists) {
                 file_put_contents($envExample, $envBlock, FILE_APPEND);
             }
         }
     }
-
     // ─── Yardımcı Metodlar ───────────────────────────────────────
 
     /**

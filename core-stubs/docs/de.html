@@ -312,7 +312,7 @@ SEITENLEISTE
 <div class="sb-subcat">Desinfizieren und validieren</div>
 <a href="#sh-sanitizeint">sanitizeInt()</a>
 <a href="#sh-sanitizefloat">sanitizeFloat()</a>
-<a href="#sh-sanitizestring">sanitizeString()</a>
+<a href="#sh-sanitizestring">stripHtml()</a>
 <a href="#sh-sanitizeemail">sanitizeEmail()</a>
 <a href="#sh-verifyemail">überprüfenEmail()</a>
 <div class="sb-subcat">HTTP-Anfrage</div>
@@ -330,12 +330,12 @@ SEITENLEISTE
 <a href="#sh-slugify">slugify()</a>
 <a href="#sh-arrayonly">arrayOnly()</a>
 <div class="sb-subcat">ID-Generierung und Dienstprogramme</div>
-<a href="#sh-byteid">byteId()</a>
-<a href="#sh-makeid">makeId()</a>
+<a href="#sh-byteid">generateBinaryId()</a>
+<a href="#sh-makeid">generateStringId()</a>
 <a href="#sh-formatid">formatId()</a>
 <a href="#sh-intid">intId()</a>
 <a href="#sh-bigintid">bigintId()</a>
-<a href="#sh-stringer">stringer()</a>
+
 <a href="#sh-otpcoder">OTP-Codierer</a>
 <div class="sb-cat">API-Sicherheit</div>
 <a href="#api-methods">HTTP-Methodensteuerung</a>
@@ -530,7 +530,7 @@ $_GET['param2'] = '15';</code></pre>
 <p>In der neuen Struktur oben ist der Zugriff auf die Daten auf der entsprechenden Seite ganz einfach:</p>
 <pre><code><span class="cm">// in public/user.php:</span>
 $userId = sanitizeInt($_GET['param1']); <span class="cm">// 123456 (oder $_GET['id'])</span>
-$token = sanitizeString($_GET['param2']); <span class="cm">// 123j54m23k</span></code></pre>
+$token = stripHtml($_GET['param2']); <span class="cm">// 123j54m23k</span></code></pre>
 </div>
 <h3>2. Globale Helfer</h3>
 <p>In älteren Versionen<code>\Bin\SystemMethod::generateToken()</code>oder<code>\Bin\ViewMethod::display()</code>Lange Namensraumaufrufe wie dieser waren erforderlich. Mit v2.0.0 sind alle diese Funktionen im globalen Namespace verfügbar (<code>namespace { }</code>) enthalten war.</p>
@@ -629,7 +629,7 @@ html[data-theme="default"][data-mode="light"] {
 </div>
 <div class="card">
 <h3>Regel 3: Sicherer Datenfluss</h3>
-<p>Alle aus der Datenbank kommenden Daten werden verarbeitet, bevor sie an das DOM übertragen werden.<code class="ic">display()</code>Es ist mit umwickelt. Alle an die API eingehenden Daten werden vor ihrer Verarbeitung verarbeitet.<code class="ic">sanitizeString()</code>oder<code class="ic">sanitizeInt()</code>Es wird mit gereinigt.</p>
+<p>Alle aus der Datenbank kommenden Daten werden verarbeitet, bevor sie an das DOM übertragen werden.<code class="ic">display()</code>Es ist mit umwickelt. Alle an die API eingehenden Daten werden vor ihrer Verarbeitung verarbeitet.<code class="ic">stripHtml()</code>oder<code class="ic">sanitizeInt()</code>Es wird mit gereinigt.</p>
 </div>
 <div class="card">
 <h3>Regel 4: Fehlerbehandlung mit APP_ENV</h3>
@@ -765,7 +765,7 @@ make:api
 <span class="var">$allowedMethods</span> = [<span class="st">'POST'</span>];
 <span class="fn">require_once</span> <span class="var">$_SERVER</span>[<span class="st">'DOCUMENT_ROOT'</span>] . <span class="st">'/../app/ApiControl.php'</span>;
 <span class="kw">verwenden</span> Bin\SystemMethod;
-<span class="var">$Aktion</span> = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'Aktion'</span>] ?? <span class="st">''</span>);
+<span class="var">$Aktion</span> = <span class="fn">stripHtml</span>(<span class="var">$_POST</span>[<span class="st">'Aktion'</span>] ?? <span class="st">''</span>);
 <span class="kw">schalten</span> (<span class="var">$Aktion</span>) {
     <span class="kw">Fall</span> <span class="st">'erstellen'</span>:
         <span class="fn">jsonResponse</span>([<span class="st">'Status'</span> =&gt; <span class="st">'Erfolg'</span>, <span class="st">'Nachricht'</span> =&gt; <span class="st">„Erstellt.“</span>], <span class="nu">200</span>);
@@ -3928,10 +3928,10 @@ if ($response['status'] === 'success') {
 <pre><code><span class="var">$Preis</span> = <span class="fn">desinfizierenFloat</span>(<span class="var">$_POST</span>[<span class="st">'Preis'</span>]);</code></pre>
 </section>
 <section id="sh-sanitizestring">
-<h2>Systemhelfer—<code>sanitizeString()</code> <span class="tag b-api">SystemMethode</span></h2>
-<span class="ret">string sanitizeString(string $value)</span>
+<h2>Systemhelfer—<code>stripHtml()</code> <span class="tag b-api">SystemMethode</span></h2>
+<span class="ret">string stripHtml(string $value)</span>
 <p>Um XSS und ähnliche Angriffe zu verhindern, alle<strong>HTML- und PHP-Tags (<code>&lt;script&gt;</code>, <code>&lt;iframe&gt;</code>usw.) zerstört</strong>. Es muss verwendet werden, bevor String in der Datenbank gespeichert wird.</p>
-<pre><code><span class="var">$name</span> = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'Name'</span>]);</code></pre>
+<pre><code><span class="var">$name</span> = <span class="fn">stripHtml</span>(<span class="var">$_POST</span>[<span class="st">'Name'</span>]);</code></pre>
 </section>
 <section id="sh-sanitizeemail">
 <h2>Systemhelfer—<code>sanitizeEmail()</code> <span class="tag b-api">SystemMethode</span></h2>
@@ -4027,7 +4027,7 @@ if ($response['status'] === 'success') {
 <span class="cm">// Extern manipulierte Werte wie ID und Rolle werden automatisch zerstört.</span></code></pre>
 </section>
 <section id="sh-byteid">
-<h2>Systemhelfer -<code>byteId()</code> <span class="tag b-api">SystemMethode</span></h2>
+<h2>Systemhelfer -<code>generateBinaryId()</code> <span class="tag b-api">SystemMethode</span></h2>
 <div class="info-box">Native, leistungsstarke und zeitlich geordnete 16-Byte-Rohdaten<strong>UUIDv7</strong>produziert.</div>
 <p>ID-Spalten in der Datenbank<code>BINARY(16)</code>Wenn Sie eine enorme Indizierungs- und JOIN-Leistung erzielen möchten, indem Sie es als beibehalten, erstellen Sie mit dieser Funktion neue Datensätze.</p>
 <div class="code-block">
@@ -4035,13 +4035,13 @@ if ($response['status'] === 'success') {
 <span class="code-lang">PHP</span>
 </div>
 <pre><code><span class="kw">verwenden</span> Bin\SystemMethod;
-<span class="var">$rawId</span> = SystemMethod::<span class="fn">byteId</span>();
-<span class="cm">// Oder globaler Helfer: byteId();</span>
+<span class="var">$rawId</span> = SystemMethod::<span class="fn">generateBinaryId</span>();
+<span class="cm">// Oder globaler Helfer: generateBinaryId();</span>
 <span class="var">$db</span>-&gt;<span class="fn">vorbereiten</span>(<span class="st">„INSERT INTO user (id, name) VALUES (?, ?)“</span>)-&gt;<span class="fn">ausführen</span>([<span class="var">$rawId</span>, <span class="st">'Triumph'</span>]);</code></pre>
 </div>
 </section>
 <section id="sh-makeid">
-<h2>Systemhelfer -<code>makeId()</code> <span class="tag b-api">SystemMethode</span></h2>
+<h2>Systemhelfer -<code>generateStringId()</code> <span class="tag b-api">SystemMethode</span></h2>
 <div class="info-box">Nativ, Standard 36 Zeichen<strong>UUIDv7</strong>erzeugt die Zeichenfolge.</div>
 <p>in der Datenbank<code>CHAR(36)</code>oder<code>VARCHAR(36)</code>Wenn Sie es verwenden und sich nicht mit rohen Binärdaten befassen möchten, können Sie mit dieser Funktion UUID direkt im String-Format generieren.</p>
 <div class="code-block">
@@ -4049,7 +4049,7 @@ if ($response['status'] === 'success') {
 <span class="code-lang">PHP</span>
 </div>
 <pre><code><span class="kw">verwenden</span> Bin\SystemMethod;
-<span class="var">$stringId</span> = SystemMethod::<span class="fn">makeId</span>();
+<span class="var">$stringId</span> = SystemMethod::<span class="fn">generateStringId</span>();
 <span class="cm">// Beispielausgabe: 0190ed84-3f12-7a91-8bc4-91823741abcd</span></code></pre>
 </div>
 </section>
@@ -4091,29 +4091,7 @@ if ($response['status'] === 'success') {
 <span class="var">$massiveId</span> = <span class="fn">bigintId</span>(18, <span class="kw">WAHR</span>); <span class="cm">// gibt 18-stelligen STRING zurück (JS-sicher)</span></code></pre>
 </div>
 </section>
-<section id="sh-stringer">
-<h2>Systemhelfer -<code>stringer()</code> <span class="tag b-api">SystemMethode</span></h2>
-<div class="info-box">Verpackt Werte in Zeichenfolgen, um sie vor der Unempfindlichkeit gegenüber riesigen Zahlen (BIGINT) von Javascript zu schützen.</div>
-<p>Es schützt numerische Variablen (BigInt usw.), die größer als 15 Ziffern sind, vor den Rundungsfehlern (Präzisionsverlust) von Javascript, wenn sie im DOM in der Ansichtsebene gedruckt werden.</p>
-<div class="code-block">
-<div class="code-header">
-<span class="code-lang">HTML/PHP</span>
-</div>
-<pre><code><span class="cm">&lt;!-- Wir umschließen es mit einem Stringer, um zu verhindern, dass JS es beschädigt --&gt;</span>
-&lt;button data-id=<span class="st">„&lt;?=</span> <span class="fn">Stringer</span>(<span class="var">$Daten</span>[<span class="st">'AUSWEIS'</span>]) <span class="st">?&gt;"</span>&gt;Sil&lt;/button&gt;</code></pre>
-</div>
-<section id="sh-otpcoder">
-<h2>Systemhelfer - OTP-Codierer<span class="tag b-api">SystemMethode</span></h2>
-<div class="info-box">Erzeugt zufällige, kryptografisch sichere Authentifizierungscodes (OTP).</div>
-<div class="code-block">
-<pre><code><span class="cm">// 6-stellige Zufallszahl</span>
-<span class="var">$code</span> = <span class="fn">otpInt</span>(<span class="nu">6</span>); <span class="cm">// 482910</span>
-<span class="cm">// Nur 8-stelliger Buchstabe ('c': Kleinbuchstabe, 'C': Großbuchstabe, 'cC': gemischt)</span>
-<span class="var">$code</span> = <span class="fn">otpStr</span>(<span class="nu">8</span>, <span class="st">'C'</span>); <span class="cm">// PKLMDZRA</span>
-<span class="cm">// 6-stelliger Buchstabe+Zahl (alphanumerisch)</span>
-<span class="var">$code</span> = <span class="fn">otpMix</span>(<span class="nu">6</span>, <span class="st">'C'</span>); <span class="cm">//9A4X2Z</span></code></pre>
-</div>
-</section>
+
 </section>
 ====== API-SICHERHEIT ======
 <section id="api-methods">
@@ -4205,9 +4183,9 @@ echo json_encode([<span class="st">'Fehler'</span> =&gt; <span class="st">„Zu 
     <span class="fn">jsonResponse</span>([<span class="st">'Fehler'</span> =&gt; <span class="st">„Ungültiges Token.“</span>], <span class="nu">403</span>);
 }
 <span class="cm">// 2. Daten löschen</span>
-<span class="var">$name</span>     = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'Name'</span>] ?? <span class="st">''</span>);
+<span class="var">$name</span>     = <span class="fn">stripHtml</span>(<span class="var">$_POST</span>[<span class="st">'Name'</span>] ?? <span class="st">''</span>);
 <span class="var">$E-Mail</span> = <span class="fn">sanitizeEmail</span>(<span class="var">$_POST</span>[<span class="st">'E-Mail'</span>] ?? <span class="st">''</span>);
-<span class="var">$Nachricht</span>  = <span class="fn">sanitizeString</span>(<span class="var">$_POST</span>[<span class="st">'Nachricht'</span>] ?? <span class="st">''</span>);
+<span class="var">$Nachricht</span>  = <span class="fn">stripHtml</span>(<span class="var">$_POST</span>[<span class="st">'Nachricht'</span>] ?? <span class="st">''</span>);
 <span class="cm">// 3. Geschäftslogik (E-Mail senden, in der Datenbank speichern usw.)</span>
 <span class="cm">//......</span>
 <span class="cm">// 4. Antworten</span>
