@@ -65,7 +65,7 @@ try {
             const content = `[Desktop Entry]
 Name=ArtiFrame DevOps
 Comment=Launch ArtiFrame DevOps Studio
-Exec=artiframe devops
+Exec=bash -ic "artiframe devops"
 Icon=utilities-terminal
 Terminal=false
 Type=Application
